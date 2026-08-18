@@ -1,0 +1,24 @@
+PHASE 15.10 TEST RESULTS — V2 RELEASE READINESS
+=================================================
+
+Tests expected to pass:
+- npm run phase15:v2-release-readiness:test
+- npm run phase15:cost-anomaly-hardening:test
+- npm run phase15:daily-action-digest:test
+- npm run phase15:voice-input:test
+- npm run phase15:proactivity-triggers:test
+- npm run phase15:memory-ui:test
+- npm run phase15:tool-routing:test
+- npm run phase14:ads-safety-qa:test
+- npm run phase13:support-send-qa:test
+- npm run build
+
+Coverage:
+- Health mode check.
+- Required final checklist items.
+- Empty evidence returns not_ready.
+- Partial evidence returns warnings/not_ready.
+- Complete evidence returns ready_for_client_acceptance.
+- force=true does not bypass readiness rules.
+- Secret-like fields are rejected from preview input.
+- No execution/external-call/autonomy flags remain false.

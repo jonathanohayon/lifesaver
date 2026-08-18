@@ -1,0 +1,17 @@
+{
+  "success": true,
+  "data": {
+    "app": {
+      "name": "LIFE.SAVER",
+      "version": "0.1.2",
+      "mode": "SaaS/Admin Foundation",
+      "environment": "development"
+    },
+    "architecture": {
+      "currentStage": "Local development with mock ecommerce metrics and mock assistant replies.",
+      "v1Scope": "Single founder workspace using Triple Whale as the only business data source and Claude as server-side assistant.",
+      "futureSaasDirection": "Multi-workspace subscription product where each customer has isolated data.",
+      "dataOwnershipRule": "Code can be updated safely; customer data remains protected in PostgreSQL and tied to workspace_id."
+    }
+  }
+}

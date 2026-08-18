@@ -1,0 +1,54 @@
+LIFE.SAVER v0.7.4 — Mobile Rules Memory Proactivity
+====================================================
+
+Purpose
+-------
+This phase improves the V2 approval queue mobile experience after the global mobile shell and dashboard/chat mobile phases.
+
+Scope
+-----
+- actions.html
+- apps/web/src/assets/css/actions.css
+- apps/web/src/assets/js/actions.js
+- apps/web/src/assets/js/action-card.js
+- shared frontend version metadata
+- health mode/version labels
+
+Mobile UX improvements
+----------------------
+1. Action cards are easier to read on phones.
+2. Each card exposes a mobile summary: status, risk, category, and created time.
+3. Action controls are larger and easier to tap.
+4. View Details, Approve, Reject, and Cancel are grouped in a mobile-safe control row.
+5. Detail drawer uses full-screen mobile behavior.
+6. Approve/reject/cancel confirmations use sticky full-width mobile footers.
+7. Risk badges, status badges, and safety notes wrap safely.
+8. Result logs and safe metadata previews are scrollable and do not force horizontal page overflow.
+9. Support, ads, rollback, timeline, payload preview, and result summary sections stack on phones.
+
+Safety boundary
+---------------
+This phase does not change backend action transition rules, policy engine rules, executor rules, or external connector behavior.
+
+Internal cancel note
+--------------------
+The mobile Cancel control calls the existing internal LIFE.SAVER cancellation endpoint for eligible pre-execution statuses only. It does not add new backend logic and cannot perform external writes.
+
+No external writes
+------------------
+This phase cannot:
+- publish content,
+- send support replies,
+- change ad spend,
+- pause real campaigns,
+- refund orders,
+- edit products,
+- perform rollback,
+- call external platform APIs,
+- enable auto-run.
+
+Version
+-------
+Frontend shared metadata and API health are updated to:
+- version: 0.7.4
+- health mode: v2-mobile-0-7-4-rules-memory-proactivity

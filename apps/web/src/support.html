@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LIFE.SAVER — Support Action UI</title>
+<link rel="stylesheet" href="./assets/css/admin.css" />
+<link rel="stylesheet" href="./assets/css/support-status.css" />
+<link rel="stylesheet" href="./assets/css/mobile-shell.css" />
+<link rel="stylesheet" href="./assets/css/mobile-release-qa.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to support action UI</a>
+  <main class="admin-shell support-shell" id="main-content" tabindex="-1">
+    <section class="topbar">
+      <div class="brand">
+        <h1>LIFE.SAVER SUPPORT</h1>
+        <span>Support action UI · Active Platform Conversion · v0.8.3</span>
+      </div>
+      <div class="footer-actions">
+        <a class="btn" href="./index.html">← Dashboard</a>
+        <a class="btn" href="./functional-audit.html">Functional Audit</a>
+        <a class="btn" href="./actions.html">Actions</a>
+        <a class="btn" href="./notifications.html">Notifications</a>
+        <a class="btn" href="./rules.html">Rules</a>
+        <a class="btn" href="./settings.html">Settings</a>
+        <a class="btn" href="./memory.html">Memory</a>
+        <a class="btn" href="./login.html">Login</a>
+        <button class="btn" id="logoutBtn" type="button">Logout</button>
+        <span class="badge" id="authState">AUTH CHECKING</span>
+        <span class="badge" id="loadState">STATUS READY</span>
+      </div>
+    </section>
+
+    <section class="grid four compact support-summary-grid">
+      <div class="panel"><div class="kicker">Connector</div><div class="value" id="connectorState">—</div><small id="connectorLabel">Gmail</small></div>
+      <div class="panel"><div class="kicker">Last Sync</div><div class="value green" id="lastSync">—</div><small>Read-only import status.</small></div>
+      <div class="panel"><div class="kicker">Sync Errors</div><div class="value warn-value" id="syncErrorCount">0</div><small>Browser-safe redacted errors only.</small></div>
+      <div class="panel"><div class="kicker">Token Status</div><div class="value" id="tokenStatus">—</div><small>No token values are shown.</small></div>
+    </section>
+
+    <section class="panel support-hero-panel">
+      <div>
+        <h2>Support Connector + Action Review</h2>
+        <p class="note">The mobile-ready support screen keeps the connector read-only while showing a founder review UI for support_reply_send actions. The founder can review the ticket, suggested reply, and then approve/reject through existing internal action endpoints. Approval/rejection never sends the email.</p>
+      </div>
+      <div class="support-controls" aria-label="Support connector status controls">
+        <button class="btn primary" id="refreshStatusBtn" type="button">Refresh Status</button>
+        <button class="btn" id="loadExampleBtn" type="button">Load QA Example</button>
+      </div>
+    </section>
+
+    <section class="panel support-action-review-panel">
+      <div class="panel-header-row">
+        <div>
+          <div class="kicker">Ticket-to-Action UI</div>
+          <h2>Support Reply Review</h2>
+        </div>
+        <span class="badge" id="supportActionUiState">SAFE REVIEW</span>
+      </div>
+      <p class="note compact-note">Review the normalized ticket, suggested reply, risk, warnings, and approval checklist before approving or rejecting the proposed support_reply_send action. These controls call only internal approval/rejection endpoints and do not send an email.</p>
+      <div class="support-action-toolbar">
+        <label>
+          <span>Existing action ID</span>
+          <input id="supportActionIdInput" type="text" placeholder="action_support_reply_123" autocomplete="off" />
+        </label>
+        <button class="btn" id="loadSupportActionExampleBtn" type="button">Load Review Example</button>
+        <button class="btn" id="approveSupportActionBtn" type="button" disabled>Approve Action</button>
+        <button class="btn" id="rejectSupportActionBtn" type="button" disabled>Reject Action</button>
+      </div>
+      <div class="grid two support-action-grid">
+        <article class="support-ticket-card">
+          <div class="kicker">Ticket</div>
+          <h3 id="reviewTicketSubject">No ticket loaded</h3>
+          <div class="support-status-table compact-action-table">
+            <div><span>Ticket ID</span><strong id="reviewTicketId">—</strong></div>
+            <div><span>Thread</span><strong id="reviewThreadId">—</strong></div>
+            <div><span>Customer</span><strong id="reviewCustomerHint">—</strong></div>
+            <div><span>Category</span><strong id="reviewCategory">—</strong></div>
+            <div><span>Risk</span><strong id="reviewRisk">—</strong></div>
+            <div><span>Status</span><strong id="reviewActionStatus">—</strong></div>
+          </div>
+          <p class="note" id="reviewTicketSnippet">Load an example or select a proposed support action.</p>
+        </article>
+        <article class="support-ticket-card suggested-reply-card">
+          <div class="kicker">Suggested Reply</div>
+          <h3>Reply Draft Preview</h3>
+          <p class="reply-preview" id="reviewSuggestedReply">No suggested reply loaded.</p>
+          <div class="support-warning-list" id="reviewWarnings"><span class="support-pill warn">Waiting for review packet</span></div>
+        </article>
+      </div>
+      <div class="support-checklist" id="reviewChecklist" aria-live="polite"></div>
+    </section>
+
+    <section class="grid two support-panels">
+      <article class="panel support-column">
+        <div class="panel-header-row">
+          <div>
+            <div class="kicker">Connector Health</div>
+            <h2 id="syncHealthTitle">Loading…</h2>
+          </div>
+          <span class="badge" id="syncHealthBadge">READ ONLY</span>
+        </div>
+        <div class="support-badge-list" id="uiBadgeList" aria-live="polite"></div>
+        <div class="support-status-table" aria-label="Support connector status details">
+          <div><span>Provider</span><strong id="providerName">—</strong></div>
+          <div><span>Connection</span><strong id="connectionValue">—</strong></div>
+          <div><span>Last successful sync</span><strong id="lastSuccessfulSync">—</strong></div>
+          <div><span>Last attempt</span><strong id="lastAttempt">—</strong></div>
+          <div><span>Token expires</span><strong id="tokenExpires">—</strong></div>
+          <div><span>Read-only scope</span><strong id="readOnlyScope">—</strong></div>
+          <div><span>Safe to import</span><strong id="safeToImport">—</strong></div>
+        </div>
+        <p class="note green-note" id="nextAction">Loading next recommended action…</p>
+      </article>
+
+      <article class="panel support-column">
+        <div class="panel-header-row">
+          <div>
+            <div class="kicker">Sync Errors</div>
+            <h2>Recent Sync Errors</h2>
+          </div>
+          <span class="badge warn-badge" id="errorState">CHECKING</span>
+        </div>
+        <p class="note compact-note">Errors are redacted before rendering. The UI never shows raw Gmail payloads, access values, refresh values, or authorization headers.</p>
+        <div class="support-error-list" id="syncErrorList" aria-live="polite" aria-busy="true">
+          <article class="support-error-card loading-card"><strong>Loading errors…</strong><span>Please wait while LIFE.SAVER checks the safe status endpoint.</span></article>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <h2>Mobile Support Safety Boundary</h2>
+      <div class="grid two">
+        <p class="note green-note"><strong>Allowed in this phase:</strong><br>Show Gmail connector status, connected/disconnected state, last sync timestamps, redacted sync errors, token health state, ticket review card, suggested reply review card, approval checklist, and approve/reject controls for existing proposed actions.</p>
+        <p class="note warn"><strong>Not allowed in this phase:</strong><br>No Gmail API client, no Gmail OAuth route, no Gmail send/modify scope, no email sending, no support auto-reply, no support send executor, no token value display, and no raw provider payload display. Approve/reject records internal action status only.</p>
+      </div>
+    </section>
+
+    <div class="note" id="supportMessage" role="status" aria-live="polite">Loading support connector status…</div>
+  </main>
+  <script src="./assets/js/runtime-config.js"></script>
+  <script src="./assets/js/support-status.js"></script>
+<script src="./assets/js/lifesaver-version.js"></script>
+<script src="./assets/js/lifesaver-mobile-shell.js"></script>
+</body>
+</html>

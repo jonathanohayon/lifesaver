@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LIFE.SAVER — Functional Audit</title>
+<link rel="stylesheet" href="./assets/css/admin.css" />
+<link rel="stylesheet" href="./assets/css/mobile-shell.css" />
+<link rel="stylesheet" href="./assets/css/mobile-release-qa.css" />
+<link rel="stylesheet" href="./assets/css/functional-audit.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to functional audit</a>
+  <main class="admin-shell functional-audit-shell" id="main-content" tabindex="-1">
+    <section class="topbar">
+      <div class="brand">
+        <h1>FUNCTIONAL AUDIT</h1>
+        <span>UI-to-API map · <span data-ls-version-label>Active Platform Conversion</span> · v<span data-ls-version>0.8.3</span></span>
+      </div>
+      <div class="footer-actions">
+        <a class="btn" href="./index.html">← Dashboard</a>
+        <a class="btn" href="./actions.html">Actions</a>
+        <a class="btn" href="./rules.html">Rules</a>
+        <a class="btn" href="./memory.html">Memory</a>
+        <a class="btn" href="./support.html">Support</a>
+        <a class="btn" href="./notifications.html">Notifications</a>
+        <a class="btn" href="./settings.html">Settings</a>
+        <a class="btn" href="./admin.html">Super Admin</a>
+        <a class="btn" href="./launch-readiness.html">Launch Prep</a>
+        <span class="badge" id="auditLoadState">AUDIT READY</span>
+      </div>
+    </section>
+
+    <section class="grid four compact">
+      <div class="panel"><div class="kicker">Version</div><div class="value" data-ls-version>0.8.3</div><small data-ls-version-small>Active Platform Conversion</small></div>
+      <div class="panel"><div class="kicker">Health Mode</div><div class="value green small-value" data-ls-health-mode>v2-functional-0-8-3-active-platform-conversion</div><small>Expected API mode after deploy.</small></div>
+      <div class="panel"><div class="kicker">Mapped Surfaces</div><div class="value" id="surfaceCount">—</div><small>Pages, buttons, and operator lanes.</small></div>
+      <div class="panel"><div class="kicker">Safety</div><div class="value green">AUDIT ONLY</div><small>No execution, no external writes.</small></div>
+    </section>
+
+    <section class="panel functional-hero">
+      <h2>v0.8.3 Functional Audit + UI-to-API Connection Map</h2>
+      <p class="note">This page does not make LIFE.SAVER more autonomous. It shows what is already backend-connected, what is partial, what is preview-only, and what needs backend persistence before we make more features truly functional.</p>
+      <nav class="functional-mobile-shortcuts" aria-label="Functional audit shortcuts">
+        <a href="#functionalCounts">Status Counts</a>
+        <a href="#functionalSurfaces">Surface Map</a>
+        <a href="#functionalChecklist">Checklist</a>
+        <a href="#functionalNextPhases">Next Phases</a>
+      </nav>
+    </section>
+
+    <section class="grid three" id="functionalCounts" aria-label="Functional audit counts">
+      <div class="panel"><div class="kicker">Backend Connected</div><div class="value green" id="countBackend">—</div><small>Already using backend APIs.</small></div>
+      <div class="panel"><div class="kicker">Partial / Framework</div><div class="value amber" id="countPartial">—</div><small>Needs persistence or activation plan.</small></div>
+      <div class="panel"><div class="kicker">Preview / Disabled</div><div class="value red" id="countPreview">—</div><small>Must not be treated as live execution.</small></div>
+    </section>
+
+    <section class="panel" id="functionalSurfaces">
+      <h2>Functional Surface Map</h2>
+      <p class="note">Each card explains the current state, APIs involved, missing work, recommended next step, and activation risk.</p>
+      <div class="functional-filter-row">
+        <label><span>Status filter</span><select id="statusFilter"><option value="all">All statuses</option><option value="backend_connected">Backend connected</option><option value="partial_backend_connected">Partial backend</option><option value="ui_preview_only">UI preview only</option><option value="needs_backend_persistence">Needs backend persistence</option><option value="framework_only">Framework only</option><option value="connector_disabled_by_design">Connector disabled</option></select></label>
+        <button class="btn primary" id="refreshAuditBtn" type="button">Refresh Audit</button>
+        <button class="btn" id="copyAuditJsonBtn" type="button">Copy JSON</button>
+      </div>
+      <div class="functional-surface-grid" id="surfaceGrid"></div>
+      <pre class="raw-preview" id="auditJsonPreview">Loading audit map…</pre>
+    </section>
+
+    <section class="grid two" id="functionalChecklist">
+      <article class="panel">
+        <h2>Functional Audit Checklist</h2>
+        <ul class="functional-list" id="auditChecklist"></ul>
+      </article>
+      <article class="panel">
+        <h2>Before v0.8.3</h2>
+        <ul class="functional-list" id="beforeV081"></ul>
+        <p class="note warn">v0.8.3 should not enable real external actions. It should select the first backend persistence target and preserve approval, policy, master pause, caps, audit, result logs, and no-hidden-autonomy safeguards.</p>
+      </article>
+    </section>
+
+    <section class="panel" id="functionalNextPhases">
+      <h2>Recommended Next Functional Phases</h2>
+      <div class="functional-next-grid" id="nextPhaseGrid"></div>
+    </section>
+  </main>
+
+<script src="./assets/js/runtime-config.js"></script>
+<script src="./assets/js/lifesaver-version.js"></script>
+<script src="./assets/js/lifesaver-mobile-shell.js"></script>
+<script src="./assets/js/functional-audit.js"></script>
+</body>
+</html>

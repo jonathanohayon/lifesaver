@@ -1,0 +1,133 @@
+{
+  "version": "0.6.0",
+  "phase": "2.3",
+  "name": "LIFE.SAVER V2 Actions Table Schema Reference",
+  "migration": "database/migrations/009_create_actions_table.sql",
+  "safety": {
+    "externalWritesEnabled": false,
+    "executorsEnabled": false,
+    "approvalApisEnabled": false,
+    "v1Rule": "READ + ADVISE + DRAFT ONLY"
+  },
+  "table": "actions",
+  "fields": {
+    "id": {
+      "type": "uuid",
+      "primaryKey": true,
+      "default": "gen_random_uuid()"
+    },
+    "workspace_id": {
+      "type": "uuid",
+      "required": true,
+      "references": "workspaces(id)",
+      "onDelete": "cascade"
+    },
+    "created_by_user_id": {
+      "type": "uuid",
+      "required": false,
+      "references": "users(id)",
+      "onDelete": "set null"
+    },
+    "action_type": {
+      "type": "text",
+      "required": true
+    },
+    "title": {
+      "type": "text",
+      "required": true,
+      "blankAllowed": false
+    },
+    "description": {
+      "type": "text",
+      "required": false
+    },
+    "payload_json": {
+      "type": "jsonb",
+      "required": true,
+      "default": {}
+    },
+    "status": {
+      "type": "text",
+      "required": true,
+      "default": "proposed"
+    },
+    "risk_level": {
+      "type": "text",
+      "required": true,
+      "default": "low"
+    },
+    "approval_required": {
+      "type": "boolean",
+      "required": true,
+      "default": true
+    },
+    "policy_decision": {
+      "type": "text",
+      "required": true,
+      "default": "not_evaluated"
+    },
+    "created_at": {
+      "type": "timestamptz",
+      "required": true,
+      "default": "now()"
+    },
+    "updated_at": {
+      "type": "timestamptz",
+      "required": true,
+      "default": "now()"
+    },
+    "approved_at": {
+      "type": "timestamptz",
+      "required": false
+    },
+    "executed_at": {
+      "type": "timestamptz",
+      "required": false
+    }
+  },
+  "allowedValues": {
+    "action_type": [
+      "content_publish",
+      "support_reply_send",
+      "ad_budget_adjust",
+      "ad_pause",
+      "research_task",
+      "dev_task",
+      "notification_send",
+      "rollback_action"
+    ],
+    "status": [
+      "proposed",
+      "approval_required",
+      "auto_approved",
+      "approved",
+      "rejected",
+      "cancelled",
+      "queued",
+      "executing",
+      "executed",
+      "failed",
+      "rollback_requested",
+      "rolled_back"
+    ],
+    "risk_level": [
+      "low",
+      "medium",
+      "high",
+      "critical"
+    ],
+    "policy_decision": [
+      "not_evaluated",
+      "ask",
+      "auto_approve",
+      "block"
+    ]
+  },
+  "indexes": [
+    "idx_actions_workspace_created",
+    "idx_actions_workspace_status_created",
+    "idx_actions_workspace_type_status",
+    "idx_actions_created_by_user_created",
+    "idx_actions_approval_queue"
+  ]
+}

@@ -1,0 +1,21 @@
+DATABASE MIGRATION — PHASE 12.3
+
+File:
+- database/migrations/021_support_ticket_schema_phase_12_3.sql
+
+Purpose:
+- Adds canonical support ticket schema metadata to support_tickets.
+
+Additive columns:
+- customer_email TEXT
+- body_snippet TEXT
+- sensitive_flag BOOLEAN NOT NULL DEFAULT FALSE
+- sensitive_reasons_json JSONB NOT NULL DEFAULT []
+- ticket_schema_version TEXT NOT NULL DEFAULT support_ticket_schema_v1
+
+Safety:
+- No table drops.
+- No destructive migration.
+- No provider API calls.
+- No email sending.
+- Raw provider payload remains separate.

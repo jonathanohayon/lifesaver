@@ -1,0 +1,19 @@
+LIFE.SAVER v0.8.3 — Active Platform Conversion Test Results
+
+Commands run during package creation:
+
+npm run phase-functional:0-8-3:test
+node --check apps/web/src/assets/js/main.js
+node --check apps/web/src/assets/js/audience-reach.js
+node --check apps/api/dist/modules/triple-whale/triple-whale.mapper.js
+node --check apps/api/dist/modules/metrics/metrics.service.js
+node --check apps/api/dist/modules/audience-reach/audience-reach.model.js
+node scripts/build-web-static.mjs
+
+Expected phase output:
+
+active-platform-conversion-check — 43 passed, 0 failed
+audience-reach-tests — 58 passed, 0 failed
+active-platform-conversion-tests — 22 passed, 0 failed
+
+Full npm run build still should be run locally after npm.cmd install because the packaging workspace does not include node_modules.

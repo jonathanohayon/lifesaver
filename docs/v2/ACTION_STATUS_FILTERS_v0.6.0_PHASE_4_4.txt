@@ -1,0 +1,130 @@
+LIFE.SAVER V2 — Phase 4.4 Status Filters
+Version: v0.6.0
+Deliverable: Filterable action queue
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 4.4 adds a read-only status filter layer to the Actions approval queue UI.
+
+The founder can now filter workspace-scoped actions by these primary statuses:
+
+- Proposed
+- Approved
+- Rejected
+- Executed
+- Failed
+- Cancelled
+- Rolled Back
+
+An All filter is also available.
+
+This phase does not approve, reject, cancel, queue, execute, publish, send, spend,
+pause, refund, rollback, or write to any external system.
+
+================================================================================
+UI DECISION
+================================================================================
+
+Primary action review page:
+- actions.html
+
+New UI added:
+- Primary status filter tabs above the advanced filter toolbar.
+- Active status filter summary card.
+- Read-only helper text explaining the selected filter.
+- Existing advanced dropdown remains available for full lifecycle statuses such as
+  approval_required, auto_approved, queued, executing, and rollback_requested.
+
+================================================================================
+FILES UPDATED
+================================================================================
+
+apps/web/src/actions.html
+- Added primary status filter tabs.
+- Added active status filter summary panel.
+- Updated Phase 4.4 copy and safety boundary.
+
+apps/web/src/assets/js/actions.js
+- Added PRIMARY_STATUS_FILTERS registry.
+- Added status filter tab click handling.
+- Synchronized status tabs with the advanced status dropdown.
+- Kept all filters read-only.
+- Continued using GET /api/v1/actions with workspace-scoped query parameters.
+
+apps/web/src/assets/css/actions.css
+- Added status filter tab styles.
+- Added active, hover, focus, and mobile layout states.
+
+packages/shared/src/action-status-filters.ts
+- Added shared status filter registry and safety rules.
+
+================================================================================
+PRIMARY FILTERS
+================================================================================
+
+All:
+Shows all workspace-scoped actions.
+
+Proposed:
+Shows actions waiting for review.
+
+Approved:
+Shows internally approved actions. Execution remains disabled until later executor
+phases.
+
+Rejected:
+Shows actions rejected by an owner/admin.
+
+Executed:
+Future status for actions confirmed by executor result. No executor is enabled in
+this phase.
+
+Failed:
+Future status for failed execution or lifecycle result review.
+
+Cancelled:
+Shows actions cancelled before execution.
+
+Rolled Back:
+Future status for actions with confirmed rollback completion after rollback flow exists.
+
+================================================================================
+SAFETY RULES
+================================================================================
+
+1. Status filters are read-only UI controls.
+2. Changing a filter may only call GET /api/v1/actions with safe query parameters.
+3. Status filters must never call approve, reject, cancel, queue, execute, rollback,
+   publish, send, spend, pause, refund, or edit endpoints.
+4. List view remains summary-only.
+5. Full raw payload_json is not exposed in the list view.
+6. Detail drawer continues to show only safe payload preview.
+7. No external write connector is enabled in Phase 4.4.
+
+================================================================================
+TESTING
+================================================================================
+
+1. Start API and web locally.
+2. Log in.
+3. Run local fixtures if needed:
+   npm.cmd run db:seed:actions:local
+4. Open:
+   http://localhost:3000/actions.html
+5. Click each status filter:
+   All, Proposed, Approved, Rejected, Executed, Failed, Cancelled, Rolled Back
+6. Confirm the list changes or shows a safe empty state.
+7. Confirm the active filter label updates.
+8. Confirm Detail drawer still opens.
+9. Confirm Approve/Reject remain guarded.
+10. Confirm no external action happens.
+
+================================================================================
+PHASE RESULT
+================================================================================
+
+Phase 4.4 delivers a filterable action queue UI.
+
+No executor or external write capability has been added.

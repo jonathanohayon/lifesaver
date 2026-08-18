@@ -1,0 +1,168 @@
+{
+  "status": {
+    "phase": "V2 Phase 13.10 — Support Send QA",
+    "healthMode": "v2-phase-13-10-support-send-qa",
+    "deliverable": "support_send_qa_report",
+    "actionType": "support_reply_send",
+    "provider": "gmail",
+    "qaChecks": [
+      "safe_approved_send",
+      "no_duplicate_send",
+      "correct_thread",
+      "logs_stored",
+      "sensitive_ticket_blocked"
+    ],
+    "verifiesOneSafeApprovedSend": true,
+    "verifiesNoDuplicateSend": true,
+    "verifiesCorrectThread": true,
+    "verifiesLogsStored": true,
+    "verifiesSensitiveTicketBlocked": true,
+    "qaUsesMockGmailClient": true,
+    "liveGmailSendPerformedByQa": false,
+    "manualApprovalRequiredStill": true,
+    "autoSendEnabled": false,
+    "bulkSendEnabled": false,
+    "noDatabaseMigrationRequired": true,
+    "rawTokenReturnedToBrowser": false,
+    "rawMimeReturnedToBrowser": false,
+    "providerPayloadReturnedToBrowser": false,
+    "nextStep": "Phase 14.1 — Ads Connector Audit"
+  },
+  "report": {
+    "version": "0.7.0",
+    "phase": "phase_13_10_support_send_qa",
+    "healthMode": "v2-phase-13-10-support-send-qa",
+    "deliverable": "support_send_qa_report",
+    "provider": "gmail",
+    "actionType": "support_reply_send",
+    "overallStatus": "pass",
+    "generatedAt": "2026-07-08T19:46:01.001Z",
+    "checks": [
+      {
+        "id": "safe_approved_send",
+        "label": "One safe approved send",
+        "status": "pass",
+        "summary": "A single manually approved support reply executed through the mocked Gmail client and produced safe metadata.",
+        "evidence": {
+          "status": "executed",
+          "statusPath": [
+            "approved",
+            "executing",
+            "executed"
+          ],
+          "apiCalled": true,
+          "gmailCallCount": 1,
+          "externalMessageId": "gmail_msg_qa_123",
+          "externalThreadId": "gmail_thread_qa_123",
+          "manualApprovalConfirmed": true,
+          "eventsRecorded": 2,
+          "resultLogStored": true,
+          "storedResultStatus": "success",
+          "externalWritesSucceeded": true,
+          "rawTokenReturned": false,
+          "rawMimeReturned": false
+        }
+      },
+      {
+        "id": "no_duplicate_send",
+        "label": "No duplicate send",
+        "status": "pass",
+        "summary": "A second execution attempt for the same approved action was blocked before the mocked Gmail client could be called again.",
+        "evidence": {
+          "firstStatus": "executed",
+          "secondStatus": "blocked",
+          "secondMessage": "Manual founder/admin approval is required before Gmail support reply sending.",
+          "gmailCallCount": 1,
+          "finalActionStatus": "executed",
+          "secondApiCalled": false,
+          "resultRowsRecorded": 2,
+          "eventsRecorded": 2
+        }
+      },
+      {
+        "id": "correct_thread",
+        "label": "Correct thread required",
+        "status": "pass",
+        "summary": "A mismatched imported Gmail thread was blocked before the mocked Gmail client could be called.",
+        "evidence": {
+          "status": "blocked",
+          "importedTicketFound": true,
+          "threadAssociationVerified": false,
+          "threadMatchesImportedTicket": false,
+          "apiCalled": false,
+          "gmailCallCount": 0,
+          "message": "Support reply sending is blocked because the approved action is not safely associated with the imported Gmail thread."
+        }
+      },
+      {
+        "id": "logs_stored",
+        "label": "Logs stored",
+        "status": "pass",
+        "summary": "The support send result log contains the external message ID, thread ID, sent timestamp, API response summary, and safe metadata.",
+        "evidence": {
+          "status": "executed",
+          "resultLogStored": true,
+          "supportSendResultLogStored": true,
+          "hasExternalMessageId": true,
+          "hasThreadId": true,
+          "hasSentTimestamp": true,
+          "hasApiResponseSummary": true,
+          "metadataHealthMode": "v2-phase-13-8-send-result-logs",
+          "externalMessageId": "gmail_msg_qa_123",
+          "externalThreadId": "gmail_thread_qa_123",
+          "sentAtType": "string",
+          "apiResponseSummaryType": "string",
+          "providerPayloadReturned": false
+        }
+      },
+      {
+        "id": "sensitive_ticket_blocked",
+        "label": "Sensitive ticket blocked without approval",
+        "status": "pass",
+        "summary": "A refund/low-confidence support reply without manual approval was blocked before any Gmail call.",
+        "evidence": {
+          "status": "blocked",
+          "manualApprovalConfirmed": false,
+          "apiCalled": false,
+          "gmailCallCount": 0,
+          "message": "Manual founder/admin approval is required before Gmail support reply sending.",
+          "note": "Sensitive tickets may only proceed after founder/admin approval evidence is present; this QA verifies the blocked path."
+        }
+      }
+    ],
+    "summary": {
+      "passed": 5,
+      "failed": 0,
+      "total": 5,
+      "oneSafeApprovedSendVerified": true,
+      "noDuplicateSendVerified": true,
+      "correctThreadVerified": true,
+      "logsStoredVerified": true,
+      "sensitiveTicketBlockedVerified": true
+    },
+    "safety": {
+      "qaUsesMockGmailClient": true,
+      "liveGmailSendPerformedByQa": false,
+      "autoSendEnabled": false,
+      "bulkSendEnabled": false,
+      "manualApprovalStillRequired": true,
+      "rawTokenReturned": false,
+      "rawMimeReturned": false,
+      "rawProviderPayloadReturned": false,
+      "noDatabaseMigrationRequired": true,
+      "note": "Phase 13.10 is a QA/report layer. It verifies the manual-approved support send path with a mocked Gmail client by default. It does not perform a live Gmail send, does not enable auto-send, does not enable bulk sending, and does not expose raw OAuth tokens, raw MIME/base64, or raw provider payloads."
+    }
+  },
+  "safety": {
+    "qaUsesMockGmailClient": true,
+    "liveGmailSendPerformedByQa": false,
+    "autoSendEnabled": false,
+    "bulkSendEnabled": false,
+    "manualApprovalStillRequired": true,
+    "rawTokenReturned": false,
+    "rawMimeReturned": false,
+    "rawProviderPayloadReturned": false,
+    "noDatabaseMigrationRequired": true,
+    "note": "Phase 13.10 is a QA/report layer. It verifies the manual-approved support send path with a mocked Gmail client by default. It does not perform a live Gmail send, does not enable auto-send, does not enable bulk sending, and does not expose raw OAuth tokens, raw MIME/base64, or raw provider payloads."
+  }
+}

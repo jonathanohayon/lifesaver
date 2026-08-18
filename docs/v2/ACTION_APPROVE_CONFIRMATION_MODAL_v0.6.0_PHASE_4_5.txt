@@ -1,0 +1,148 @@
+LIFE.SAVER V2 — Phase 4.5 Approve Confirmation Modal
+Version: v0.6.0
+Deliverable: Approve confirmation modal
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 4.5 prevents accidental approvals from the Actions approval queue UI.
+
+Before the founder records approval, the UI now opens a confirmation modal that
+explains:
+
+- what will happen;
+- whether the action executes immediately;
+- what platform/context will be affected;
+- the risk level;
+- a final explicit approve button.
+
+This phase uses the existing safe backend endpoint:
+
+POST /api/v1/actions/:id/approve
+
+The endpoint records internal approval status and logs an approval event only. It does
+not queue, execute, publish, send, spend, pause, refund, edit products, rollback, or
+write to any external platform.
+
+================================================================================
+FILES UPDATED
+================================================================================
+
+apps/web/src/actions.html
+- Added approve confirmation modal markup.
+- Updated Phase 4.5 page copy and safety boundary.
+- Enabled approve controls to open the confirmation modal.
+- Kept reject guarded until Phase 4.6.
+
+apps/web/src/assets/js/actions.js
+- Added approval confirmation state.
+- Added openApprovalConfirmationById().
+- Added openApprovalConfirmation().
+- Added closeApprovalConfirmation().
+- Added submitApproveConfirmation().
+- Final approve calls POST /api/v1/actions/:id/approve.
+- After approval, action cards reload and detail can refresh.
+
+apps/web/src/assets/js/action-card.js
+- Approve button now opens the confirmation modal.
+- Card safety note explains internal approval only.
+- Reject remains guarded.
+
+apps/web/src/assets/css/actions.css
+- Added modal overlay, dialog, warning, summary grid, textarea, footer, and mobile styles.
+
+packages/shared/src/action-approve-confirmation-modal.ts
+- Added shared UI safety reference for Phase 4.5.
+
+================================================================================
+MODAL CONTENT REQUIREMENTS
+================================================================================
+
+The modal shows:
+
+1. What will happen
+   LIFE.SAVER will mark the action as Approved internally and log an approval event.
+
+2. Whether it executes immediately
+   No. Execution remains disabled until future executor phases.
+
+3. Platform affected
+   Pulled from the safe action detail preview, for example Instagram, support provider,
+   ad platform, campaign target, or internal task context.
+
+4. Risk level
+   Low, medium, high, or critical.
+
+5. Final approve button
+   Calls the safe backend approve endpoint only after explicit confirmation.
+
+================================================================================
+APPROVABLE STATUSES
+================================================================================
+
+The modal allows final approval only for:
+
+- proposed
+- approval_required
+- auto_approved
+
+For already approved, rejected, cancelled, queued, executing, executed, failed,
+rollback_requested, or rolled_back actions, the modal shows a safe message and disables
+final approval.
+
+================================================================================
+SAFETY RULES
+================================================================================
+
+1. Opening the modal does not approve anything.
+2. Final approve requires an explicit click.
+3. Final approve records internal approval only.
+4. Final approve does not execute immediately.
+5. Final approve does not queue an executor.
+6. Final approve does not publish content.
+7. Final approve does not send support replies.
+8. Final approve does not change ad spend.
+9. Final approve does not pause campaigns.
+10. Final approve does not refund orders.
+11. Final approve does not edit products.
+12. Final approve does not write to Triple Whale or any external platform.
+13. Reject remains guarded until Phase 4.6.
+
+================================================================================
+TESTING STEPS
+================================================================================
+
+1. Run backend/database preparation:
+   npm.cmd run db:status
+   npm.cmd run db:migrate
+   npm.cmd run db:seed:actions:local
+
+2. Start local services:
+   npm.cmd run dev:api
+   npm.cmd run dev:web
+
+3. Open:
+   http://localhost:3000/actions.html
+
+4. Confirm action cards load.
+5. Click Approve on a proposed fixture.
+6. Confirm the modal shows:
+   - what will happen;
+   - execution immediately = No;
+   - affected platform;
+   - risk level;
+   - final approve button.
+7. Click Cancel and confirm no status changes.
+8. Open Approve again and click Final Approve.
+9. Confirm the card reloads with status approved.
+10. Confirm no executor, external write, publish, send, spend, pause, refund, or rollback happens.
+
+================================================================================
+NEXT PHASE
+================================================================================
+
+Phase 4.6 — Reject With Reason
+
+That phase will add a rejection modal with founder-selected rejection reasons and optional
+notes.

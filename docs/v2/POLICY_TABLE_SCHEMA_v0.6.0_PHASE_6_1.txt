@@ -1,0 +1,194 @@
+LIFE.SAVER V2 — Phase 6.1 Policy Table Schema
+Version: v0.6.0
+Deliverable: policies table migration
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 6 begins the Policy / Rules Foundation.
+
+The policy engine will eventually decide whether an action should:
+
+- ask for founder approval
+- be auto-approved inside explicit founder rules
+- be blocked
+
+Phase 6.1 is only the storage foundation. It creates the policies table. It does not evaluate policies, enable auto-approval, queue actions, run executors, or write to external platforms.
+
+================================================================================
+MIGRATION
+================================================================================
+
+Added migration:
+
+database/migrations/015_create_policies_table.sql
+
+This migration is non-destructive and additive.
+
+It creates:
+
+- policies
+
+It does not drop, rename, truncate, or delete any V1/V2 table or column.
+
+================================================================================
+TABLE: policies
+================================================================================
+
+Fields:
+
+- id
+- workspace_id
+- name
+- action_type
+- conditions_json
+- decision
+- caps_json
+- priority
+- enabled
+- created_by
+- updated_by
+- created_at
+- updated_at
+
+The user-requested fields are included. The created_at and updated_at fields were added because production policy records need audit-friendly timestamps.
+
+================================================================================
+DECISIONS
+================================================================================
+
+Allowed decisions:
+
+- ask
+- auto_approve
+- block
+
+Important:
+
+A stored policy decision does not execute anything.
+A stored auto_approve policy does not execute anything.
+Future policy evaluation must still check:
+
+- emergency safe mode
+- master pause
+- category pause
+- role permissions
+- hard caps
+- audit logging
+- idempotency
+- executor pause guard
+- final executor validation
+
+================================================================================
+ACTION TYPES
+================================================================================
+
+Allowed action types follow the approved V2 action taxonomy:
+
+- content_publish
+- support_reply_send
+- ad_budget_adjust
+- ad_pause
+- research_task
+- dev_task
+- notification_send
+- rollback_action
+
+================================================================================
+JSON FIELDS
+================================================================================
+
+conditions_json:
+Stores rule conditions only.
+Example:
+
+{
+  "platform": "instagram",
+  "risk_level_max": "low",
+  "approved_style": true
+}
+
+caps_json:
+Stores cap configuration only.
+Example:
+
+{
+  "max_posts_per_day": 2,
+  "max_actions_per_hour": 3
+}
+
+Both fields must be JSON objects.
+
+They must never contain:
+
+- API keys
+- OAuth tokens
+- passwords
+- raw .env values
+- database URLs
+- Claude API key
+- Triple Whale API key
+- APP_ENCRYPTION_KEY
+- WORKER_SHARED_SECRET
+- payment/card data
+
+================================================================================
+PRIORITY
+================================================================================
+
+priority is an integer from 0 to 10000.
+
+Lower number means higher priority for future evaluation.
+
+Example:
+
+- 10 = important block rule
+- 100 = normal ask rule
+- 500 = lower-priority auto-approval rule
+
+Conflict resolution is not implemented in Phase 6.1. It comes later.
+
+================================================================================
+ENABLED FLAG
+================================================================================
+
+enabled=true means the future policy engine may consider the rule.
+
+enabled=false means the future policy engine should ignore the rule.
+
+Phase 6.1 only stores this value; it does not evaluate it.
+
+================================================================================
+SAFETY BOUNDARY
+================================================================================
+
+This phase does not add:
+
+- policy evaluation service
+- default ask behavior implementation
+- auto-run rules
+- policy UI
+- executor registry activation
+- sandbox executor
+- real executor
+- content publishing
+- support reply sending
+- ad budget changes
+- campaign pause execution
+- rollback execution
+- external write connectors
+
+Current safety remains:
+
+READ + ADVISE + DRAFT + INTERNAL APPROVAL/REJECTION/CANCELLATION + PAUSE CONTROL ONLY
+
+================================================================================
+NEXT PHASE
+================================================================================
+
+Next: Phase 6.2 — Default Ask Policy
+
+Goal:
+If no rule matches, always ask.
+

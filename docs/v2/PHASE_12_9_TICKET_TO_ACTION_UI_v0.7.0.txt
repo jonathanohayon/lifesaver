@@ -1,0 +1,46 @@
+PHASE 12.9 — TICKET-TO-ACTION UI
+=================================
+
+Purpose
+-------
+Give the founder a safe support-specific review UI for proposed support_reply_send actions.
+
+Deliverable
+-----------
+Support action UI.
+
+Capabilities
+------------
+- Review normalized ticket metadata.
+- Review browser-safe ticket snippet.
+- Review suggested reply preview.
+- See category, confidence, sensitive flag, escalation flag, and risk level.
+- See warnings and founder review checklist.
+- Approve/reject through existing internal action endpoints.
+
+Endpoints
+---------
+GET  /api/v1/support/action-ui/status
+GET  /api/v1/support/action-ui/example
+POST /api/v1/support/action-ui/preview
+
+Existing endpoints used by UI buttons
+-------------------------------------
+POST /api/v1/actions/:id/approve
+POST /api/v1/actions/:id/reject
+
+Safety model
+------------
+The support action UI does not send the support reply. It only approves or rejects the proposed action internally.
+
+Not added
+---------
+- Gmail OAuth.
+- Gmail API client.
+- Gmail send/modify scope.
+- Email sending.
+- Support send executor.
+- Support auto-reply.
+- Raw provider payload exposure.
+- Raw ticket payload exposure.
+- Token value exposure.

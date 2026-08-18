@@ -1,0 +1,83 @@
+{
+  "endpoint": "GET /api/v1/actions/:id/content-live-test-report",
+  "method": "GET",
+  "authRequired": true,
+  "description": "Returns the token-safe Phase 9.10 controlled live test report for one content_publish action.",
+  "publishes": false,
+  "deletes": false,
+  "callsLinkedIn": false,
+  "exampleResponse": {
+    "ok": true,
+    "data": {
+      "version": "0.7.0",
+      "phase": "v0.7.0_phase_9_10",
+      "healthMode": "v2-phase-9-10-controlled-live-test",
+      "reportName": "linkedinControlledLiveTestReport",
+      "workspaceId": "workspace-id",
+      "actionId": "action-id",
+      "platform": "linkedin",
+      "status": "pass",
+      "checks": {
+        "databaseConfigured": true,
+        "actionFound": true,
+        "actionTypeValid": true,
+        "actionManuallyApproved": true,
+        "actionExecutedOrRolledBackAfterPublish": true,
+        "exactlyOneSuccessfulPublishResult": true,
+        "noFailedPublishResult": true,
+        "platformPostIdStored": true,
+        "publishedTimeStored": true,
+        "platformResponseSummaryStored": true,
+        "tokenNotReturned": true,
+        "rawPlatformResponseNotReturned": true,
+        "rollbackPayloadNotReturned": true
+      },
+      "liveTest": {
+        "explicitFounderApprovalRequired": true,
+        "requiredApprovalPhrase": "I APPROVE ONE LINKEDIN TEST POST",
+        "selectedPlatform": "linkedin",
+        "executorName": "linkedinManualApprovedContentExecutor",
+        "requiredScope": "w_member_social",
+        "maxSuccessfulPublishResultsAllowedForTest": 1,
+        "successfulPublishResultCount": 1,
+        "failedPublishResultCount": 0,
+        "platformPostId": "urn:li:share:123",
+        "permalink": "https://www.linkedin.com/feed/update/urn:li:share:123",
+        "publishedTime": "2026-07-06T10:02:00.000Z",
+        "manualApprovalActorUserId": "user-id",
+        "manualApprovalEventId": "event-id"
+      },
+      "evidence": {
+        "actionStatus": "executed",
+        "riskLevel": "low",
+        "policyDecision": "ask",
+        "resultLogIds": ["result-id"],
+        "safePlatformResponseSummary": {
+          "platform": "linkedin",
+          "httpStatus": 201,
+          "success": true,
+          "postIdSource": "x-restli-id",
+          "rawResponseBodyStored": false,
+          "rawTokenStored": false
+        }
+      },
+      "safety": {
+        "thisEndpointPublishes": false,
+        "thisEndpointDeletes": false,
+        "autoRunEnabled": false,
+        "externalWritesAttemptedByThisEndpoint": false,
+        "browserReceivesRawToken": false,
+        "browserReceivesRawPlatformResponse": false,
+        "browserReceivesRollbackPayload": false
+      },
+      "message": "Controlled live test passed: one manually approved LinkedIn content_publish action has one successful safe result log."
+    }
+  },
+  "neverReturns": [
+    "raw OAuth access token",
+    "raw OAuth refresh token",
+    "Authorization header",
+    "raw LinkedIn response body",
+    "rollback payload"
+  ]
+}

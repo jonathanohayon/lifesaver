@@ -1,0 +1,39 @@
+# LIFE.SAVER v0.6.0 — Phase 7.1 Test Results
+
+Commands run in the generated package:
+
+```bash
+npm run build
+npm run rules:layout:test
+npm run policy:tests:test
+npm run policy:dry-run:test
+npm run policy:decision-records:test
+npm run policy:conflict-resolution:test
+npm run policy:cap-validation:test
+npm run policy:evaluator:test
+npm run policy:scope-matching:test
+npm run policy:condition-operators:test
+npm run policy:default-ask:test
+npm run policy:schema:test
+npm run policy:pause:test
+npm run executor:pause:test
+npm run actions:test:backend
+npm run client:test-checklist
+npm run security:check
+npm run env:check
+```
+
+Expected result:
+- Build passes.
+- Rules layout test passes.
+- Existing Phase 6 policy tests continue to pass.
+- Local security/env checks may show expected warnings when real `.env` and production secrets are not present.
+
+Safety result:
+- No real executors.
+- No sandbox executors.
+- No external write connectors.
+- No auto-run execution.
+- No content publishing.
+- No support sending.
+- No ad changes.

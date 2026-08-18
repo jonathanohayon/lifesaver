@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "data": {
+    "type": "weekly",
+    "content": "Weekly demo summary: revenue, orders, AOV, ad spend, ROAS, conversion rate, and attribution are now mapped through the backend.",
+    "source": "mock",
+    "sourceSnapshotId": null,
+    "generatedAt": "2026-06-07T00:00:00.000Z",
+    "metrics": {
+      "revenue": 9068,
+      "orders": 142,
+      "aov": 63.86,
+      "adSpend": 3210,
+      "roas": 3.4,
+      "conversionRate": 2.8
+    }
+  }
+}

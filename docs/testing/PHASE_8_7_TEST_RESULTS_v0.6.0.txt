@@ -1,0 +1,26 @@
+# LIFE.SAVER v0.6.0 Phase 8.7 Test Results
+
+Package: lifesaver-v0.6.0-phase-8-7-execution-result-logs.zip
+
+Expected key test:
+- executor:result-logs:test — 18 passed, 0 failed
+
+Recommended regression tests:
+- npm.cmd run build
+- npm.cmd run executor:result-logs:test
+- npm.cmd run executor:sandbox-lifecycle:test
+- npm.cmd run executor:sandbox-ads:test
+- npm.cmd run executor:sandbox-support:test
+- npm.cmd run executor:sandbox-content:test
+- npm.cmd run executor:registry:test
+- npm.cmd run executor:interface:test
+- npm.cmd run executor:pause:test
+- npm.cmd run policy:tests:test
+- npm.cmd run rules:permission:test
+- npm.cmd run actions:test:backend
+- npm.cmd run client:test-checklist
+- npm.cmd run security:check
+- npm.cmd run env:check
+
+Safety expectation:
+All execution result logs are sandbox-only; no external writes are enabled.

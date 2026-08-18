@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LIFE.SAVER — Policy Rules</title>
+<link rel="stylesheet" href="./assets/css/admin.css" />
+<link rel="stylesheet" href="./assets/css/rules.css" />
+<link rel="stylesheet" href="./assets/css/mobile-shell.css" />
+<link rel="stylesheet" href="./assets/css/mobile-release-qa.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to policy rules</a>
+  <main class="admin-shell rules-shell" id="main-content" tabindex="-1">
+    <section class="topbar">
+      <div class="brand">
+        <h1>LIFE.SAVER RULES</h1>
+        <span>Policy rules UI · Active Platform Conversion · v0.8.3</span>
+      </div>
+      <div class="footer-actions">
+        <a class="btn" href="./index.html">← Dashboard</a>
+        <a class="btn" href="./settings.html">Settings</a>
+        <a class="btn" href="./memory.html">Memory</a>
+        <a class="btn" href="./actions.html">Actions</a>
+        <a class="btn" href="./notifications.html">Notifications</a>
+        <a class="btn" href="./functional-audit.html">Functional Audit</a>
+        <a class="btn" href="./admin.html">Super Admin</a>
+        <a class="btn" href="./launch-readiness.html">Launch Prep</a>
+        <a class="btn" href="./login.html">Login</a>
+        <button class="btn" id="logoutBtn" type="button">Logout</button>
+        <span class="badge" id="authState">AUTH CHECKING</span>
+        <span class="badge" id="rulesState">WIZARD SAFE</span>
+      </div>
+    </section>
+
+    <section class="grid four compact rules-status-grid">
+      <div class="panel"><div class="kicker">Logged In As</div><div class="value" id="loggedInUser">—</div><small id="loggedInWorkspace">—</small></div>
+      <div class="panel"><div class="kicker">Phase</div><div class="value green">7.10</div><small>Rules permission QA.</small></div>
+      <div class="panel"><div class="kicker">Policy Engine</div><div class="value green">READY</div><small>Phase 6.10 tests complete.</small></div>
+      <div class="panel"><div class="kicker">Execution</div><div class="value amber">DISABLED</div><small>No executors or external writes.</small></div>
+    </section>
+
+    <section class="panel rules-hero" id="rulesOverviewSection">
+      <div class="rules-hero-copy">
+        <div class="kicker">Founder Autonomy Control Center</div>
+        <h2>Policy Rules UI</h2>
+        <p class="note">Phase 7.10 keeps the safe seven-step rule wizard plus Content, Support, Ads, Global Caps, Rule Simulation preview, Pause Integration Display, and Policy Audit UI, then adds dedicated Rules Permission QA. The founder can clearly see when master pause or category pauses override automation. This phase does not create database policies, edit backend policy rows, auto-run anything, publish content, send support replies, change budgets, pause campaigns, or write to external platforms.</p>
+      </div>
+      <div class="rules-hero-badges" aria-label="Rules page safety badges">
+        <span>Default ask</span>
+        <span>Pause first</span>
+        <span>Hard caps</span>
+        <span>Most restrictive wins</span>
+        <span>No execution</span>
+        <span>Local preview save</span>
+        <span>Content form</span>
+        <span>Support form</span>
+        <span>Ads form</span>
+        <span>Caps form</span>
+        <span>Simulation preview</span>
+        <span>Pause warning</span>
+        <span>Audit UI</span>
+        <span>Permission QA</span>
+      </div>
+    </section>
+
+    <section class="panel rules-section pause-integration-section" id="pauseIntegrationSection" aria-live="polite">
+      <div class="rules-section-head compact-head">
+        <div>
+          <div class="kicker">Phase 7.9</div>
+          <h2>Pause Integration Display</h2>
+          <p>Shows when global or category pause is overriding rule previews and future automation.</p>
+        </div>
+        <span class="rules-status-pill" id="pauseOverrideStateBadge">CHECKING</span>
+      </div>
+      <div class="pause-override-banner unknown" id="pauseOverrideWarning" role="status" aria-live="polite">
+        <div>
+          <span class="simulation-label">Pause override status</span>
+          <strong id="pauseOverrideHeadline">Checking pause status…</strong>
+          <p id="pauseOverrideMessage">If pause status cannot be loaded, LIFE.SAVER should behave conservatively and keep future automation in manual review.</p>
+        </div>
+        <ul id="pauseOverrideScopeList" class="pause-scope-list">
+          <li>Global pause: checking</li>
+          <li>Content pause: checking</li>
+          <li>Support pause: checking</li>
+          <li>Ads pause: checking</li>
+        </ul>
+      </div>
+      <p class="note warn" id="pauseOverrideRuleImpact"><strong>Pause override rule:</strong> global pause, category pause, and emergency safe mode must beat auto-approval and future executors. Example: “Auto-run is currently paused globally.”</p>
+      <p class="note" id="pauseOverrideRefreshCopy">Use Refresh Pause Status to re-check the existing autonomy status endpoint. This display is read-only and does not pause or resume anything itself.</p>
+    </section>
+
+    <section class="panel rules-section" id="masterPauseSection">
+      <div class="rules-section-head">
+        <div>
+          <div class="kicker">Section 1 · Existing Pause Controls</div>
+          <h2>Master Pause</h2>
+          <p>Shows the current autonomy pause state and links back to Settings for the existing pause controls.</p>
+        </div>
+        <span class="rules-status-pill" id="masterPauseBadge">CHECKING</span>
+      </div>
+      <div class="grid four compact rules-mini-grid">
+        <div class="mini"><span>Global Pause</span><strong id="globalPauseState">—</strong></div>
+        <div class="mini"><span>Content</span><strong id="contentPauseState">—</strong></div>
+        <div class="mini"><span>Support</span><strong id="supportPauseState">—</strong></div>
+        <div class="mini"><span>Ads</span><strong id="adsPauseState">—</strong></div>
+      </div>
+      <p class="note warn" id="masterPauseNote">Master pause remains the highest-priority safety control. If active, future auto-approval and future executor execution must stay blocked.</p>
+      <div class="rules-actions-row">
+        <a class="btn primary" href="./settings.html#autonomyPausePanel">Open Pause Controls</a>
+        <button class="btn" id="refreshAutonomyBtn" type="button">Refresh Pause Status</button>
+      </div>
+    </section>
+
+    <section class="panel rules-section" id="ruleWizardSection" aria-label="Create rule wizard">
+      <div class="rules-section-head">
+        <div>
+          <div class="kicker">Phase 7.2 retained</div>
+          <h2>Create Rule Wizard</h2>
+          <p>Build a policy-rule preview through seven safe steps. Save is local-preview only until backend policy editing and permissions are added in a later approved phase.</p>
+        </div>
+        <span class="rules-status-pill safe" id="wizardSafetyBadge">NO DB WRITE</span>
+      </div>
+
+      <ol class="wizard-stepper" id="ruleWizardStepper" aria-label="Rule wizard steps">
+        <li class="active" data-step="1">1. Action type</li>
+        <li data-step="2">2. Platform/channel</li>
+        <li data-step="3">3. Condition</li>
+        <li data-step="4">4. Decision</li>
+        <li data-step="5">5. Caps</li>
+        <li data-step="6">6. Review</li>
+        <li data-step="7">7. Save</li>
+      </ol>
+
+      <form class="rule-wizard" id="ruleWizardForm" novalidate>
+        <fieldset class="wizard-panel active" data-step-panel="1" id="wizardStepActionType">
+          <legend>Step 1 — Choose action type</legend>
+          <p class="note">Choose which future action family the policy would apply to. This does not enable the action.</p>
+          <label class="rules-field">Rule name
+            <input id="ruleNameInput" type="text" maxlength="80" value="Safe content review rule" />
+          </label>
+          <div class="rules-radio-grid" role="radiogroup" aria-label="Action type">
+            <label><input type="radio" name="actionType" value="content_publish" checked /> Content publish</label>
+            <label><input type="radio" name="actionType" value="support_reply_send" /> Support reply send</label>
+            <label><input type="radio" name="actionType" value="ad_budget_adjust" /> Ad budget adjust</label>
+            <label><input type="radio" name="actionType" value="ad_pause" /> Ad pause</label>
+            <label><input type="radio" name="actionType" value="research_task" /> Research task</label>
+            <label><input type="radio" name="actionType" value="dev_task" /> Dev task</label>
+          </div>
+        </fieldset>
+
+        <fieldset class="wizard-panel" data-step-panel="2" id="wizardStepPlatformChannel">
+          <legend>Step 2 — Choose platform/channel</legend>
+          <p class="note">Scope the policy to a safe platform/channel. Empty values are avoided so the future rule shape is predictable.</p>
+          <div class="grid two compact">
+            <label class="rules-field">Platform
+              <select id="platformSelect">
+                <option value="instagram">Instagram</option>
+                <option value="tiktok">TikTok</option>
+                <option value="youtube">YouTube</option>
+                <option value="gmail">Gmail</option>
+                <option value="helpdesk">Helpdesk</option>
+                <option value="meta_ads">Meta Ads</option>
+                <option value="google_ads">Google Ads</option>
+                <option value="internal">Internal</option>
+              </select>
+            </label>
+            <label class="rules-field">Channel
+              <select id="channelSelect">
+                <option value="organic_social">Organic social</option>
+                <option value="support_inbox">Support inbox</option>
+                <option value="paid_media">Paid media</option>
+                <option value="research">Research</option>
+                <option value="development">Development</option>
+                <option value="internal_ops">Internal ops</option>
+              </select>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="wizard-panel" data-step-panel="3" id="wizardStepCondition">
+          <legend>Step 3 — Add condition</legend>
+          <p class="note">Choose one Phase 6.4 condition operator. More complex condition builders come later.</p>
+          <div class="grid three compact wizard-condition-grid">
+            <label class="rules-field">Field
+              <select id="conditionFieldSelect">
+                <option value="risk_level">risk_level</option>
+                <option value="platform">platform</option>
+                <option value="channel">channel</option>
+                <option value="amount">amount</option>
+                <option value="category">category</option>
+                <option value="confidence_score">confidence_score</option>
+                <option value="payload.caption">payload.caption</option>
+              </select>
+            </label>
+            <label class="rules-field">Operator
+              <select id="conditionOperatorSelect">
+                <option value="equals">equals</option>
+                <option value="contains">contains</option>
+                <option value="less_than">less_than</option>
+                <option value="greater_than">greater_than</option>
+                <option value="channel_is">channel_is</option>
+                <option value="risk_below">risk_below</option>
+                <option value="confidence_above">confidence_above</option>
+                <option value="amount_below">amount_below</option>
+              </select>
+            </label>
+            <label class="rules-field">Value
+              <input id="conditionValueInput" type="text" value="medium" />
+            </label>
+          </div>
+          <p class="note">Tip: for <strong>risk_below</strong>, use low, medium, high, or critical. For amount/confidence operators, use a number.</p>
+        </fieldset>
+
+        <fieldset class="wizard-panel" data-step-panel="4" id="wizardStepDecision">
+          <legend>Step 4 — Choose decision</legend>
+          <p class="note warn">Auto-approve in this wizard is only a future policy decision preview. It does not trigger execution in this package.</p>
+          <div class="rules-radio-grid" role="radiogroup" aria-label="Policy decision">
+            <label><input type="radio" name="decision" value="ask" checked /> Ask / manual review</label>
+            <label><input type="radio" name="decision" value="auto_approve" /> Auto-approve when safe</label>
+            <label><input type="radio" name="decision" value="block" /> Block</label>
+          </div>
+        </fieldset>
+
+        <fieldset class="wizard-panel" data-step-panel="5" id="wizardStepCaps">
+          <legend>Step 5 — Set caps</legend>
+          <p class="note">Caps are included in the preview JSON using the Phase 6.6 cap names. Empty values are omitted.</p>
+          <div class="rules-cap-form-grid">
+            <label class="rules-field">Max posts per day <input id="capPostsPerDay" type="number" min="0" step="1" placeholder="3" /></label>
+            <label class="rules-field">Max support auto-replies/day <input id="capSupportReplies" type="number" min="0" step="1" placeholder="10" /></label>
+            <label class="rules-field">Max ad spend change/day <input id="capAdSpendChange" type="number" min="0" step="0.01" placeholder="50" /></label>
+            <label class="rules-field">Max model cost/day <input id="capModelCost" type="number" min="0" step="0.01" placeholder="25" /></label>
+            <label class="rules-field">Max actions/hour <input id="capActionsHour" type="number" min="0" step="1" placeholder="20" /></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="wizard-panel" data-step-panel="6" id="wizardStepReview">
+          <legend>Step 6 — Review</legend>
+          <p class="note">Review the policy shape before saving the local preview draft. This JSON is not sent to the backend in Phase 7.2.</p>
+          <pre class="wizard-preview" id="rulePreviewJson" aria-label="Rule preview JSON">{}</pre>
+          <div class="rules-actions-row">
+            <button class="btn" id="copyRulePreviewBtn" type="button">Copy Preview JSON</button>
+            <span class="rules-inline-status" id="copyRulePreviewStatus">—</span>
+          </div>
+        </fieldset>
+
+        <fieldset class="wizard-panel" data-step-panel="7" id="wizardStepSave">
+          <legend>Step 7 — Save</legend>
+          <p class="note green-note"><strong>Safe save behaviour:</strong> Phase 7.2/7.3 saves browser-local previews only. It does not insert into the policies table, does not call policy editing endpoints, and does not enable auto-run.</p>
+          <div class="rules-actions-row">
+            <button class="btn primary" id="saveRulePreviewBtn" type="button">Save Local Preview</button>
+            <button class="btn" id="resetRuleWizardBtn" type="button">Reset Wizard</button>
+            <span class="rules-inline-status" id="saveRulePreviewStatus">Not saved yet.</span>
+          </div>
+          <div class="rules-history-empty" id="localPreviewSavedBox" hidden>
+            <strong>Local preview saved safely.</strong>
+            <p>This confirms the wizard flow works. A later phase may connect this to authenticated backend policy creation after permission QA.</p>
+          </div>
+        </fieldset>
+
+        <div class="wizard-nav" aria-label="Wizard navigation">
+          <button class="btn" id="wizardPrevBtn" type="button">← Previous</button>
+          <span class="rules-inline-status" id="wizardStepStatus">Step 1 of 7</span>
+          <button class="btn primary" id="wizardNextBtn" type="button">Next →</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="rules-rule-grid" aria-label="Policy rule categories">
+      <article class="panel rules-section rules-card rules-content-card" id="contentRulesSection">
+        <div class="rules-section-head compact-head">
+          <div><div class="kicker">Section 2 · Phase 7.3 retained</div><h2>Content Rules</h2></div>
+          <span class="rules-status-pill safe">LOCAL PREVIEW</span>
+        </div>
+        <p>Content-specific policy controls for platform, approved style, max posts/day, allowed content type, auto-publish preference, and approval risk threshold.</p>
+        <form class="content-rules-form" id="contentRulesForm" novalidate>
+          <div class="grid two compact content-rules-grid">
+            <label class="rules-field">Platform
+              <select id="contentRulePlatform">
+                <option value="instagram">Instagram</option>
+                <option value="tiktok">TikTok</option>
+                <option value="youtube">YouTube</option>
+                <option value="facebook">Facebook</option>
+                <option value="linkedin">LinkedIn</option>
+                <option value="internal_preview">Internal preview only</option>
+              </select>
+            </label>
+            <label class="rules-field">Allowed content type
+              <select id="contentAllowedContentType">
+                <option value="image_post">Image post</option>
+                <option value="short_video">Short video</option>
+                <option value="carousel">Carousel</option>
+                <option value="story">Story</option>
+                <option value="text_caption">Text caption</option>
+                <option value="approved_template_only">Approved template only</option>
+              </select>
+            </label>
+          </div>
+
+          <label class="rules-field">Approved style
+            <textarea id="contentApprovedStyle" rows="4" maxlength="900">Calm, premium, founder-approved brand voice. No exaggerated claims, no unsupported discounts, no sensitive claims, and no off-brand humour.</textarea>
+          </label>
+
+          <div class="grid three compact content-rules-grid">
+            <label class="rules-field">Max posts/day
+              <input id="contentMaxPostsDay" type="number" min="0" step="1" value="3" />
+            </label>
+            <label class="rules-field">Auto-publish allowed
+              <select id="contentAutoPublishAllowed">
+                <option value="no" selected>No — ask first</option>
+                <option value="yes">Yes — future rule preview only</option>
+              </select>
+            </label>
+            <label class="rules-field">Approval required above risk level
+              <select id="contentApprovalRiskLevel">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+                <option value="critical">Critical</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="rules-actions-row">
+            <button class="btn" id="copyContentRulePreviewBtn" type="button">Copy Content Rule JSON</button>
+            <button class="btn primary" id="saveContentRulePreviewBtn" type="button">Save Local Content Preview</button>
+            <button class="btn" id="resetContentRulePreviewBtn" type="button">Reset Content Form</button>
+            <span class="rules-inline-status" id="contentRuleSaveStatus">Not saved yet.</span>
+          </div>
+
+          <pre class="wizard-preview content-preview" id="contentRulePreviewJson" aria-label="Content rule preview JSON">{}</pre>
+          <p class="note green-note"><strong>Safe Phase 7.3 behaviour:</strong> this form creates a local preview only. It does not create a policy row, does not enable auto-publish, and does not publish content.</p>
+        </form>
+      </article>
+
+      <article class="panel rules-section rules-card rules-support-card" id="supportRulesSection">
+        <div class="rules-section-head compact-head">
+          <div><div class="kicker">Section 3 · Phase 7.4 retained</div><h2>Support Rules</h2></div>
+          <span class="rules-status-pill safe">LOCAL PREVIEW</span>
+        </div>
+        <p>Support-specific policy controls for ticket category, confidence threshold, auto-reply preference, escalation categories, reply cap, and sensitive-ticket exclusions.</p>
+        <form class="support-rules-form" id="supportRulesForm" novalidate>
+          <div class="grid two compact support-rules-grid">
+            <label class="rules-field">Ticket category
+              <select id="supportTicketCategory">
+                <option value="faq">FAQ</option>
+                <option value="shipping">Shipping</option>
+                <option value="order_status">Order status</option>
+                <option value="product_question">Product question</option>
+                <option value="complaint">Complaint</option>
+                <option value="refund">Refund</option>
+                <option value="cancellation">Cancellation</option>
+                <option value="payment_issue">Payment issue</option>
+                <option value="sensitive">Sensitive</option>
+                <option value="unknown">Unknown / escalate</option>
+              </select>
+            </label>
+            <label class="rules-field">Confidence threshold
+              <input id="supportConfidenceThreshold" type="number" min="0" max="1" step="0.01" value="0.90" />
+            </label>
+          </div>
+
+          <div class="grid three compact support-rules-grid">
+            <label class="rules-field">Auto-reply allowed
+              <select id="supportAutoReplyAllowed">
+                <option value="no" selected>No — ask first</option>
+                <option value="yes">Yes — future rule preview only</option>
+              </select>
+            </label>
+            <label class="rules-field">Max replies/day
+              <input id="supportMaxRepliesDay" type="number" min="0" step="1" value="10" />
+            </label>
+            <label class="rules-field">Always escalate above risk
+              <select id="supportApprovalRiskLevel">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+                <option value="critical">Critical</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="grid two compact support-rules-grid">
+            <label class="rules-field">Escalation categories
+              <select id="supportEscalationCategories" multiple size="6" aria-describedby="supportEscalationHelp">
+                <option value="refund" selected>Refund</option>
+                <option value="cancellation" selected>Cancellation</option>
+                <option value="complaint" selected>Complaint</option>
+                <option value="payment_issue" selected>Payment issue</option>
+                <option value="legal_threat" selected>Legal threat</option>
+                <option value="chargeback" selected>Chargeback</option>
+                <option value="angry_customer" selected>Angry customer</option>
+                <option value="unknown_intent" selected>Unknown intent</option>
+              </select>
+              <small id="supportEscalationHelp">Hold Ctrl/Cmd to select multiple categories.</small>
+            </label>
+            <label class="rules-field">Sensitive-ticket exclusions
+              <select id="supportSensitiveTicketExclusions" multiple size="6" aria-describedby="supportSensitiveHelp">
+                <option value="medical_or_health" selected>Medical / health</option>
+                <option value="legal_or_compliance" selected>Legal / compliance</option>
+                <option value="payment_or_card_data" selected>Payment / card data</option>
+                <option value="personal_data_request" selected>Personal data request</option>
+                <option value="high_value_customer" selected>High-value customer</option>
+                <option value="low_confidence" selected>Low confidence</option>
+                <option value="refund_or_chargeback" selected>Refund / chargeback</option>
+                <option value="policy_exception" selected>Policy exception</option>
+              </select>
+              <small id="supportSensitiveHelp">Selected exclusions always force human review in the preview.</small>
+            </label>
+          </div>
+
+          <div class="rules-actions-row">
+            <button class="btn" id="copySupportRulePreviewBtn" type="button">Copy Support Rule JSON</button>
+            <button class="btn primary" id="saveSupportRulePreviewBtn" type="button">Save Local Support Preview</button>
+            <button class="btn" id="resetSupportRulePreviewBtn" type="button">Reset Support Form</button>
+            <span class="rules-inline-status" id="supportRuleSaveStatus">Not saved yet.</span>
+          </div>
+
+          <pre class="wizard-preview support-preview" id="supportRulePreviewJson" aria-label="Support rule preview JSON">{}</pre>
+          <p class="note green-note"><strong>Safe Phase 7.4 retained behaviour:</strong> this form creates a local preview only. It does not create a policy row, does not send support replies, and does not connect to Gmail/helpdesk APIs.</p>
+        </form>
+      </article>
+
+      <article class="panel rules-section rules-card rules-ads-card" id="adsRulesSection">
+        <div class="rules-section-head compact-head">
+          <div><div class="kicker">Section 4 · Phase 7.5 retained</div><h2>Ads Rules</h2></div>
+          <span class="rules-status-pill safe">LOCAL PREVIEW</span>
+        </div>
+        <p>Ads-specific policy controls for platform, campaign scope, max daily budget change, max percentage change, always-ask threshold, and pause rules.</p>
+        <form class="ads-rules-form" id="adsRulesForm" novalidate>
+          <div class="grid two compact ads-rules-grid">
+            <label class="rules-field">Platform
+              <select id="adsRulePlatform">
+                <option value="meta_ads">Meta Ads</option>
+                <option value="google_ads">Google Ads</option>
+                <option value="tiktok_ads">TikTok Ads</option>
+                <option value="snapchat_ads">Snapchat Ads</option>
+                <option value="pinterest_ads">Pinterest Ads</option>
+                <option value="microsoft_ads">Microsoft / Bing Ads</option>
+                <option value="internal_preview">Internal preview only</option>
+              </select>
+            </label>
+            <label class="rules-field">Campaign scope
+              <select id="adsCampaignScope">
+                <option value="single_campaign">Single campaign</option>
+                <option value="single_adset">Single ad set / ad group</option>
+                <option value="campaign_group">Campaign group</option>
+                <option value="account_review_only">Account review only</option>
+                <option value="named_safe_campaigns_only">Named safe campaigns only</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="grid three compact ads-rules-grid">
+            <label class="rules-field">Max daily budget change
+              <input id="adsMaxDailyBudgetChange" type="number" min="0" step="1" value="25" />
+            </label>
+            <label class="rules-field">Max percentage change
+              <input id="adsMaxPercentageChange" type="number" min="0" max="100" step="1" value="10" />
+            </label>
+            <label class="rules-field">Always ask above threshold
+              <input id="adsAlwaysAskAboveThreshold" type="number" min="0" step="1" value="50" />
+            </label>
+          </div>
+
+          <div class="grid two compact ads-rules-grid">
+            <label class="rules-field">Pause rules
+              <select id="adsPauseRules" multiple size="7" aria-describedby="adsPauseRulesHelp">
+                <option value="roas_below_threshold" selected>ROAS below threshold</option>
+                <option value="spend_above_cap" selected>Spend above cap</option>
+                <option value="tracking_anomaly" selected>Tracking anomaly</option>
+                <option value="creative_rejected" selected>Creative rejected</option>
+                <option value="landing_page_error" selected>Landing page error</option>
+                <option value="manual_review_required" selected>Manual review required</option>
+                <option value="unknown_performance_issue" selected>Unknown performance issue</option>
+              </select>
+              <small id="adsPauseRulesHelp">Selected pause rules are preview-only conditions. They do not pause campaigns in this phase.</small>
+            </label>
+            <label class="rules-field">Approval required above risk
+              <select id="adsApprovalRiskLevel">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+                <option value="critical">Critical</option>
+              </select>
+              <small>Ad actions are money-impacting. This preview keeps ask/manual review as the safe default.</small>
+            </label>
+          </div>
+
+          <div class="rules-actions-row">
+            <button class="btn" id="copyAdsRulePreviewBtn" type="button">Copy Ads Rule JSON</button>
+            <button class="btn primary" id="saveAdsRulePreviewBtn" type="button">Save Local Ads Preview</button>
+            <button class="btn" id="resetAdsRulePreviewBtn" type="button">Reset Ads Form</button>
+            <span class="rules-inline-status" id="adsRuleSaveStatus">Not saved yet.</span>
+          </div>
+
+          <pre class="wizard-preview ads-preview" id="adsRulePreviewJson" aria-label="Ads rule preview JSON">{}</pre>
+          <p class="note green-note"><strong>Safe Phase 7.5 behaviour:</strong> this form creates a local preview only. It does not create a policy row, does not connect to Meta/Google/TikTok/Snapchat/Pinterest/Microsoft Ads, does not change budgets, and does not pause campaigns.</p>
+        </form>
+      </article>
+    </section>
+
+    <section class="panel rules-section" id="globalCapsSection">
+      <div class="rules-section-head">
+        <div>
+          <div class="kicker">Section 5 · Phase 7.6 retained</div>
+          <h2>Global Caps</h2>
+          <p>Caps settings UI for posts per day, auto-replies per day, ad budget change per day, model token/cost usage, and actions per hour.</p>
+        </div>
+        <span class="rules-status-pill safe">LOCAL PREVIEW</span>
+      </div>
+      <div class="rules-cap-grid">
+        <div class="rules-cap"><span>Posts/day</span><strong>max_posts_per_day</strong><small>Blocks content auto-approval when exceeded.</small></div>
+        <div class="rules-cap"><span>Auto-replies/day</span><strong>max_support_auto_replies_per_day</strong><small>Blocks support auto-reply overuse.</small></div>
+        <div class="rules-cap"><span>Ad budget change/day</span><strong>max_ad_spend_change_per_day</strong><small>Protects real money before ad phases.</small></div>
+        <div class="rules-cap"><span>Model token/cost usage</span><strong>max_model_tokens_per_day + max_model_cost_per_day</strong><small>Protects Claude/model usage budget.</small></div>
+        <div class="rules-cap"><span>Actions/hour</span><strong>max_actions_per_hour</strong><small>Prevents action floods.</small></div>
+      </div>
+
+      <form class="caps-settings-form" id="capsSettingsForm" novalidate>
+        <div class="grid three compact caps-settings-grid">
+          <label class="rules-field">Posts per day
+            <input id="capsPostsPerDay" type="number" min="0" step="1" value="3" />
+          </label>
+          <label class="rules-field">Auto-replies per day
+            <input id="capsAutoRepliesPerDay" type="number" min="0" step="1" value="10" />
+          </label>
+          <label class="rules-field">Ad budget change per day
+            <input id="capsAdBudgetChangePerDay" type="number" min="0" step="1" value="25" />
+          </label>
+        </div>
+        <div class="grid three compact caps-settings-grid">
+          <label class="rules-field">Model tokens/day
+            <input id="capsModelTokensPerDay" type="number" min="0" step="1000" value="100000" />
+          </label>
+          <label class="rules-field">Model cost/day
+            <input id="capsModelCostPerDay" type="number" min="0" step="0.01" value="10.00" />
+          </label>
+          <label class="rules-field">Actions per hour
+            <input id="capsActionsPerHour" type="number" min="0" step="1" value="20" />
+          </label>
+        </div>
+
+        <div class="rules-actions-row">
+          <button class="btn" id="copyCapsPreviewBtn" type="button">Copy Caps JSON</button>
+          <button class="btn primary" id="saveCapsPreviewBtn" type="button">Save Local Caps Preview</button>
+          <button class="btn" id="resetCapsPreviewBtn" type="button">Reset Caps Form</button>
+          <span class="rules-inline-status" id="capsSaveStatus">Not saved yet.</span>
+        </div>
+
+        <pre class="wizard-preview caps-preview" id="capsPreviewJson" aria-label="Caps settings preview JSON">{}</pre>
+        <p class="note green-note"><strong>Safe Phase 7.6 behaviour:</strong> this form creates a local preview only. It does not create or update policy rows, does not save caps to the database, does not enable auto-run, and does not execute actions.</p>
+      </form>
+    </section>
+
+
+    <section class="panel rules-section" id="ruleSimulationSection">
+      <div class="rules-section-head">
+        <div>
+          <div class="kicker">Section 6 · Phase 7.7 retained</div>
+          <h2>Rule Simulation Preview</h2>
+          <p>Test a proposed action against the current local rule previews before enabling anything. The result explains whether the action would be auto-approved, ask/manual review, or blocked.</p>
+        </div>
+        <span class="rules-status-pill safe">LOCAL SIMULATION</span>
+      </div>
+
+      <div class="simulation-result-card" aria-live="polite">
+        <span class="simulation-label">Simulation result</span>
+        <strong id="simulationDecisionSentence">This proposed Instagram post would be: ASK</strong>
+        <span class="rules-decision-badge ask" id="simulationDecisionBadge">ASK</span>
+        <p id="simulationReasonText">Run the preview to see the rule reasoning.</p>
+      </div>
+
+      <form class="rule-simulation-form" id="ruleSimulationForm" novalidate>
+        <div class="grid three compact simulation-grid">
+          <label class="rules-field">Rule source to test
+            <select id="simRuleSource">
+              <option value="wizard">Create Rule Wizard preview</option>
+              <option value="content" selected>Content Rules preview</option>
+              <option value="support">Support Rules preview</option>
+              <option value="ads">Ads Rules preview</option>
+              <option value="caps">Global Caps preview only</option>
+            </select>
+          </label>
+          <label class="rules-field">Proposed action type
+            <select id="simActionType">
+              <option value="content_publish" selected>Content publish</option>
+              <option value="support_reply_send">Support reply send</option>
+              <option value="ad_budget_adjust">Ad budget adjust</option>
+              <option value="ad_pause">Ad pause</option>
+              <option value="research_task">Research task</option>
+              <option value="dev_task">Development task</option>
+            </select>
+          </label>
+          <label class="rules-field">Master pause active?
+            <select id="simMasterPauseActive">
+              <option value="no" selected>No</option>
+              <option value="yes">Yes — block preview</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="grid three compact simulation-grid">
+          <label class="rules-field">Platform
+            <select id="simPlatform">
+              <option value="instagram" selected>Instagram</option>
+              <option value="tiktok">TikTok</option>
+              <option value="youtube">YouTube</option>
+              <option value="gmail">Gmail</option>
+              <option value="helpdesk">Helpdesk</option>
+              <option value="meta_ads">Meta Ads</option>
+              <option value="google_ads">Google Ads</option>
+              <option value="internal">Internal</option>
+            </select>
+          </label>
+          <label class="rules-field">Channel
+            <select id="simChannel">
+              <option value="organic_social" selected>Organic social</option>
+              <option value="support_inbox">Support inbox</option>
+              <option value="paid_media">Paid media</option>
+              <option value="research">Research</option>
+              <option value="development">Development</option>
+              <option value="internal_ops">Internal ops</option>
+            </select>
+          </label>
+          <label class="rules-field">Context category
+            <select id="simCategory">
+              <option value="content" selected>Content</option>
+              <option value="faq">FAQ support</option>
+              <option value="shipping">Shipping support</option>
+              <option value="refund">Refund support</option>
+              <option value="complaint">Complaint</option>
+              <option value="ads">Ads</option>
+              <option value="sensitive">Sensitive / always ask</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="grid three compact simulation-grid">
+          <label class="rules-field">Risk level
+            <select id="simRiskLevel">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+              <option value="critical">Critical</option>
+            </select>
+          </label>
+          <label class="rules-field">Confidence score
+            <input id="simConfidenceScore" type="number" min="0" max="1" step="0.01" value="0.92" />
+          </label>
+          <label class="rules-field">Amount / budget change
+            <input id="simAmount" type="number" min="0" step="1" value="0" />
+          </label>
+        </div>
+
+        <label class="rules-field">Proposed action preview text
+          <textarea id="simActionText" rows="4" maxlength="900">Founder-approved Instagram post draft in the approved brand style.</textarea>
+        </label>
+
+        <div class="rules-actions-row">
+          <button class="btn primary" id="runSimulationBtn" type="button">Run Simulation Preview</button>
+          <button class="btn" id="copySimulationPreviewBtn" type="button">Copy Simulation JSON</button>
+          <button class="btn" id="saveSimulationPreviewBtn" type="button">Save Local Simulation Preview</button>
+          <button class="btn" id="resetSimulationPreviewBtn" type="button">Reset Simulation</button>
+          <span class="rules-inline-status" id="simulationSaveStatus">Not saved yet.</span>
+        </div>
+
+        <pre class="wizard-preview simulation-preview" id="simulationPreviewJson" aria-label="Rule simulation preview JSON">{}</pre>
+        <p class="note green-note"><strong>Safe Phase 7.7/7.8/7.9/7.10 behaviour:</strong> simulation runs in the browser against local previews only. It does not create a policy row, does not enable a rule, does not call a policy write endpoint, does not run executors, and does not write to external platforms.</p>
+      </form>
+    </section>
+
+    <section class="panel rules-section policy-audit-section" id="ruleHistorySection" aria-label="Policy audit UI">
+      <div class="rules-section-head">
+        <div>
+          <div class="kicker">Phase 7.9 · Section 7</div>
+          <h2>Rule History / Policy Audit</h2>
+          <p>Shows local-preview audit metadata for rule changes and recent simulated policy decisions before database-backed policy history is enabled.</p>
+        </div>
+        <span class="rules-status-pill safe" id="policyAuditStatusBadge">LOCAL AUDIT</span>
+      </div>
+
+      <div class="grid five compact policy-audit-summary" id="policyAuditSummaryCards" aria-label="Policy audit summary cards">
+        <div class="mini"><span>Created by</span><strong id="auditCreatedBy">—</strong></div>
+        <div class="mini"><span>Updated by</span><strong id="auditUpdatedBy">—</strong></div>
+        <div class="mini"><span>Disabled by</span><strong id="auditDisabledBy">—</strong></div>
+        <div class="mini"><span>Last triggered</span><strong id="auditLastTriggered">—</strong></div>
+        <div class="mini"><span>Recent decisions</span><strong id="auditRecentDecisionCount">—</strong></div>
+      </div>
+
+      <div class="policy-audit-table-wrap" aria-label="Policy audit records">
+        <table class="policy-audit-table">
+          <thead>
+            <tr>
+              <th>Rule / preview</th>
+              <th>Created by</th>
+              <th>Updated by</th>
+              <th>Disabled by</th>
+              <th>Last triggered</th>
+              <th>Recent decisions</th>
+            </tr>
+          </thead>
+          <tbody id="policyAuditTableBody">
+            <tr><td colspan="6">Loading local policy audit preview…</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rules-actions-row">
+        <button class="btn primary" id="refreshPolicyAuditBtn" type="button">Refresh Audit Preview</button>
+        <button class="btn" id="copyPolicyAuditBtn" type="button">Copy Audit JSON</button>
+        <button class="btn" id="savePolicyAuditBtn" type="button">Save Local Audit Snapshot</button>
+        <button class="btn" id="resetPolicyAuditBtn" type="button">Reset Local Audit Snapshot</button>
+        <span class="rules-inline-status" id="policyAuditSaveStatus">Not saved yet.</span>
+      </div>
+
+      <pre class="wizard-preview policy-audit-preview" id="policyAuditPreviewJson" aria-label="Policy audit preview JSON">{}</pre>
+      <p class="note green-note"><strong>Safe Phase 7.9/7.10 behaviour:</strong> this Policy Audit UI reads browser-local previews and saved simulation JSON only. It does not query policy audit tables, does not write audit records, does not enable rules, and does not execute anything.</p>
+    </section>
+
+
+    <section class="panel rules-section permission-qa-section" id="rulesPermissionQaSection" aria-label="Rules permission QA">
+      <div class="rules-section-head">
+        <div>
+          <div class="kicker">Phase 7.10 · Permission QA</div>
+          <h2>Rules Permission QA</h2>
+          <p>Confirms only authorized workspace roles can edit rule previews before any future database-backed policy editing endpoints are enabled.</p>
+        </div>
+        <span class="rules-status-pill safe" id="rulesPermissionStatusBadge">QA READY</span>
+      </div>
+
+      <div class="permission-warning-banner" id="rulesPermissionGateBanner" role="status" aria-live="polite">
+        <div>
+          <span class="simulation-label">Effective rule-edit access</span>
+          <strong id="rulesPermissionHeadline">Checking role permission…</strong>
+          <p id="rulesPermissionMessage">Owner can edit. Admin can edit only when rule-edit access is allowed. Viewer and unauthorized sessions cannot edit.</p>
+        </div>
+        <ul class="pause-scope-list" id="rulesPermissionScopeList">
+          <li>Owner: can edit</li>
+          <li>Admin: can edit if allowed</li>
+          <li>Viewer: cannot edit</li>
+          <li>Unauthorized request blocked: no token or wrong workspace cannot edit</li>
+        </ul>
+      </div>
+
+      <form class="rules-permission-form" id="rulesPermissionQaForm" novalidate>
+        <div class="grid three compact permission-qa-grid">
+          <label class="rules-field">Role to test
+            <select id="rulesPermissionRoleSelect">
+              <option value="owner" selected>Owner</option>
+              <option value="admin">Admin</option>
+              <option value="member">Member</option>
+              <option value="viewer">Viewer</option>
+              <option value="unauthorized">Unauthorized request</option>
+            </select>
+          </label>
+          <label class="rules-field">Admin edit allowed
+            <select id="rulesPermissionAdminAllowedSelect">
+              <option value="yes" selected>Yes — admin can edit</option>
+              <option value="no">No — admin must be read-only</option>
+            </select>
+          </label>
+          <label class="rules-field">Request authorization
+            <select id="rulesPermissionAuthSelect">
+              <option value="authorized" selected>Authorized session</option>
+              <option value="missing_token">Missing token</option>
+              <option value="wrong_workspace">Wrong workspace</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="grid four compact permission-qa-summary" aria-label="Rules permission QA summary">
+          <div class="mini"><span>Detected/current role</span><strong id="rulesDetectedRole">—</strong></div>
+          <div class="mini"><span>Owner edit test</span><strong id="rulesOwnerEditResult">—</strong></div>
+          <div class="mini"><span>Admin edit test</span><strong id="rulesAdminEditResult">—</strong></div>
+          <div class="mini"><span>Viewer/unauthorized</span><strong id="rulesViewerUnauthorizedResult">—</strong></div>
+        </div>
+
+        <div class="policy-audit-table-wrap permission-qa-table-wrap" aria-label="Rules permission QA records">
+          <table class="policy-audit-table permission-qa-table">
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th>Role</th>
+                <th>Admin allowed</th>
+                <th>Authorized request</th>
+                <th>Expected result</th>
+                <th>Reason</th>
+              </tr>
+            </thead>
+            <tbody id="rulesPermissionQaTableBody">
+              <tr><td colspan="6">Loading rules permission QA preview…</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="rules-actions-row">
+          <button class="btn primary" id="runRulesPermissionQaBtn" type="button">Run Permission QA</button>
+          <button class="btn" id="copyRulesPermissionQaBtn" type="button">Copy Permission QA JSON</button>
+          <button class="btn" id="saveRulesPermissionQaBtn" type="button">Save Local Permission QA Snapshot</button>
+          <button class="btn" id="resetRulesPermissionQaBtn" type="button">Reset Permission QA Snapshot</button>
+          <span class="rules-inline-status" id="rulesPermissionQaSaveStatus">Not saved yet.</span>
+        </div>
+
+        <pre class="wizard-preview permission-qa-preview" id="rulesPermissionQaJson" aria-label="Rules permission QA JSON">{}</pre>
+        <p class="note green-note"><strong>Safe Phase 7.10 behaviour:</strong> this Rules Permission QA checks UI gating and expected role decisions only. It does not create or update policy rows, does not save permissions to the database, does not add policy editing endpoints, and does not execute anything.</p>
+      </form>
+    </section>
+
+
+    <section class="panel rules-section proactivity-mobile-section" id="proactivityTriggerSection" aria-label="Proactive trigger registry mobile preview">
+      <div class="rules-section-head compact-head">
+        <div>
+          <div class="kicker">Phase 15.6 retained · Mobile readable</div>
+          <h2>Proactive Trigger Registry</h2>
+          <p>Mobile-readable registry for ROAS drop, new support ticket, scheduled content slot, weekly ad review, pending action reminder, and failed executor event. This is display and preview only.</p>
+        </div>
+        <span class="rules-status-pill safe" id="proactivityRegistryBadge">FRAMEWORK ONLY</span>
+      </div>
+      <div class="proactivity-warning-card">
+        <strong>No proactive job runs from this screen.</strong>
+        <p>Triggers may identify a future route or specialist, but this mobile UI does not create actions, send notifications, call Claude, invoke tools, call connectors, execute, or auto-run.</p>
+      </div>
+      <div class="proactivity-mobile-grid" id="proactivityTriggerRegistry" aria-live="polite">
+        <article class="proactivity-trigger-card"><span>ROAS drop</span><strong>Manual review route</strong><p>Flag meaningful blended ROAS declines for founder review.</p></article>
+        <article class="proactivity-trigger-card"><span>New support ticket</span><strong>Support specialist route</strong><p>Surface new tickets without sending a reply automatically.</p></article>
+        <article class="proactivity-trigger-card"><span>Scheduled content slot</span><strong>Content specialist route</strong><p>Remind founder of planned content windows without publishing.</p></article>
+        <article class="proactivity-trigger-card"><span>Weekly ad review</span><strong>Ads specialist route</strong><p>Queue a safe weekly review summary without changing budgets.</p></article>
+        <article class="proactivity-trigger-card"><span>Pending action reminder</span><strong>Approval queue route</strong><p>Remind founder about waiting approvals without approving them.</p></article>
+        <article class="proactivity-trigger-card"><span>Failed executor event</span><strong>Escalation route</strong><p>Keep failed executor events visible and never hidden.</p></article>
+      </div>
+      <div class="rules-actions-row">
+        <button class="btn" id="refreshProactivityRegistryBtn" type="button">Refresh Trigger Registry</button>
+        <button class="btn" id="copyProactivityRegistryBtn" type="button">Copy Registry JSON</button>
+        <span class="rules-inline-status" id="proactivityRegistryStatus">Static mobile registry loaded.</span>
+      </div>
+      <pre class="wizard-preview proactivity-preview" id="proactivityRegistryJson" aria-label="Proactive trigger registry JSON">{}</pre>
+    </section>
+
+    <section class="panel rules-section" id="phaseSafetySection">
+      <h2>Phase 7.10 Safety Boundary</h2>
+      <div class="grid two">
+        <p class="note green-note"><strong>Allowed in this phase:</strong><br>Seven-step rule creation wizard, content rules form, support rules form, ads rules form, caps settings form, rule simulation preview, pause-state display, policy audit UI, local preview JSON, browser-local preview save, navigation, section layout, and documentation/testing for rules permission QA.</p>
+        <p class="note warn"><strong>Not allowed in this phase:</strong><br>No backend policy creation endpoint, no database policy insert/update, no audit database save, no permission database save, no cap database save, no simulation database save, no ad connector, no ad budget update, no campaign pause, no auto-run toggles, no sandbox executor, no real executor, no content publishing, no support sending, and no external platform writes.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="./assets/js/runtime-config.js"></script>
+  <script src="./assets/js/rules.js"></script>
+<script src="./assets/js/lifesaver-version.js"></script>
+<script src="./assets/js/lifesaver-mobile-shell.js"></script>
+</body>
+</html>

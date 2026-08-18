@@ -1,0 +1,28 @@
+LIFE.SAVER UI — Action Status Filters
+Version: v0.6.0 Phase 4.4
+
+Placement:
+- actions.html, directly above the advanced filter toolbar.
+
+Component behavior:
+- Status tabs act as quick filters.
+- Advanced status dropdown remains available.
+- Tabs and dropdown stay synchronized.
+- Filter changes reload GET /api/v1/actions with status query parameter.
+- Empty states remain safe and clear.
+
+Primary tabs:
+- All
+- Proposed
+- Approved
+- Rejected
+- Executed
+- Failed
+- Cancelled
+- Rolled Back
+
+Safety:
+- Filter controls are read-only.
+- They do not approve/reject/cancel actions.
+- They do not execute anything.
+- They do not expose secrets or full payload_json.

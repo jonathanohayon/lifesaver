@@ -1,0 +1,64 @@
+{
+  "phase": "v0.6.0 Phase 6.7 Policy Conflict Resolution",
+  "endpointExamples": [
+    "GET /api/v1/actions/:id",
+    "POST /api/v1/actions/:id/approve",
+    "POST /api/v1/actions/:id/reject",
+    "POST /api/v1/actions/:id/cancel"
+  ],
+  "errorResponseShape": {
+    "success": false,
+    "error": {
+      "code": "INVALID_STATUS_TRANSITION",
+      "message": "This action cannot move to the requested status.",
+      "requestId": "req_example"
+    },
+    "requestId": "req_example",
+    "timestamp": "2026-06-29T00:00:00.000Z"
+  },
+  "stableActionErrorCodes": [
+    "ACTION_NOT_FOUND",
+    "ACTION_ALREADY_EXECUTED",
+    "ACTION_REJECTED",
+    "ACTION_CANCELLED",
+    "ACTION_ALREADY_APPROVED",
+    "APPROVAL_FORBIDDEN",
+    "REJECTION_FORBIDDEN",
+    "CANCELLATION_FORBIDDEN",
+    "INVALID_STATUS_TRANSITION",
+    "ACTION_WORKSPACE_FORBIDDEN",
+    "ACTION_VALIDATION_ERROR"
+  ],
+  "safeDetailsMayInclude": [
+    "module",
+    "phase",
+    "operation",
+    "currentStatus",
+    "attemptedStatus",
+    "allowedStatuses",
+    "role",
+    "riskLevel",
+    "guardCode",
+    "externalWritesEnabled",
+    "executorEnabled"
+  ],
+  "forbiddenInErrorResponses": [
+    "payload_json",
+    "rollback_payload",
+    "API keys",
+    "OAuth tokens",
+    "passwords",
+    "raw .env values",
+    "DATABASE_URL",
+    "Claude API key",
+    "Triple Whale API key",
+    "APP_ENCRYPTION_KEY",
+    "WORKER_SHARED_SECRET"
+  ],
+  "safety": {
+    "externalWritesEnabled": false,
+    "executorEnabled": false,
+    "queueingEnabled": false,
+    "v1Rule": "READ + ADVISE + DRAFT ONLY"
+  }
+}

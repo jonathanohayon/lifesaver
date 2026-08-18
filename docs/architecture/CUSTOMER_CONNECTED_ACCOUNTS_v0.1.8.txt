@@ -1,0 +1,28 @@
+LIFE.SAVER v0.2.0 — Customer Connected Accounts Architecture
+
+Purpose:
+This version separates customer-owned connection management from Super Admin monitoring.
+
+Customer Settings:
+- URL: /settings.html
+- Customer can store/update/disconnect their own Triple Whale API key.
+- API key is sent to backend once, encrypted server-side, and never returned.
+- Uses the logged-in user's workspace context from the auth token.
+
+Super Admin:
+- URL: /admin.html
+- Super Admin monitors connection status, key hint, system events, database counts, and metrics snapshots.
+- Super Admin should not need to see or manually manage raw customer API keys in the future SaaS version.
+
+API:
+- GET /api/v1/connect/triplewhale/status
+- POST /api/v1/connect/triplewhale
+- DELETE /api/v1/connect/triplewhale
+- POST /api/v1/triple-whale/test-connection
+- POST /api/v1/refresh-metrics
+
+Live Test Rule:
+The app does not guess Triple Whale endpoint fields. TRIPLE_WHALE_LIVE_TEST_URL must remain blank until official docs or a sample response are confirmed.
+
+V1 Safety:
+Read + advise + draft only. No write scopes and no external actions.

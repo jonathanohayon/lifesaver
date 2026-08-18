@@ -1,0 +1,33 @@
+LIFE.SAVER v0.6.0 — Phase 8.9 Rollback Simulation Test Results
+
+Package: lifesaver-v0.6.0-phase-8-9-rollback-simulation.zip
+Health mode: v2-phase-8-9-rollback-simulation
+
+Tests expected/passed:
+- npm run build
+- npm run executor:rollback-simulation:test — 26 passed, 0 failed
+- npm run executor:failure-simulation:test — 24 passed, 0 failed
+- npm run executor:result-logs:test — 18 passed, 0 failed
+- npm run executor:sandbox-lifecycle:test — 16 passed, 0 failed
+- npm run executor:sandbox-ads:test — 23 passed, 0 failed
+- npm run executor:sandbox-support:test — 16 passed, 0 failed
+- npm run executor:sandbox-content:test — 15 passed, 0 failed
+- npm run executor:registry:test
+- npm run executor:interface:test
+- npm run executor:pause:test
+- npm run policy:tests:test
+- npm run rules:permission:test
+- npm run actions:test:backend
+- npm run client:test-checklist
+- npm run security:check
+- npm run env:check
+
+Local security/env warnings are expected when real .env, DATABASE_URL, and production secrets are absent.
+
+Safety confirmed:
+- No real rollback execution.
+- No external writes.
+- No real content publishing.
+- No real support sending.
+- No real ad budget changes or campaign pauses.
+- No auto-run execution.

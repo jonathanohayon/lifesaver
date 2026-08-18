@@ -1,0 +1,40 @@
+LIFE.SAVER v0.2.9 — Claude Server-Side Chat Foundation
+
+Purpose:
+- Replace the mock chat foundation with a real server-side Claude integration.
+- Keep the frontend typing animation and browser text-to-speech unchanged.
+- Keep Claude API key on the backend only.
+- Ground LIFE.SAVER replies in the latest stored Triple Whale normalized metrics.
+- Keep v1 read + advise + draft only.
+
+What changed:
+- Added environment config for CLAUDE_API_KEY, CLAUDE_MODEL, CLAUDE_API_BASE_URL, CLAUDE_API_VERSION, CLAUDE_MAX_TOKENS, CLAUDE_TEMPERATURE, and CLAUDE_DAILY_CHAT_LIMIT.
+- Added a direct server-side Claude Messages API client using Node fetch.
+- Added LIFE.SAVER persona prompt with British-butler tone and strict no-action rules.
+- Added business metrics context builder from latest normalized metrics.
+- Added chat persistence into chat_history when a workspace is available.
+- Added usage_logs entries for completed Claude chat requests.
+- Added daily Claude chat call limit guard.
+- Added safe fallback mode when Claude is not configured, rate/cost limit is hit, or Claude temporarily fails.
+- Frontend now sends the local auth token to POST /api/v1/chat when available.
+
+Important safety:
+- Claude never runs in the browser.
+- Claude API key is never exposed to frontend.
+- Claude receives a compact, normalized metrics context, not the full raw Triple Whale payload.
+- No action-taking tools exist in v0.2.9.
+- draft_content and draft_support_reply are described as safe capabilities only; real draft storage comes in a later version.
+
+Testing:
+1. Add CLAUDE_API_KEY to .env if available.
+2. Run npm.cmd install.
+3. Run npm.cmd run db:status.
+4. Run npm.cmd run dev:api.
+5. Run npm.cmd run dev:web.
+6. Open http://localhost:3000/login.html and login.
+7. Open http://localhost:3000 and ask: "How are we doing today?"
+8. Expected if Claude key is configured: response data mode is claude_live and chat_history/usage_logs rows are created.
+9. Expected if Claude key is not configured: safe fallback reply explains Claude is not configured and still uses verified core metrics where available.
+
+Next recommended version:
+- v0.3.0 or v0.2.10 Draft Tools Foundation: store draft_content and draft_support_reply as drafts requiring founder approval.

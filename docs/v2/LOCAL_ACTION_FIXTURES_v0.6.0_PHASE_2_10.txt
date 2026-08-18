@@ -1,0 +1,150 @@
+LIFE.SAVER v0.6.0 — Phase 2.10 Local-Only Action Fixtures
+===========================================================
+
+Purpose
+-------
+Phase 2.10 creates safe local/testing action examples so the V2 action data model can be tested before Phase 3 approval APIs and Phase 4 approval UI are built.
+
+This phase is intentionally non-executing.
+
+V2 safety rule
+--------------
+Nothing real happens unless:
+1. The founder approves it, OR
+2. A clear policy/rule explicitly allows it.
+
+In Phase 2.10, neither execution nor auto-run rules exist yet. Therefore the fixtures are proposed action records only.
+
+Fixture set
+-----------
+The local-only fixture set includes:
+
+1. Proposed Instagram post
+   - action_type: content_publish
+   - risk_level: low
+   - status: proposed
+   - approval_required: true
+   - external write: no
+   - executor: none
+
+2. Proposed support reply
+   - action_type: support_reply_send
+   - risk_level: medium
+   - status: proposed
+   - approval_required: true
+   - external write: no
+   - executor: none
+
+3. Proposed ad budget change
+   - action_type: ad_budget_adjust
+   - risk_level: high
+   - status: proposed
+   - approval_required: true
+   - external write: no
+   - executor: none
+
+What gets inserted
+------------------
+The local fixture command inserts:
+
+- rows in actions
+- matching action_created events in action_events
+
+It does not insert successful action_results because no executor has run.
+
+Why this matters
+----------------
+These records let us test future Phase 3 and Phase 4 work:
+
+- action list queries
+- workspace scoping
+- approval queue filters
+- risk badges
+- action detail modals
+- action timeline display
+- duplicate protection
+
+Local command
+-------------
+After copying your working .env and applying migrations, run:
+
+npm.cmd run db:seed:actions:local
+
+Safety conditions
+-----------------
+The command refuses to run when:
+
+- NODE_ENV=production
+- APP_ENVIRONMENT=production
+- DATABASE_ENVIRONMENT=production
+- CUSTOMER_ACCESS_MODE is not local-testing
+
+For an intentional non-production staging test, the command can be forced only by setting:
+
+ALLOW_LOCAL_ACTION_FIXTURES=true
+
+Do not use that override against a production database.
+
+Expected output
+---------------
+The command returns JSON including:
+
+- success: true
+- phase: 2.10
+- workspaceId
+- insertedCount
+- skippedExistingCount
+- actions[]
+- safety.noExternalWrites: true
+
+Idempotency behaviour
+---------------------
+The fixtures include stable idempotency_key values and stable action_hash values.
+
+Running the command twice should not create duplicate active actions. The second run should report existing/skipped fixtures.
+
+Important security notes
+------------------------
+Fixture payloads must never contain:
+
+- API keys
+- OAuth tokens
+- raw .env values
+- DATABASE_URL
+- Claude API key
+- Triple Whale API key
+- APP_ENCRYPTION_KEY
+- WORKER_SHARED_SECRET
+- card/payment data
+- real private customer details
+
+Current safety status
+---------------------
+Phase 2.10 does not add:
+
+- approval endpoints
+- approval queue UI
+- executor registry
+- sandbox executor
+- real executor
+- social publishing
+- support sending
+- ad spend changes
+- campaign pausing
+- external write connectors
+- auto-run rules
+
+V1 remains READ + ADVISE + DRAFT ONLY.
+
+Next phase
+----------
+Phase 3.1 should create the backend action module structure around:
+
+- actions.types.ts
+- actions.repository.ts
+- actions.service.ts
+- actions.controller.ts
+- actions.routes.ts
+- actions.validation.ts
+
+Phase 3 APIs should use these local fixtures for safe testing before any real executor exists.

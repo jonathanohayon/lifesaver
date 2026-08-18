@@ -1,0 +1,33 @@
+================================================================================
+PHASE 14.8 — ADS ROLLBACK / RE-ENABLE
+================================================================================
+
+Purpose:
+Add the ads rollback/re-enable executor shell before any real ad platform mutation is allowed.
+
+Supported rollback/re-enable plans:
+- restore_previous_budget
+- reenable_paused_adset
+- reenable_campaign
+
+Important boundary:
+This package does not call Meta Marketing API or Google Ads API. It does not restore budgets, re-enable campaigns, re-enable adsets, pause anything, change budgets, or enable ads auto-run.
+
+Required gates:
+- Phase 14.6 manual approval gate must pass.
+- Source action reference must exist.
+- Source action result or source snapshot reference must exist.
+- Manual rollback request evidence must exist.
+- Phase 14.7 before snapshot must be present.
+- Current known state must be present.
+- Only one target entity may be handled at a time.
+- force=true is ignored.
+
+Storage expectations for future provider phase:
+- action_events: rollback_requested, rollback_started, rollback_finished_or_failed
+- action_results: rollback result row with rollback_success or rollback_failed
+- ads_action_snapshots: before rollback and after rollback snapshots linked to action_results
+
+Next:
+- Phase 14.9 — Auto-Run Below Threshold Later
+================================================================================

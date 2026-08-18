@@ -1,0 +1,35 @@
+LIFE.SAVER v0.4.1 — Release Workflow
+
+GOAL
+Move from ZIP packages to Git-based releases safely.
+
+NORMAL RELEASE FLOW
+1. Make changes in a new branch.
+2. Test locally:
+   npm.cmd install
+   npm.cmd run db:status
+   npm.cmd run db:migrate
+   npm.cmd run security:check
+   npm.cmd run deploy:check
+3. Confirm frontend pages work.
+4. Commit changes.
+5. Merge to main after review.
+6. Tag stable release:
+   git tag v0.x.x
+   git push origin v0.x.x
+7. Deploy from main or tag.
+
+DATABASE MIGRATIONS
+- Add new SQL migrations only when schema changes are required.
+- Migrations must be additive where possible.
+- Do not drop production columns/tables casually.
+- Backup production database before risky migrations.
+
+ROLLBACK PLAN
+- Keep previous Git tag.
+- Roll back app code to previous tag if needed.
+- Database rollback should be planned carefully; avoid destructive migrations.
+
+VERSION RULE
+- v0.4.x = production preparation
+- v0.5.x = SaaS/multi-workspace/billing foundations later

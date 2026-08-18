@@ -1,0 +1,29 @@
+LIFE.SAVER V2 — Phase 6.9 Dry-Run Mode
+
+Goal:
+Test policies without real execution.
+
+Use cases:
+- Admin simulation
+- QA
+- Policy UI preview
+
+Deliverable:
+Policy dry-run service.
+
+Function:
+- dryRunActionPolicy(input)
+
+The dry-run service calls the existing policy evaluator and returns a preview result. It can be used by a future admin screen or policy rule builder to answer questions like:
+
+- Would this proposed Instagram post be ask, auto_approve, or block?
+- Which policy would match?
+- Would a cap be exceeded?
+- Would pause/emergency safe mode override the rule?
+- What safe audit snapshot would be shown if this were a real proposed action?
+
+Safety:
+The dry-run service is intentionally non-mutating. It must never create actions, persist snapshots, approve/reject actions, queue executors, run executors, call write connectors, or touch external platforms.
+
+Important:
+Even when dry-run returns auto_approve, this only means the policy engine preview says it would be eligible. It is not an execution trigger.

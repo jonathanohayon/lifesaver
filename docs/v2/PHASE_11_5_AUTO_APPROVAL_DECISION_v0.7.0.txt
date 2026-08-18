@@ -1,0 +1,63 @@
+================================================================================================
+PHASE 11.5 — AUTO-APPROVAL DECISION
+================================================================================================
+
+Goal
+----
+Policy engine marks content auto_approved only when every rule matches.
+
+Deliverable
+-----------
+Auto-approval decision record.
+
+What was added
+--------------
+A deterministic decision function:
+
+buildContentAutoApprovalDecisionRecord(input)
+
+It combines previous Phase 11 checks:
+- Phase 11.1 approved content style profile
+- Phase 11.2 content risk scoring
+- Phase 11.3 daily post cap check
+- Phase 11.4 channel/time restrictions
+
+It also checks:
+- policy auto-approval rule matched
+- master pause off
+- content pause off
+- emergency safe mode off
+- supported action type
+- supported platform/channel
+- supported media type
+
+Decision values
+---------------
+1. auto_approved
+   Returned only when every gate passes.
+
+2. manual_review_required
+   Returned when a non-blocking ask gate fails, such as no auto-approval policy rule or style/risk asking for review.
+
+3. blocked
+   Returned when a blocking gate fails, such as pause active, daily cap exceeded, unsupported platform, unsupported media, or blocked risk/style.
+
+Safety boundary
+---------------
+Phase 11.5 is decision-record only.
+It does not publish content.
+It does not call LinkedIn.
+It does not access/decrypt tokens.
+It does not mutate action status.
+It does not write a decision to the database.
+It does not enable a worker or schedule.
+
+The final record includes:
+- finalDecision
+- autoApproved boolean
+- gate results
+- policyDecisionSnapshot
+- safe content summary
+- component decisions from style/risk/cap/channel-time
+
+The output intentionally avoids returning the raw caption as payload data.

@@ -1,0 +1,38 @@
+name: LIFE.SAVER CI
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint placeholder
+        run: npm run lint
+
+      - name: Build workspaces
+        run: npm run build
+
+      - name: Security check in CI-safe development mode
+        run: npm run security:check
+        env:
+          NODE_ENV: development
+          FRONTEND_URL: http://localhost:3000
+          AUTH_TOKEN_SECRET: replace_with_ci_only_non_production_secret_40_chars
+          APP_ENCRYPTION_KEY: replace_with_ci_only_non_production_secret_32_chars
+          WORKER_SHARED_SECRET: replace_with_ci_only_non_production_secret_40_chars

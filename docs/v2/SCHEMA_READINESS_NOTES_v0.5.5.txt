@@ -1,0 +1,55 @@
+LIFE.SAVER v0.5.5 — V2 Schema Readiness Notes
+
+Purpose:
+Document what the current V1 database foundation already has and what V2 Phase 2 must add. This is a planning note only; v0.5.5 does not add destructive migrations and does not create action-taking tables yet.
+
+Existing V1/SaaS foundation tables expected from migrations 001-008:
+- users
+- workspaces
+- workspace_members
+- connected_accounts
+- metrics_snapshots
+- chat_history
+- briefs
+- drafts
+- usage_logs
+- system_events
+
+Current V1 behavior:
+- connected_accounts stores encrypted customer-owned Triple Whale API keys per workspace.
+- metrics_snapshots stores raw_payload separately from normalized_metrics.
+- drafts stores internal content/support drafts only.
+- system_events and usage_logs provide audit visibility.
+- No external action/executor tables are active in V1.
+
+V2 Phase 2 tables still missing and intentionally deferred:
+- actions
+- action_events
+- action_results
+- policies
+- autonomy_settings
+- notification_preferences
+- notifications
+- support_tickets
+- memory
+- action_caps / policy caps storage, if separated from policies.caps_json
+
+V2 migration rule:
+- Additive migrations only.
+- Do not drop or rename existing V1 production columns without approval.
+- Do not reuse drafts as executed actions. Drafts can later create proposed actions, but V1 draft approval remains an internal status only.
+- Preserve workspace_id on every V2 table.
+- Preserve created_by_user_id / approved_by_user_id / executed_by fields where relevant.
+- Every action state change must be logged in action_events.
+- Every executor response must be stored in action_results.
+- Policies must default to ask, not auto-run.
+- Master pause/autonomy settings must be checked before execution.
+
+Recommended first V2 migration package:
+v0.6.0 — V2 Action Approval Foundation
+- actions table
+- action_events table
+- action_results table
+- autonomy_settings table or minimal pause foundation
+- no real external write connectors
+- sandbox executor only after approval queue foundations are working

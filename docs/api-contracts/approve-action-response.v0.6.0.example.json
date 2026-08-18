@@ -1,0 +1,51 @@
+{
+  "success": true,
+  "data": {
+    "version": "0.6.0",
+    "phase": "v0.6.0 Phase 3.5 Approve Action Endpoint",
+    "workspaceId": "00000000-0000-0000-0000-000000000001",
+    "userRole": "owner",
+    "approved": true,
+    "alreadyApproved": false,
+    "action": {
+      "id": "00000000-0000-0000-0000-000000000101",
+      "workspaceId": "00000000-0000-0000-0000-000000000001",
+      "createdByUserId": "00000000-0000-0000-0000-000000000201",
+      "actionType": "content_publish",
+      "title": "Fixture: Proposed Instagram post",
+      "description": "Safe local fixture action. No real posting is enabled.",
+      "status": "approved",
+      "riskLevel": "low",
+      "approvalRequired": true,
+      "policyDecision": "ask",
+      "idempotencyKey": "local-fixture:content_publish:instagram:001",
+      "actionHash": "example-safe-action-hash",
+      "createdAt": "2026-06-29T00:00:00.000Z",
+      "updatedAt": "2026-06-29T00:05:00.000Z",
+      "approvedAt": "2026-06-29T00:05:00.000Z",
+      "executedAt": null,
+      "hasPayload": false
+    },
+    "transition": {
+      "fromStatus": "proposed",
+      "toStatus": "approved"
+    },
+    "approval": {
+      "approvedByUserId": "00000000-0000-0000-0000-000000000201",
+      "approvedAt": "2026-06-29T00:05:00.000Z",
+      "approvalNote": "Approved for future sandbox review only.",
+      "eventLogged": true
+    },
+    "execution": {
+      "executed": false,
+      "queued": false,
+      "executorEnabled": false,
+      "note": "Approval is recorded internally only. Executor phases are not enabled yet, so this endpoint does not queue or execute the action."
+    },
+    "safety": {
+      "canExecuteFromThisEndpoint": false,
+      "externalWritesEnabled": false,
+      "note": "POST /api/v1/actions/:id/approve only changes internal LIFE.SAVER action status and logs an approved event. It cannot publish content, send support replies, change ad spend, pause campaigns, refund orders, edit products, or write to external platforms."
+    }
+  }
+}

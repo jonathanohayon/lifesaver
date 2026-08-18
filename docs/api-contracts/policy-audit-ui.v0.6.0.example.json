@@ -1,0 +1,47 @@
+{
+  "version": "0.6.0",
+  "phase": "Phase 7.9 Rule History/Audit",
+  "previewOnly": true,
+  "persistence": "browser_local_audit_preview_only_no_database_write",
+  "audit_summary": {
+    "created_by": "founder@example.com",
+    "updated_by": "founder@example.com",
+    "disabled_by": "founder@example.com",
+    "last_triggered": "Never triggered",
+    "recent_decision_count": 6,
+    "saved_local_preview_count": 0
+  },
+  "records": [
+    {
+      "id": "local-audit-1",
+      "rule_preview": "Content Rules Preview",
+      "created_by": "founder@example.com",
+      "updated_by": "Not updated yet",
+      "disabled_by": "founder@example.com",
+      "last_triggered": "Never triggered",
+      "recent_decisions": [
+        "ASK"
+      ],
+      "source": "browser_local_preview_only",
+      "saved": false,
+      "enabled": false
+    }
+  ],
+  "required_fields_shown": [
+    "created_by",
+    "updated_by",
+    "disabled_by",
+    "last_triggered",
+    "recent_decisions"
+  ],
+  "safety": {
+    "localPreviewOnly": true,
+    "databaseAuditQueryAttempted": false,
+    "databaseAuditWriteAttempted": false,
+    "policyEndpointCalled": false,
+    "policyDatabaseWrites": false,
+    "externalWritesAttempted": false,
+    "executorRan": false,
+    "autoRunTriggered": false
+  }
+}

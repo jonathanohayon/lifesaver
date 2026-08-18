@@ -1,0 +1,71 @@
+{
+  "endpoint": "GET /api/v1/actions/:id/content-publish-result-logs",
+  "method": "GET",
+  "auth_required": true,
+  "workspace_scoped": true,
+  "phase": "v0.7.0_phase_9_7",
+  "health_mode": "v2-phase-9-7-result-tracking",
+  "response_shape": {
+    "ok": true,
+    "data": {
+      "summary": {
+        "version": "0.7.0",
+        "phase": "v0.7.0_phase_9_7",
+        "healthMode": "v2-phase-9-7-result-tracking",
+        "executorName": "linkedinManualApprovedContentExecutor",
+        "targetTable": "action_results"
+      },
+      "actionId": "00000000-0000-0000-0000-000000000000",
+      "count": 1,
+      "logs": [
+        {
+          "id": "result-row-id",
+          "actionId": "action-id",
+          "workspaceId": "workspace-id",
+          "executorName": "linkedinManualApprovedContentExecutor",
+          "resultStatus": "success",
+          "platformPostId": "urn:li:share:6844785523593134080",
+          "permalink": null,
+          "publishedTime": "2026-07-06T12:00:00.000Z",
+          "platformResponseSummary": {
+            "platform": "linkedin",
+            "httpStatus": 201,
+            "success": true,
+            "postIdSource": "x-restli-id",
+            "permalinkSource": "none",
+            "platformPostIdPresent": true,
+            "permalinkPresent": false,
+            "publishedTimePresent": true,
+            "responseBodyType": "object",
+            "responseBodyKeys": [],
+            "safeHeaderKeys": ["content-type", "x-restli-id"],
+            "rawResponseBodyStored": false,
+            "rawTokenStored": false
+          },
+          "resultSummary": "Manual-approved LinkedIn content published successfully. External post ID: urn:li:share:6844785523593134080.",
+          "errorIfFailed": null,
+          "createdAt": "2026-07-06T12:00:01.000Z",
+          "updatedAt": "2026-07-06T12:00:01.000Z",
+          "safety": {
+            "rawTokenReturned": false,
+            "rawResponseBodyReturned": false,
+            "rollbackPayloadReturned": false
+          }
+        }
+      ],
+      "safety": {
+        "rawTokenReturned": false,
+        "rawResponseBodyReturned": false,
+        "rollbackPayloadReturned": false
+      }
+    }
+  },
+  "never_return": [
+    "raw OAuth access token",
+    "raw OAuth refresh token",
+    "Authorization header",
+    "raw LinkedIn response body",
+    "rollback payload",
+    "secret material"
+  ]
+}

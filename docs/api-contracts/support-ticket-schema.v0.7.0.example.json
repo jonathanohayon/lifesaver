@@ -1,0 +1,34 @@
+{
+  "statusEndpoint": "GET /api/v1/support/ticket-schema/status",
+  "exampleEndpoint": "GET /api/v1/support/ticket-schema/example",
+  "previewEndpoint": "POST /api/v1/support/ticket-schema/preview",
+  "healthMode": "v2-phase-12-3-ticket-data-model",
+  "deliverable": "support_ticket_schema",
+  "fields": [
+    "ticket_id",
+    "customer_email",
+    "subject",
+    "body_snippet",
+    "thread_id",
+    "status",
+    "category",
+    "sensitive_flag"
+  ],
+  "exampleRequest": {
+    "ticketId": "ticket_123",
+    "customerEmail": "customer@example.com",
+    "subject": "Where is my order?",
+    "bodySnippet": "Hello, can you please share the tracking update for order #1001?",
+    "threadId": "gmail_thread_123",
+    "status": "open",
+    "category": "shipping",
+    "sensitiveFlag": false
+  },
+  "safety": {
+    "externalApiCalled": false,
+    "emailSent": false,
+    "gmailApiClientAdded": false,
+    "supportReplyActionAdded": false,
+    "rawProviderPayloadReturnedToBrowser": false
+  }
+}

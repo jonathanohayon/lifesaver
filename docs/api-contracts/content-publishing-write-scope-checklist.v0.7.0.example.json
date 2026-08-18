@@ -1,0 +1,67 @@
+{
+  "package_name": "lifesaver-v0.7.0-phase-9-2-write-scope-planning.zip",
+  "version": "0.7.0",
+  "phase": "V2 Phase 9.2 \u2014 Write Scope Planning",
+  "health_mode": "v2-phase-9-2-write-scope-planning",
+  "selected_platform": "linkedin",
+  "selected_platform_label": "LinkedIn",
+  "selected_initial_author_type": "member",
+  "selected_initial_content_type": "text_link_post",
+  "required_product": "Share on LinkedIn",
+  "required_write_scope": "w_member_social",
+  "oauth_flow": "linkedin_3_legged_authorization_code",
+  "app_review_or_portal_access_required": true,
+  "app_review_notes": "Enable Share on LinkedIn product and confirm w_member_social is assigned in LinkedIn Developer Portal before implementing OAuth or publishing.",
+  "token_expiry_plan": {
+    "do_not_assume_long_lived_access_tokens": true,
+    "store_expires_at_from_expires_in": true,
+    "programmatic_refresh_tokens_assumed_available": false,
+    "reconnect_required_if_expired_without_refresh": true,
+    "future_refresh_token_storage_must_be_encrypted": true
+  },
+  "publishing_permissions": {
+    "member_posting_allowed_future": true,
+    "organization_posting_allowed_future": false,
+    "sponsored_content_allowed_future": false,
+    "comments_likes_automation_allowed_future": false,
+    "bulk_publish_allowed_future": false
+  },
+  "media_upload_limitations": {
+    "media_upload_added_this_phase": false,
+    "initial_executor_should_be_text_link_only": true,
+    "image_upload_later_requires_asset_or_images_flow": true,
+    "known_image_formats": [
+      "jpg",
+      "gif",
+      "png"
+    ],
+    "known_image_pixel_limit_less_than": 36152320,
+    "gif_max_frames": 250,
+    "video_upload_later_separate_flow": true,
+    "document_upload_later_separate_flow": true,
+    "organic_carousel_out_of_initial_scope": true
+  },
+  "future_publish_gates": [
+    "workspace_scoping",
+    "manual_approval",
+    "permission_guard",
+    "master_pause_off",
+    "content_pause_off",
+    "emergency_safe_mode_off",
+    "policy_not_blocked",
+    "caps_not_exceeded",
+    "token_valid",
+    "payload_valid",
+    "idempotency_check",
+    "result_log"
+  ],
+  "real_executor_added": false,
+  "real_external_writes_added": false,
+  "oauth_routes_added": false,
+  "token_storage_added": false,
+  "linkedin_api_client_added": false,
+  "media_upload_added": false,
+  "auto_run_enabled": false,
+  "external_platform_called": false,
+  "next_phase": "Phase 9.3 \u2014 Connector Credential Model"
+}

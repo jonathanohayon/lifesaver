@@ -1,0 +1,28 @@
+# LIFE.SAVER v0.6.0 — Phase 7.1 Rules Page Layout
+
+## Purpose
+Let the founder safely control autonomy by creating the first rules-page shell under Settings/Admin.
+
+## Deliverable
+Rules page shell.
+
+## Page Added
+- `apps/web/src/rules.html`
+- Built copy: `apps/dist/rules.html`
+
+## Sections Included
+1. Master pause
+2. Content rules
+3. Support rules
+4. Ads rules
+5. Global caps
+6. Rule history
+
+## Current Behavior
+The page is intentionally layout-first and read-only. It can read the existing autonomy pause status for display, but it does not create policies or edit rules.
+
+## Safety Boundary
+Phase 7.1 does not add executors, write connectors, auto-run execution, publishing, support sending, ad changes, refunds, product edits, rollback execution, or external platform writes.
+
+## Why This Comes Before Rule Creation
+Phase 6 completed the policy engine foundation. Before building rule creation forms, the founder needs a clear, calm rules surface that explains what the policy areas are and where future controls will live.

@@ -1,0 +1,89 @@
+LIFE.SAVER v0.4.3 — Handoff Evidence Template
+
+Project version tested:
+Tester:
+Date:
+Environment:
+Database project:
+Triple Whale workspace/shop:
+
+1. Local setup
+- npm install result:
+- db:status result:
+- db:migrate result:
+- security:check result:
+- env:check result:
+- client:test-checklist result:
+
+2. Auth/Admin
+- Login works: yes/no
+- Admin shows version 0.4.3: yes/no
+- API connected: yes/no
+- Database connected: yes/no
+
+3. Triple Whale Summary
+- Validate key result:
+- Summary probe result:
+- Mapping preview result:
+- coreMetricsProductionReady:
+- productionReady:
+- Revenue path:
+- Orders path:
+- AOV path:
+- Ad Spend sourceKind:
+- ROAS path:
+
+4. Dashboard
+- Live KPI values visible: yes/no
+- Old demo values removed/labelled: yes/no
+- Screenshot saved: yes/no
+
+5. Briefs
+- Daily Brief generated: yes/no
+- Weekly Summary generated: yes/no
+- sample_placeholder absent: yes/no
+
+6. Drafts
+- Content draft created: yes/no
+- Support reply draft created: yes/no
+- Approve/reject/reset tested: yes/no
+- No external send/post action: yes/no
+
+7. Claude
+- Safe fallback tested: yes/no
+- Live Claude tested: yes/no/not configured
+- Tool calling tested: yes/no/not configured
+- Secrets hidden from browser: yes/no
+
+8. Worker
+- worker:status passes: yes/no
+- worker:once:daily passes: yes/no
+- worker:once:weekly passes: yes/no
+- system_events updated: yes/no
+
+9. Admin Logs
+- Snapshot timeline loads: yes/no
+- System events load: yes/no
+- Brief history loads: yes/no
+- Usage logs load: yes/no
+- Sensitive fields redacted: yes/no
+
+10. Attribution / Pixel
+- Probe ran: yes/no
+- Safe success/error: yes/no
+- Did not overwrite core metrics: yes/no
+- attributionProductionReady remains false until confirmed: yes/no
+
+11. Security
+- Security status loads: yes/no
+- No secrets in UI: yes/no
+- Production warnings understood: yes/no
+
+Known issues found:
+- 
+
+Fixes needed before production:
+- 
+
+Approved for next phase:
+- yes/no

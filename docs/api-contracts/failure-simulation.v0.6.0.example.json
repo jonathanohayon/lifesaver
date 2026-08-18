@@ -1,0 +1,40 @@
+{
+  "version": "0.6.0",
+  "phase": "v0.6.0 Phase 8.8 Failure Simulation",
+  "input_example": {
+    "actionType": "content_publish",
+    "currentStatus": "proposed",
+    "payloadJson": {
+      "schema_version": "action-payload/v0.6.0",
+      "action_type": "content_publish",
+      "source": "admin",
+      "intent_summary": "Publish a post in sandbox but force QA failure.",
+      "sandbox_should_fail": true,
+      "sandbox_failure_reason": "QA requested fake publish failure.",
+      "data": {
+        "platform": "instagram",
+        "caption": "Safe sandbox caption.",
+        "post_type": "feed"
+      }
+    }
+  },
+  "expected_lifecycle": {
+    "statusPath": ["proposed", "approved", "executing", "failed"],
+    "finalStatus": "failed",
+    "executed": false,
+    "failed": true
+  },
+  "expected_result_preview": {
+    "result_status": "failed",
+    "sandbox_should_fail": true,
+    "sandbox_success": false,
+    "external_writes_attempted": false,
+    "external_writes_succeeded": false
+  },
+  "safety": {
+    "sandboxOnly": true,
+    "realExecutorEnabled": false,
+    "autoRunEnabled": false,
+    "externalWritesEnabled": false
+  }
+}

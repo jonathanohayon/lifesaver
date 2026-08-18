@@ -1,0 +1,54 @@
+# LIFE.SAVER v0.6.0 — Phase 7.3 Content Rules UI
+
+## Purpose
+
+Let the founder configure safe content-rule preferences in the Policy Rules UI.
+
+## Deliverable
+
+Content rules form.
+
+## Fields added
+
+- Platform.
+- Approved style.
+- Max posts/day.
+- Allowed content type.
+- Auto-publish allowed yes/no.
+- Approval required above risk level.
+
+## Implementation
+
+The form is added to `/rules.html` in the Content Rules section.
+
+The form generates a local content-rule preview JSON with:
+
+- `action_type: content_publish`
+- platform scope
+- organic social channel
+- approved style notes
+- allowed content type
+- `max_posts_per_day` cap
+- future decision preview of `ask` or `auto_approve`
+- risk threshold condition
+- safety flags
+
+## Safety
+
+This phase is UI preview only.
+
+It does not:
+
+- create database policies
+- update database policies
+- call `/api/v1/policies`
+- enable auto-publish
+- run executors
+- publish content
+- send support replies
+- change ads
+- write externally
+
+## Next phase
+
+Phase 7.4 — Support Rules UI.

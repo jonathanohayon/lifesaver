@@ -1,0 +1,30 @@
+LIFE.SAVER v0.7.4 — Mobile Rules Memory Proactivity Test Results
+
+Tests run in packaging workspace:
+- npm run phase-mobile:0-7-4:test
+- node --check apps/web/src/assets/js/rules.js
+- node --check apps/web/src/assets/js/memory.js
+- node scripts/build-web-static.mjs
+
+Expected smoke-test result:
+mobile-rules-memory-proactivity-check — 62 passed, 0 failed
+
+Manual mobile QA checklist:
+- /rules.html opens without horizontal scrolling.
+- Mobile shortcut nav appears on phone width.
+- Rules sections collapse/expand on phone width.
+- Master Pause remains visible first.
+- Content/Support/Ads/Caps forms stack in one column.
+- JSON previews scroll internally instead of widening the page.
+- Proactivity trigger cards are readable on mobile.
+- /memory.html memory cards stack cleanly.
+- Memory Edit/Approve/Disable/Delete buttons are tap-friendly.
+- /api/v1/health returns mode v2-mobile-0-7-4-rules-memory-proactivity.
+
+Safety verification:
+- No database migration added.
+- No backend approval behavior changed.
+- No executor behavior changed.
+- No policy behavior changed.
+- No external write connector added.
+- No auto-run enabled.

@@ -1,0 +1,27 @@
+{
+  "name": "@lifesaver/worker",
+  "version": "0.8.5",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/worker.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/worker.js",
+    "status": "tsx src/worker.ts --status",
+    "once:metrics": "tsx src/worker.ts --once=metrics_refresh",
+    "once:daily": "tsx src/worker.ts --once=daily_pipeline",
+    "once:weekly": "tsx src/worker.ts --once=weekly_pipeline",
+    "once:daily-brief": "tsx src/worker.ts --once=daily_brief",
+    "once:weekly-summary": "tsx src/worker.ts --once=weekly_summary"
+  },
+  "dependencies": {
+    "node-cron": "^3.0.3",
+    "dotenv": "^16.4.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  },
+  "description": "LIFE.SAVER Worker - v0.8.2 compatible with Audience Mapping Guidance."
+}

@@ -1,0 +1,41 @@
+LIFE.SAVER v0.7.0 — Phase 10.4 Approval Deep Links
+
+GOAL
+Email and in-app notifications should open the exact action detail screen.
+
+DELIVERABLE
+Secure approval deep link.
+
+WHAT WAS BUILT
+- New deep-link model: buildSecureApprovalDeepLink().
+- New safe status endpoint: GET /api/v1/notifications/deep-links/status.
+- New safe preview endpoint: GET /api/v1/notifications/deep-links/preview?actionId=<uuid>.
+- Notification center links now use the shared secure approval deep-link model.
+- Notification trigger review URLs now use the shared secure approval deep-link model.
+- actions.html now supports query deep links:
+  /actions.html?actionId=<uuid>&source=email_notification
+- actions.html still supports older hash links:
+  /actions.html#<uuid>
+- Login redirects back to safe relative returnTo links after authentication.
+
+SECURITY BEHAVIOR
+- Deep link contains only actionId and source.
+- Deep link does not contain tokens.
+- Deep link does not contain raw action payload JSON.
+- Deep link does not approve by itself.
+- Deep link does not execute by itself.
+- Deep link requires a valid authenticated session because actions APIs are protected by authRequired.
+- If the user is logged out, actions.html redirects to login with a safe returnTo parameter.
+
+SAFE LINK FORMAT
+./actions.html?actionId=<uuid>&source=email_notification
+
+ABSOLUTE LIVE FORMAT
+https://lifesaveragent.com/actions.html?actionId=<uuid>&source=email_notification
+
+NOT ADDED
+- No magic-login links.
+- No tokenized email links.
+- No one-click approval.
+- No one-click execution.
+- No external notification provider.

@@ -1,0 +1,40 @@
+LIFE.SAVER v0.2.8 — Triple Whale Summary Period Fix + Probe Variants
+
+Purpose
+-------
+v0.2.3 reached the Triple Whale Summary endpoint but received HTTP 400 with:
+
+  period must be specified
+
+v0.2.8 keeps the request read-only and adds controlled Summary request variants so the app can discover which period shape Triple Whale accepts without guessing final metric mapping.
+
+What changed
+------------
+- The Summary payload builder now adds a top-level `period` field.
+- The probe tries multiple safe variants in order:
+  1. captured_period_and_periods
+  2. captured_period_with_comparison_period
+  3. captured_period_only
+  4. captured_period_string_today
+- Each attempt stores its mode, HTTP status, response kind, request body, and bounded response preview.
+- If any variant succeeds, the probe stops and stores the successful raw response for mapping review.
+- If all variants fail, the latest Summary probe snapshot clearly shows attempts[] so the next body adjustment can be made from real diagnostics.
+- No API key is stored in request diagnostics.
+- Raw browser previews remain redacted.
+
+Safety rules
+------------
+- Summary probes remain read-only.
+- Dashboard metrics remain productionReady=false until the accepted response field paths are confirmed.
+- API-key validation snapshots are still separated from Summary probe snapshots.
+- Placeholder metrics must not be treated as real business truth.
+
+Expected test flow
+------------------
+1. Validate Triple Whale key.
+2. Probe Summary API.
+3. Open Snapshot History.
+4. Load Summary Probe Response.
+5. Check attempts[].
+6. If one attempt is successful, run Preview Metric Mapping.
+7. If mapping finds real fields, v0.2.8 can lock metric paths.

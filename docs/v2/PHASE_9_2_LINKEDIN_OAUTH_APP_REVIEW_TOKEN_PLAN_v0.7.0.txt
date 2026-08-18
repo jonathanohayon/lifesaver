@@ -1,0 +1,170 @@
+================================================================================
+LIFE.SAVER v0.7.0 — Phase 9.2 LinkedIn OAuth, App Review, Token, and Media Plan
+================================================================================
+
+Purpose
+-------
+Convert the LinkedIn publishing research into implementation rules for later phases.
+
+================================================================================
+1. OAUTH FLOW PLAN
+================================================================================
+
+Future connector flow:
+
+1. Owner/admin clicks Connect LinkedIn.
+2. Backend creates signed OAuth state with workspace_id, user_id, nonce, and expiry.
+3. User is redirected to LinkedIn OAuth authorization URL.
+4. LinkedIn redirects back to backend callback.
+5. Backend validates state and workspace/user permission.
+6. Backend exchanges authorization code for access token.
+7. Backend encrypts token server-side.
+8. Backend stores only safe status and hints.
+9. Browser receives connected/disconnected status only.
+
+Security requirements:
+
+- Use HTTPS in production.
+- Use exact redirect URI matching.
+- Use signed/expiring state.
+- Never exchange code in browser.
+- Never store token in localStorage.
+- Never send token back to frontend.
+- Never log query strings if they contain OAuth code/state.
+
+================================================================================
+2. APP ACCESS PLAN
+================================================================================
+
+Future developer portal tasks:
+
+1. Create or open the LIFE.SAVER LinkedIn developer app.
+2. Add product: Share on LinkedIn.
+3. Confirm permission: `w_member_social`.
+4. Add redirect URLs:
+   - local dev callback.
+   - Render/live callback.
+5. Store LinkedIn client ID/secret in `.env` locally and Render secrets in production.
+6. Keep `.env.example` placeholder-only.
+
+Do not request in first connector:
+
+- Ads API permissions.
+- Organization social permission.
+- Compliance permission.
+- Closed/private read social permissions.
+- Any permission not needed for manual-approved member posting.
+
+================================================================================
+3. TOKEN EXPIRY PLAN
+================================================================================
+
+Future database/storage fields:
+
+- provider: linkedin
+- encrypted_access_token
+- token_hint
+- scopes_granted_json
+- access_token_expires_at
+- token_issued_at
+- linkedin_member_id_hash_or_hint
+- linkedin_member_display_hint
+- connection_status
+- last_validation_at
+- disconnected_at
+
+Future behavior:
+
+- If token is expired, block publish and ask reconnect.
+- If token is close to expiry, show reconnect warning.
+- If refresh token support is available, store refresh token encrypted and rotate access token server-side.
+- If refresh token support is not available, use reconnect flow.
+
+Important:
+Programmatic refresh tokens should not be assumed unless LinkedIn enables that capability for the app.
+
+================================================================================
+4. PUBLISHING PLAN
+================================================================================
+
+Future first executor target:
+
+- API family: LinkedIn share/post API.
+- Author: authenticated member.
+- Action type: content_publish.
+- Content: text/link post.
+- Approval: manual approval required.
+
+Required safety checks before publish:
+
+1. User has permission to approve/execute.
+2. Action belongs to current workspace.
+3. Action status is approved or approved-for-execution path is explicit.
+4. Master pause is off.
+5. Content pause is off.
+6. Emergency safe mode is off.
+7. Policy does not block.
+8. Caps are not exceeded.
+9. Token exists and is not expired.
+10. Payload validates.
+11. Idempotency check passes.
+12. Result log is written.
+
+================================================================================
+5. MEDIA PLAN
+================================================================================
+
+Phase 9.2 decision:
+Media upload is postponed.
+
+Reason:
+Media increases risk and complexity because assets must be uploaded, processed, checked for availability, connected to a post, and safely logged.
+
+Future media handling should not be implemented until Phase 9.5.
+
+Recommended first media addition later:
+
+1. Image only.
+2. JPG/PNG/GIF only.
+3. Strict MIME and size checks.
+4. Preview before approval.
+5. Upload only after final manual approval, or upload to a safe internal storage first and LinkedIn only at execution time.
+
+================================================================================
+6. PHASE 9.2 BOUNDARY
+================================================================================
+
+This phase adds:
+
+- checklist docs.
+- static planning contract.
+- TypeScript planning object.
+- validation script.
+- health mode update.
+
+This phase does not add:
+
+- OAuth route.
+- LinkedIn client.
+- LinkedIn API call.
+- token storage.
+- media upload.
+- real executor.
+- external write.
+- auto-run.
+
+================================================================================
+7. NEXT IMPLEMENTATION RECOMMENDATION
+================================================================================
+
+Phase 9.3 should add the connector credential model only.
+
+Recommended Phase 9.3 scope:
+
+- migration for LinkedIn connected account metadata/token storage, if not reusable through connected_accounts.
+- encrypted token storage shape.
+- safe status endpoint shape.
+- disconnect model.
+- no publishing.
+- no media upload.
+- no auto-run.

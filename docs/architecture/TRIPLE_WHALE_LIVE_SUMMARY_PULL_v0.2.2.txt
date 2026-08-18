@@ -1,0 +1,43 @@
+LIFE.SAVER v0.2.8 — Triple Whale Live Summary Pull
+
+Purpose
+- Use the captured Triple Whale Summary page payload shape from Network Payloads.txt.
+- Build the Summary request body dynamically from environment values.
+- Keep the Triple Whale API key encrypted and server-side only.
+- Capture the raw Summary response in metrics_snapshots.raw_payload.
+- Run the conservative mapper on the captured response and keep productionReady=false until field paths are manually reviewed.
+
+Captured payload source
+- shopDomain: budclub.com
+- additionalShopIds: ["budclub.com"]
+- currency: USD
+- timezone: America/New_York
+- periods: selected day and previous day
+- includeCalculatedStats: true
+- includeRawStats: true
+- includeCharts: true
+- groupStatsBy: hour
+- activeOrderSegment: []
+
+New env values
+- TRIPLE_WHALE_SHOP_DOMAIN
+- TRIPLE_WHALE_ADDITIONAL_SHOP_IDS
+- TRIPLE_WHALE_CURRENCY
+- TRIPLE_WHALE_TIMEZONE
+- TRIPLE_WHALE_TIMEZONE_OFFSET
+- TRIPLE_WHALE_SUMMARY_DATE
+- TRIPLE_WHALE_SUMMARY_GROUP_BY
+- TRIPLE_WHALE_TODAY_HOUR
+
+Behavior
+- If TRIPLE_WHALE_SUMMARY_BODY_JSON is filled, it overrides the dynamic builder.
+- If it is empty, the backend builds the captured Summary payload dynamically.
+- Probe Summary API now attempts the live Summary endpoint instead of stopping as not configured.
+- The request body is stored in raw_payload.request for developer review, but it contains no API key.
+- The API key is still sent only as x-api-key on the backend.
+
+Safety
+- v0.2.8 is a live-pull test, not final production mapping.
+- productionReady remains false for live captures until field paths are manually confirmed.
+- Raw payload is for developer/admin review only.
+- Customer-facing dashboard should not claim final verified numbers until mapping is confirmed.

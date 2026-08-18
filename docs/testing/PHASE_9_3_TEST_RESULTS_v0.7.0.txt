@@ -1,0 +1,66 @@
+================================================================================
+PHASE 9.3 TEST RESULTS — v0.7.0
+================================================================================
+
+Package:
+lifesaver-v0.7.0-phase-9-3-connector-credential-model.zip
+
+Test commands run during package creation:
+
+1. `npm run phase9:credential-model:test`
+2. `npm run phase9:write-scope:test`
+3. `npm run phase9:platform-plan:test`
+4. `npm run build`
+
+Expected results:
+
+- content-connector:credentials:test — 22 passed, 0 failed
+- phase9:write-scope:test — existing Phase 9.2 checks pass
+- phase9:platform-plan:test — existing Phase 9.1 checks pass
+- build — TypeScript compile passes
+
+Safety assertions tested:
+
+- Selected platform remains LinkedIn.
+- Required future write scope remains `w_member_social`.
+- Credential table is `content_connector_credentials`.
+- Access token encryption is required.
+- Refresh token encryption is required.
+- Browser raw-token flag is false.
+- Safe status does not include raw tokens.
+- Safe status does not include encrypted token fields.
+- Expired access token does not show connected=true.
+- Disconnected row does not show encrypted token at rest.
+- Real publishing remains disabled.
+- Auto-run remains disabled.
+- External API call flag remains false.
+
+Note:
+Database integration tests are not included in this phase because the package is designed to run safely without a configured DATABASE_URL. The migration is additive and can be applied with `npm.cmd run db:migrate` after copying the working `.env`.
+
+================================================================================
+ACTUAL LOCAL PACKAGE BUILD OUTPUT AFTER FINAL PATCH
+================================================================================
+
+$ npm run phase9:credential-model:test
+content-connector:credentials:test — 22 passed, 0 failed
+Selected platform: linkedin
+Encrypted credential storage model: content_connector_credentials
+Real external writes added: false
+Auto-run enabled: false
+
+$ npm run phase9:write-scope:test
+phase9:write-scope:test — 22 passed, 0 failed
+Selected platform: linkedin
+Required write scope: w_member_social
+Real external writes added: false
+Auto-run enabled: false
+
+$ npm run phase9:platform-plan:test
+phase9:platform-plan:test — 12 passed, 0 failed
+Selected platform: linkedin
+Real external writes added: false
+Auto-run enabled: false
+
+$ npm run build
+build — passed for web, api, worker, shared, config

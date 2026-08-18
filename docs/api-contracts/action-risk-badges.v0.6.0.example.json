@@ -1,0 +1,35 @@
+{
+  "phase": "v0.6.0 Phase 4.7 Risk Badges + Warnings",
+  "riskLevels": ["low", "medium", "high", "critical"],
+  "criticalWarningTriggers": [
+    "Ad spend changes",
+    "Bulk support sends",
+    "Refund-related replies",
+    "Unusual customer complaints"
+  ],
+  "ui": {
+    "actionCard": {
+      "showsRiskBadge": true,
+      "showsHighCriticalWarningPanel": true
+    },
+    "detailDrawer": {
+      "showsRiskExplanation": true,
+      "showsCriticalTriggers": true,
+      "showsReviewRule": true
+    },
+    "approveModal": {
+      "showsRiskWarningBeforeFinalApprove": true,
+      "executesImmediately": false
+    },
+    "rejectModal": {
+      "showsRiskWarningBeforeFinalReject": true,
+      "executesImmediately": false
+    }
+  },
+  "safety": {
+    "externalWritesEnabled": false,
+    "executorEnabled": false,
+    "approvalRecordsInternalStatusOnly": true,
+    "rejectionRecordsInternalStatusOnly": true
+  }
+}

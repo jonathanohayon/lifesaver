@@ -1,0 +1,255 @@
+LIFE.SAVER v0.6.0
+Phase 3.5 — Approve Action Endpoint
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 3.5 adds the first write-style approval queue backend endpoint:
+
+POST /api/v1/actions/:id/approve
+
+This endpoint records founder/team approval inside LIFE.SAVER only.
+
+It does not queue the action.
+It does not execute the action.
+It does not call an executor.
+It does not publish content.
+It does not send support replies.
+It does not change ad spend.
+It does not pause campaigns.
+It does not write to Triple Whale, Shopify, Meta, Google, TikTok, Snapchat,
+Google Ads, Gmail/helpdesk, or any other external platform.
+
+V1 remains READ + ADVISE + DRAFT ONLY.
+
+================================================================================
+WHAT WAS ADDED
+================================================================================
+
+Endpoint:
+- POST /api/v1/actions/:id/approve
+
+Backend files updated:
+- apps/api/src/modules/actions/actions.types.ts
+- apps/api/src/modules/actions/actions.repository.ts
+- apps/api/src/modules/actions/actions.service.ts
+- apps/api/src/modules/actions/actions.controller.ts
+- apps/api/src/modules/actions/actions.routes.ts
+- apps/api/src/modules/actions/actions.validation.ts
+
+Shared reference added:
+- packages/shared/src/approve-action.ts
+
+Documentation/contracts added:
+- docs/v2/APPROVE_ACTION_ENDPOINT_v0.6.0_PHASE_3_5.txt
+- docs/api-contracts/approve-action-response.v0.6.0.example.json
+- START_HERE_v0.6.0_PHASE_3_5_APPROVE_ACTION_ENDPOINT.txt
+
+================================================================================
+APPROVAL RULES
+================================================================================
+
+Allowed roles:
+- owner can approve low, medium, high, and critical actions.
+- admin can approve low, medium, and high actions.
+- admin cannot approve critical actions by default.
+- member cannot approve.
+- viewer cannot approve.
+- super_admin monitoring should not approve customer actions by default.
+
+Allowed statuses before approval:
+- proposed
+- approval_required
+- auto_approved
+
+Blocked statuses:
+- rejected
+- cancelled
+- queued
+- executing
+- executed
+- failed
+- rollback_requested
+- rolled_back
+
+Already approved actions:
+- The endpoint returns a safe no-op response with alreadyApproved=true.
+- This protects against double-click approve behaviour.
+- It does not insert duplicate approval events.
+
+================================================================================
+EVENT LOGGING
+================================================================================
+
+When an eligible action is approved, the service:
+
+1. Updates actions.status to approved.
+2. Sets approved_at if it was not already set.
+3. Updates updated_at.
+4. Inserts an action_events row:
+   - event_type: approved
+   - from_status: previous status
+   - to_status: approved
+   - actor_user_id: approving user
+   - metadata_json includes safety flags
+
+The approval event metadata records:
+- phase: 3.5
+- endpoint: POST /api/v1/actions/:id/approve
+- approved_by_role
+- risk_level
+- execution_enabled=false
+- queued=false
+- external_write_enabled=false
+- double_click_protection=true
+
+================================================================================
+RESPONSE SHAPE
+================================================================================
+
+The endpoint returns:
+
+- version
+- phase
+- workspaceId
+- userRole
+- approved
+- alreadyApproved
+- action summary
+- transition fromStatus/toStatus
+- approval metadata
+- execution safety block
+- safety block
+
+The response deliberately says:
+- executed=false
+- queued=false
+- executorEnabled=false
+- externalWritesEnabled=false
+
+================================================================================
+ERRORS
+================================================================================
+
+Potential safe errors:
+
+AUTH_REQUIRED
+- User is not logged in.
+
+ACTION_NOT_FOUND
+- Action does not exist in the current workspace.
+
+ACTION_WORKSPACE_FORBIDDEN
+- User is not an active member of the workspace.
+
+APPROVAL_FORBIDDEN
+- User role cannot approve this action risk level.
+
+ACTION_REJECTED
+- Rejected actions cannot be approved.
+
+ACTION_CANCELLED
+- Cancelled actions cannot be approved.
+
+ACTION_ALREADY_EXECUTED_OR_QUEUED
+- Queued/executing/executed actions cannot be approved again.
+
+ACTION_FAILED
+- Failed actions cannot be approved again.
+
+ACTION_ROLLBACK_STATE
+- Rollback-state actions cannot be approved through the normal approval endpoint.
+
+DATABASE_NOT_CONFIGURED
+- Database is missing.
+
+================================================================================
+SECURITY NOTES
+================================================================================
+
+- Auth is required through the /api/v1/actions router.
+- Workspace membership is checked before action access.
+- Role/risk approval rules are enforced server-side.
+- Full payload_json is not required for approval.
+- Approval note is optional and capped to 1000 characters.
+- No secrets are returned or logged.
+- No executor or external connector is called.
+
+================================================================================
+TESTING CHECKLIST
+================================================================================
+
+Local testing steps:
+
+1. Copy working .env into the new package.
+2. Run:
+   npm.cmd install
+   npm.cmd run build
+   npm.cmd run db:status
+   npm.cmd run db:migrate
+   npm.cmd run db:seed:actions:local
+   npm.cmd run client:test-checklist
+
+3. Start backend and frontend:
+   npm.cmd run dev:api
+   npm.cmd run dev:web
+
+4. Log in.
+5. List actions:
+   GET http://localhost:4000/api/v1/actions
+
+6. Copy an action id with status proposed.
+7. Approve it:
+   POST http://localhost:4000/api/v1/actions/<ACTION_ID>/approve
+
+8. Confirm response says:
+   approved=true
+   alreadyApproved=false
+   action.status=approved
+   execution.executed=false
+   execution.queued=false
+   execution.executorEnabled=false
+   safety.externalWritesEnabled=false
+
+9. Refresh detail:
+   GET http://localhost:4000/api/v1/actions/<ACTION_ID>
+
+10. Confirm status history includes approved.
+
+11. Press approve again.
+12. Confirm second response is a no-op:
+    approved=false
+    alreadyApproved=true
+    no duplicate external write
+
+================================================================================
+WHAT THIS PHASE DOES NOT ADD
+================================================================================
+
+This phase does not add:
+- reject endpoint
+- cancel endpoint
+- approval queue UI
+- executor registry
+- sandbox executor
+- real executor
+- social publishing
+- support reply sending
+- ad budget changes
+- campaign pause
+- auto-run policy
+- external write connectors
+
+================================================================================
+NEXT PHASE
+================================================================================
+
+Phase 3.6 — Reject Action Endpoint
+
+Expected endpoint:
+POST /api/v1/actions/:id/reject
+
+It should log rejection reason, update internal status to rejected, and still never execute
+or write externally.
+

@@ -1,0 +1,338 @@
+{
+  "endpoints": {
+    "status": {
+      "method": "GET",
+      "path": "/api/v1/ads/budget-payload/status",
+      "response": {
+        "ok": true,
+        "data": {
+          "phase": "V2 Phase 14.4 — Budget Change Payload",
+          "healthMode": "v2-phase-14-4-budget-change-payload",
+          "deliverable": "ads_payload_schema",
+          "schemaOnly": true,
+          "requiredFields": [
+            "platform",
+            "account_id",
+            "campaign_id",
+            "adset_id",
+            "current_budget",
+            "proposed_budget",
+            "delta",
+            "percentage_change",
+            "reason",
+            "risk_level"
+          ],
+          "budgetChanged": false,
+          "adsExecutorAdded": false,
+          "externalAdApiCalled": false,
+          "hardCapsTableAdded": false,
+          "noDatabaseMigrationRequired": true,
+          "nextStep": "Phase 14.5 — Hard Caps Table"
+        }
+      }
+    },
+    "schema": {
+      "method": "GET",
+      "path": "/api/v1/ads/budget-payload/schema",
+      "response": {
+        "ok": true,
+        "data": {
+          "version": "0.7.0",
+          "phase": "phase_14_4_budget_change_payload",
+          "healthMode": "v2-phase-14-4-budget-change-payload",
+          "deliverable": "ads_payload_schema",
+          "schemaOnly": true,
+          "generatedAt": "2026-07-08T20:38:05.708Z",
+          "executiveSummary": "Phase 14.4 defines the safe ads budget-change payload schema for future manual-approved budget executors. It validates platform, account, campaign/ad set targeting, current/proposed budget, delta, percentage change, reason, and risk level without adding any ad API client, OAuth, token storage, executor, auto-run, or real budget mutation.",
+          "actionType": "adjust_budget",
+          "requiredFields": [
+            "platform",
+            "account_id",
+            "campaign_id",
+            "adset_id",
+            "current_budget",
+            "proposed_budget",
+            "delta",
+            "percentage_change",
+            "reason",
+            "risk_level"
+          ],
+          "fields": [
+            {
+              "field": "platform",
+              "type": "meta_marketing_api | google_ads_api",
+              "required": true,
+              "validation": "Must identify the future direct ad platform control layer, not Triple Whale.",
+              "safetyNote": "Triple Whale remains read-only performance context and cannot mutate ads."
+            },
+            {
+              "field": "account_id",
+              "type": "string",
+              "required": true,
+              "validation": "Must be the target ad account identifier or safe provider account reference.",
+              "safetyNote": "Never include OAuth tokens, refresh tokens, client secrets, or raw provider credentials."
+            },
+            {
+              "field": "campaign_id",
+              "type": "string",
+              "required": true,
+              "validation": "Must be the campaign being evaluated for a future budget change.",
+              "safetyNote": "No campaign lookup or provider mutation occurs in this phase."
+            },
+            {
+              "field": "adset_id",
+              "type": "string | null",
+              "required": true,
+              "validation": "Use a string for ad set/ad group level changes, or null for campaign-level budget changes.",
+              "safetyNote": "A null value must not be interpreted as permission to change multiple ad sets."
+            },
+            {
+              "field": "current_budget",
+              "type": "number",
+              "required": true,
+              "validation": "Must be a finite number greater than or equal to zero.",
+              "safetyNote": "Before a real executor exists, this is planned payload data only."
+            },
+            {
+              "field": "proposed_budget",
+              "type": "number",
+              "required": true,
+              "validation": "Must be a finite number greater than or equal to zero.",
+              "safetyNote": "Hard caps are required in Phase 14.5 before any executor can use this value."
+            },
+            {
+              "field": "delta",
+              "type": "number",
+              "required": true,
+              "validation": "Must equal proposed_budget - current_budget within currency tolerance.",
+              "safetyNote": "Delta must be checked again immediately before any future execution."
+            },
+            {
+              "field": "percentage_change",
+              "type": "number",
+              "required": true,
+              "validation": "Must equal ((proposed_budget - current_budget) / current_budget) * 100 when current_budget is greater than zero.",
+              "safetyNote": "Percentage changes are used for future hard-cap enforcement and risk display."
+            },
+            {
+              "field": "reason",
+              "type": "string",
+              "required": true,
+              "validation": "Must explain why the budget change is being proposed.",
+              "safetyNote": "The reason should be safe to show in approval UI without exposing raw provider payloads."
+            },
+            {
+              "field": "risk_level",
+              "type": "medium | high | critical",
+              "required": true,
+              "validation": "Budget increases should be critical by default; budget decreases should be at least high.",
+              "safetyNote": "Risk level does not approve execution; founder approval and hard caps remain required."
+            }
+          ],
+          "formulaChecks": {
+            "delta": "proposed_budget - current_budget",
+            "percentage_change": "((proposed_budget - current_budget) / current_budget) * 100"
+          },
+          "manualApprovalAndSafetyGates": [
+            "Manual approval is required before any future ads budget executor can run.",
+            "Master pause must be checked immediately before any future budget mutation.",
+            "Ads category pause must be checked immediately before any future budget mutation.",
+            "Emergency safe mode must block every future ads budget mutation.",
+            "Hard caps table and cap evaluation must exist before execution phases.",
+            "Before/after snapshot must be stored before a future real budget change is attempted.",
+            "Idempotency must prevent duplicate budget changes from double-clicks, retries, or worker replay.",
+            "Result logs must record success/failure before LIFE.SAVER claims anything changed.",
+            "Rollback/restore planning must exist before live control is attempted.",
+            "No auto-run budget changes are allowed in this phase."
+          ],
+          "examplePayload": {
+            "action_type": "adjust_budget",
+            "platform": "meta_marketing_api",
+            "account_id": "act_sandbox_example_account",
+            "campaign_id": "campaign_sandbox_example_001",
+            "adset_id": "adset_sandbox_example_001",
+            "current_budget": 100,
+            "proposed_budget": 110,
+            "delta": 10,
+            "percentage_change": 10,
+            "reason": "ROAS improved in the latest read-only performance context, so LIFE.SAVER is proposing a small manual-reviewed budget test.",
+            "risk_level": "critical",
+            "manual_approval_required": true,
+            "hard_caps_required_before_execution": true,
+            "before_after_snapshot_required_before_execution": true,
+            "result_log_required_after_execution": true,
+            "external_ad_api_called": false
+          },
+          "safety": {
+            "schemaOnly": true,
+            "noAdsExecutorAdded": true,
+            "noMetaAdsApiClientAdded": true,
+            "noGoogleAdsApiClientAdded": true,
+            "noAdOAuthRouteAdded": true,
+            "noAdTokenStorageAdded": true,
+            "noWriteScopeRequested": true,
+            "noCampaignPaused": true,
+            "noAdsetPaused": true,
+            "noBudgetChanged": true,
+            "noBudgetRestored": true,
+            "noCampaignReenabled": true,
+            "noAdsAutoRunEnabled": true,
+            "noExternalAdApiCalled": true,
+            "noRawTokensReturned": true,
+            "noRawProviderPayloadReturned": true,
+            "noDatabaseMigrationRequired": true
+          },
+          "nextStep": "Phase 14.5 — Hard Caps Table"
+        }
+      }
+    },
+    "example": {
+      "method": "GET",
+      "path": "/api/v1/ads/budget-payload/example",
+      "response": {
+        "ok": true,
+        "data": {
+          "examplePayload": {
+            "action_type": "adjust_budget",
+            "platform": "meta_marketing_api",
+            "account_id": "act_sandbox_example_account",
+            "campaign_id": "campaign_sandbox_example_001",
+            "adset_id": "adset_sandbox_example_001",
+            "current_budget": 100,
+            "proposed_budget": 110,
+            "delta": 10,
+            "percentage_change": 10,
+            "reason": "ROAS improved in the latest read-only performance context, so LIFE.SAVER is proposing a small manual-reviewed budget test.",
+            "risk_level": "critical",
+            "manual_approval_required": true,
+            "hard_caps_required_before_execution": true,
+            "before_after_snapshot_required_before_execution": true,
+            "result_log_required_after_execution": true,
+            "external_ad_api_called": false
+          },
+          "validationPreview": {
+            "decision": "valid_schema_preview",
+            "valid": true,
+            "issues": [],
+            "warnings": [],
+            "computed": {
+              "expected_delta": 10,
+              "expected_percentage_change": 10,
+              "recommended_risk_level": "critical"
+            },
+            "normalizedPayload": {
+              "action_type": "adjust_budget",
+              "platform": "meta_marketing_api",
+              "account_id": "act_sandbox_example_account",
+              "campaign_id": "campaign_sandbox_example_001",
+              "adset_id": "adset_sandbox_example_001",
+              "current_budget": 100,
+              "proposed_budget": 110,
+              "delta": 10,
+              "percentage_change": 10,
+              "reason": "ROAS improved in the latest read-only performance context, so LIFE.SAVER is proposing a small manual-reviewed budget test.",
+              "risk_level": "critical",
+              "manual_approval_required": true,
+              "hard_caps_required_before_execution": true,
+              "before_after_snapshot_required_before_execution": true,
+              "result_log_required_after_execution": true,
+              "external_ad_api_called": false
+            },
+            "safety": {
+              "schemaOnly": true,
+              "noAdsExecutorAdded": true,
+              "noMetaAdsApiClientAdded": true,
+              "noGoogleAdsApiClientAdded": true,
+              "noAdOAuthRouteAdded": true,
+              "noAdTokenStorageAdded": true,
+              "noWriteScopeRequested": true,
+              "noCampaignPaused": true,
+              "noAdsetPaused": true,
+              "noBudgetChanged": true,
+              "noBudgetRestored": true,
+              "noCampaignReenabled": true,
+              "noAdsAutoRunEnabled": true,
+              "noExternalAdApiCalled": true,
+              "noRawTokensReturned": true,
+              "noRawProviderPayloadReturned": true,
+              "noDatabaseMigrationRequired": true
+            }
+          }
+        }
+      }
+    },
+    "preview": {
+      "method": "POST",
+      "path": "/api/v1/ads/budget-payload/preview",
+      "request": {
+        "action_type": "adjust_budget",
+        "platform": "meta_marketing_api",
+        "account_id": "act_sandbox_example_account",
+        "campaign_id": "campaign_sandbox_example_001",
+        "adset_id": "adset_sandbox_example_001",
+        "current_budget": 100,
+        "proposed_budget": 110,
+        "delta": 10,
+        "percentage_change": 10,
+        "reason": "ROAS improved in the latest read-only performance context, so LIFE.SAVER is proposing a small manual-reviewed budget test.",
+        "risk_level": "critical",
+        "manual_approval_required": true,
+        "hard_caps_required_before_execution": true,
+        "before_after_snapshot_required_before_execution": true,
+        "result_log_required_after_execution": true,
+        "external_ad_api_called": false
+      },
+      "response": {
+        "ok": true,
+        "data": {
+          "decision": "valid_schema_preview",
+          "valid": true,
+          "issues": [],
+          "warnings": [],
+          "computed": {
+            "expected_delta": 10,
+            "expected_percentage_change": 10,
+            "recommended_risk_level": "critical"
+          },
+          "normalizedPayload": {
+            "action_type": "adjust_budget",
+            "platform": "meta_marketing_api",
+            "account_id": "act_sandbox_example_account",
+            "campaign_id": "campaign_sandbox_example_001",
+            "adset_id": "adset_sandbox_example_001",
+            "current_budget": 100,
+            "proposed_budget": 110,
+            "delta": 10,
+            "percentage_change": 10,
+            "reason": "ROAS improved in the latest read-only performance context, so LIFE.SAVER is proposing a small manual-reviewed budget test.",
+            "risk_level": "critical",
+            "manual_approval_required": true,
+            "hard_caps_required_before_execution": true,
+            "before_after_snapshot_required_before_execution": true,
+            "result_log_required_after_execution": true,
+            "external_ad_api_called": false
+          },
+          "safety": {
+            "schemaOnly": true,
+            "noAdsExecutorAdded": true,
+            "noMetaAdsApiClientAdded": true,
+            "noGoogleAdsApiClientAdded": true,
+            "noAdOAuthRouteAdded": true,
+            "noAdTokenStorageAdded": true,
+            "noWriteScopeRequested": true,
+            "noCampaignPaused": true,
+            "noAdsetPaused": true,
+            "noBudgetChanged": true,
+            "noBudgetRestored": true,
+            "noCampaignReenabled": true,
+            "noAdsAutoRunEnabled": true,
+            "noExternalAdApiCalled": true,
+            "noRawTokensReturned": true,
+            "noRawProviderPayloadReturned": true,
+            "noDatabaseMigrationRequired": true
+          }
+        }
+      }
+    }
+  }
+}

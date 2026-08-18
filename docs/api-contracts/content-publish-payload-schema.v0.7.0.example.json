@@ -1,0 +1,87 @@
+{
+  "contract": "content-publish-payload-schema.v0.7.0.phase_9_4",
+  "phase": "V2 Phase 9.4 — Content Action Payload",
+  "selected_platform": "linkedin",
+  "action_type": "content_publish",
+  "schema_version": "content_publish_payload.v0.7.0.phase_9_4",
+  "required_fields": [
+    "caption",
+    "platform",
+    "account_id"
+  ],
+  "optional_fields": [
+    "media_url",
+    "media_type",
+    "link_url",
+    "hashtags",
+    "scheduled_time",
+    "approval_notes",
+    "source_draft_id",
+    "idempotency_hint"
+  ],
+  "example_payload": {
+    "schema_version": "content_publish_payload.v0.7.0.phase_9_4",
+    "action_type": "content_publish",
+    "platform": "linkedin",
+    "account_kind": "member",
+    "account_id": "urn:li:person:exampleMemberId",
+    "caption": "Certainly, sir. Revenue is steady today, but paid spend should be watched carefully before scaling.",
+    "media_url": null,
+    "media_type": "none",
+    "link_url": "https://lifesaveragent.com",
+    "hashtags": ["#ecommerce", "#founderops", "#ai"],
+    "scheduled_time": "2026-07-10T09:30:00.000Z",
+    "approval_notes": "Founder must approve final wording before a future executor can publish.",
+    "source_draft_id": null,
+    "idempotency_hint": "linkedin-member-text-link-example-2026-07-10",
+    "safety": {
+      "manual_approval_required": true,
+      "real_publish_allowed_by_payload": false,
+      "auto_run_allowed_by_payload": false,
+      "external_api_call_allowed_by_payload": false
+    }
+  },
+  "browser_safe_preview_example": {
+    "schema_version": "content_publish_payload.v0.7.0.phase_9_4",
+    "action_type": "content_publish",
+    "platform": "linkedin",
+    "account_kind": "member",
+    "account_id_hint": "linkedin_member_urn_present",
+    "caption_preview": "Certainly, sir. Revenue is steady today...",
+    "caption_length": 91,
+    "media_type": "none",
+    "has_media_url": false,
+    "has_link_url": true,
+    "hashtags": ["#ecommerce", "#founderops", "#ai"],
+    "scheduled_time": "2026-07-10T09:30:00.000Z",
+    "has_approval_notes": true,
+    "idempotency_hint_present": true,
+    "safety": {
+      "manual_approval_required": true,
+      "publish_ready": false,
+      "executor_enabled": false,
+      "external_api_called": false,
+      "browser_receives_token": false,
+      "raw_payload_in_browser_preview": false
+    }
+  },
+  "forbidden_fields_anywhere_in_payload": [
+    "api_key",
+    "access_token",
+    "refresh_token",
+    "authorization",
+    "bearer",
+    "password",
+    "secret",
+    "cookie",
+    "database_url",
+    "credential"
+  ],
+  "phase_safety": {
+    "real_publishing_enabled": false,
+    "executor_added": false,
+    "external_api_called": false,
+    "auto_run_enabled": false,
+    "manual_approval_required": true
+  }
+}

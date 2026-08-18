@@ -1,0 +1,24 @@
+{
+  "version": "0.6.0",
+  "phase": "v0.6.0 Phase 5.6 Executor Pause Enforcement",
+  "intent": {
+    "workspaceId": "workspace_uuid",
+    "actionId": "action_uuid",
+    "actionType": "content_publish",
+    "executorName": "future_sandbox_content_executor"
+  },
+  "decision": {
+    "blocked": true,
+    "blockReason": "global_pause",
+    "pauseAllAutonomy": true,
+    "categoryPaused": false,
+    "executorExecutionAllowed": false,
+    "checkedImmediatelyBeforeExecution": true,
+    "message": "Executor execution is blocked by active autonomy pause state."
+  },
+  "safety": {
+    "externalWritesAttempted": false,
+    "executorRan": false,
+    "note": "Pause guard must run immediately before future executor execution."
+  }
+}

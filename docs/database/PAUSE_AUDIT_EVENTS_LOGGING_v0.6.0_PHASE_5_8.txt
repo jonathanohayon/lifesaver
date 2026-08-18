@@ -1,0 +1,30 @@
+LIFE.SAVER Database Note — Phase 5.8 Pause Audit Events
+
+No new table is required for Phase 5.8.
+
+Pause/resume changes are recorded in the existing system_events table from migration 007.
+
+Why system_events:
+- Pause/resume is a system-level safety event, not an action-specific lifecycle event.
+- action_events remains for individual action state changes.
+- system_events already supports workspace_id, event_type, severity, message, metadata, and created_at.
+
+Event types:
+- autonomy_pause_enabled
+- autonomy_pause_disabled
+
+Metadata keys:
+- phase
+- operation
+- scope
+- categoryAffected
+- actorUserId
+- reason
+- before
+- after
+- safety
+
+Safety:
+- These logs do not expose secrets.
+- Raw API keys, .env values, database URLs, and OAuth tokens must never be stored in metadata.
+- Pause/resume logs must never imply that execution occurred.

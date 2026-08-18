@@ -1,0 +1,36 @@
+LIFE.SAVER v0.5.5 — Rollback and Deployment Notes
+
+Purpose:
+Provide a safe rollback/deployment checklist after the V1 QA priority fixes and before V2 Phase 2 begins.
+
+Before deploying v0.5.5:
+1. Confirm git status is clean.
+2. Confirm .env is not tracked.
+3. Confirm node_modules, dist-only build artefacts from local experiments, and ZIP backups are not accidentally committed.
+4. Confirm APP_ENCRYPTION_KEY is the same value used when the customer's Triple Whale key was stored.
+5. Confirm production/staging DATABASE_URL points to the intended Supabase database.
+6. Confirm ALLOWED_ORIGINS uses the actual app/admin/public domains.
+7. Confirm DASHBOARD_REQUIRE_AUTH=true and CHAT_REQUIRE_AUTH=true for production.
+8. Confirm WORKER_SHARED_SECRET is strong and matches the API + worker services.
+9. Keep WORKER_ENABLED=false until the worker service is intentionally started and observed.
+10. Run npm.cmd run build, security:check, env:check, and client:test-checklist.
+
+Rollback point:
+- Tag the last stable V1 QA release before any V2 Phase 2 schema/action work.
+- Suggested tag: v0.5.5-v1-qa-priority-fixes
+
+Rollback steps if v0.5.5 deployment has a problem:
+1. In Render/GitHub, redeploy the previous known-good commit/tag.
+2. Do not rotate APP_ENCRYPTION_KEY while rolling back.
+3. Do not run db:seed unless the database is missing the user/workspace.
+4. Do not run destructive SQL.
+5. Keep WORKER_ENABLED=false while investigating.
+6. Check /api/v1/health and /api/v1/database/status.
+7. Check Customer Settings > Triple Whale status. If status is key_decrypt_failed, restore the previous APP_ENCRYPTION_KEY or reconnect the key.
+8. Check Admin > latest events for worker/Triple Whale/Claude errors.
+
+Deployment notes:
+- v0.5.5 adds no external write connectors.
+- Automatic metrics refresh is read-only and controlled by METRICS_AUTO_REFRESH_ENABLED.
+- Auto-generated briefs are internal database records only and controlled by BRIEFS_AUTO_GENERATE_ON_READ.
+- True cron scheduling still belongs to the worker process using WORKER_ENABLED and the WORKER_*_CRON values.

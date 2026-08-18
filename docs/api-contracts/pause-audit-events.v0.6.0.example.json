@@ -1,0 +1,48 @@
+{
+  "version": "0.6.0",
+  "phase": "V2 Phase 5.8 Pause Audit Events",
+  "events": [
+    {
+      "table": "system_events",
+      "event_type": "autonomy_pause_enabled",
+      "severity": "info",
+      "message": "Autonomy pause enabled for scope: ads.",
+      "metadata": {
+        "phase": "v0.6.0 Phase 5.8 Pause Audit Events",
+        "operation": "pause",
+        "scope": "ads",
+        "categoryAffected": "ads",
+        "actorUserId": "user_uuid",
+        "reason": "Pausing ad autonomy during campaign review.",
+        "before": {
+          "pauseAllAutonomy": false,
+          "pauseContentActions": false,
+          "pauseSupportActions": false,
+          "pauseAdsActions": false,
+          "pauseResearchActions": false,
+          "pauseDevActions": false
+        },
+        "after": {
+          "pauseAllAutonomy": false,
+          "pauseContentActions": false,
+          "pauseSupportActions": false,
+          "pauseAdsActions": true,
+          "pauseResearchActions": false,
+          "pauseDevActions": false
+        },
+        "safety": {
+          "autoApprovalTriggered": false,
+          "executorTriggered": false,
+          "externalWriteTriggered": false,
+          "resumeDoesNotExecuteWaitingActions": true
+        }
+      }
+    }
+  ],
+  "safety": {
+    "pauseWritesExternalPlatforms": false,
+    "resumeExecutesWaitingActions": false,
+    "executorsEnabled": false,
+    "externalWritesEnabled": false
+  }
+}

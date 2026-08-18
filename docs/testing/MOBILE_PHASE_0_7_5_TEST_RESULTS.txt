@@ -1,0 +1,48 @@
+LIFE.SAVER v0.7.5 — Mobile Operator UI Release QA Test Results
+===============================================================
+
+Test command run in packaging workspace:
+npm run phase-mobile:0-7-5:test
+
+Result:
+mobile-operator-ui-release-qa-check — 84 passed, 0 failed
+
+Additional frontend build command run:
+node scripts/build-web-static.mjs
+
+Result:
+Static web build completed.
+
+Additional syntax checks run:
+node --check apps/web/src/assets/js/lifesaver-version.js
+node --check apps/web/src/assets/js/lifesaver-mobile-shell.js
+node --check apps/web/src/assets/js/notifications.js
+node --check apps/web/src/assets/js/support-status.js
+node --check apps/web/src/assets/js/settings.js
+node --check apps/web/src/assets/js/admin.js
+node --check apps/web/src/assets/js/launch-readiness.js
+node --check apps/web/src/assets/js/login.js
+
+Result:
+JavaScript syntax checks passed.
+
+What the smoke test verifies:
+- package versions are 0.7.5
+- phase-mobile:0-7-5:test script exists
+- shared frontend metadata is 0.7.5
+- health mode is v2-mobile-0-7-5-operator-ui-release-qa
+- source and dist health controller match
+- final mobile release QA CSS exists
+- required responsive breakpoints exist
+- 44px tap-target rule exists
+- horizontal overflow prevention exists
+- Settings, Admin, Launch Readiness, Support, Notifications, Login, Dashboard, Actions, Rules, and Memory include the mobile release CSS
+- all major pages include shared version and mobile shell scripts
+- old visible v0.6.0 / Phase 8 / Phase 15.10 / v0.7.4 labels are removed from web source
+- Launch Readiness includes the mobile operator release checklist
+
+Safety result:
+Pass. This phase is frontend/mobile UI hardening only and does not add real execution, connector writes, notifications, auto-run, policy changes, or database migrations.
+
+Full workspace build note:
+A full `npm run build` was attempted after package edits, but the packaging workspace did not have a complete dependency install/type-definition tree available. The failure was dependency-install related, not caused by this frontend/mobile UI code. Run `npm.cmd install` first in your local project folder, then run `npm.cmd run build`.

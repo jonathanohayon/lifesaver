@@ -1,0 +1,27 @@
+LIFE.SAVER UI — Phase 4.9 Mobile Approval UX
+
+Primary UI Target
+-----------------
+apps/web/src/actions.html
+
+Files Updated
+-------------
+- apps/web/src/actions.html
+- apps/web/src/assets/css/actions.css
+- apps/web/src/assets/js/action-card.js
+- packages/shared/src/action-mobile-approval-ux.ts
+
+Mobile UX Changes
+-----------------
+- Larger action card buttons.
+- Full-width tap targets on phone screens.
+- Sticky mobile modal footers.
+- Readable modal headings and content.
+- Full viewport drawer/modal layout.
+- Better rejection reason select/textarea sizing.
+- Responsive top navigation buttons.
+- Overflow-safe cards, badges, warnings, and key/value grids.
+
+Safety Copy
+-----------
+The UI must continue to tell the founder that final approve/reject is internal only and does not execute external actions.

@@ -1,0 +1,50 @@
+{
+  "success": true,
+  "data": {
+    "version": "0.6.0",
+    "phase": "v0.6.0 Phase 3.2 List Actions API",
+    "workspaceId": "workspace-uuid",
+    "userRole": "owner",
+    "filters": {
+      "status": "proposed",
+      "actionType": null,
+      "riskLevel": null
+    },
+    "pagination": {
+      "limit": 50,
+      "offset": 0,
+      "returned": 3,
+      "total": 3,
+      "hasMore": false,
+      "nextOffset": null
+    },
+    "items": [
+      {
+        "id": "action-uuid",
+        "workspaceId": "workspace-uuid",
+        "createdByUserId": "user-uuid",
+        "actionType": "content_publish",
+        "title": "Fixture: Proposed Instagram post",
+        "description": "Safe local-only fixture. No real post will be published.",
+        "status": "proposed",
+        "riskLevel": "low",
+        "approvalRequired": true,
+        "policyDecision": "ask",
+        "idempotencyKey": "local-fixture-content-publish-instagram-v1",
+        "actionHash": "example-hash",
+        "createdAt": "2026-06-29T00:00:00.000Z",
+        "updatedAt": "2026-06-29T00:00:00.000Z",
+        "approvedAt": null,
+        "executedAt": null,
+        "hasPayload": false
+      }
+    ],
+    "safety": {
+      "listViewIncludesPayloadJson": false,
+      "canApproveFromThisEndpoint": false,
+      "canExecuteFromThisEndpoint": false,
+      "externalWritesEnabled": false,
+      "note": "This endpoint is read-only and summary-only. Use a future detail endpoint for payload review; execution remains disabled until later approved phases."
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "@lifesaver/shared",
+  "version": "0.8.5",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "echo \"No build needed for @lifesaver/shared yet.\""
+  }
+}

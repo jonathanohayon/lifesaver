@@ -1,0 +1,12 @@
+{
+  "success": true,
+  "data": {
+    "configured": true,
+    "connected": true,
+    "provider": "postgresql",
+    "sslEnabled": true,
+    "databaseTime": "2026-06-07T15:40:00.000Z",
+    "databaseName": "postgres",
+    "message": "Database connection is healthy."
+  }
+}

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LIFE.SAVER — Memory Management</title>
+<link rel="stylesheet" href="./assets/css/admin.css" />
+<link rel="stylesheet" href="./assets/css/memory.css" />
+<link rel="stylesheet" href="./assets/css/mobile-shell.css" />
+<link rel="stylesheet" href="./assets/css/mobile-release-qa.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to memory management</a>
+  <main class="admin-shell memory-shell" id="main-content" tabindex="-1">
+    <section class="topbar">
+      <div class="brand">
+        <h1>LIFE.SAVER MEMORY</h1>
+        <span>Memory management UI · Active Platform Conversion · v0.8.3</span>
+      </div>
+      <div class="footer-actions">
+        <a class="btn" href="./index.html">← Dashboard</a>
+        <a class="btn" href="./functional-audit.html">Functional Audit</a>
+        <a class="btn" href="./actions.html">Actions</a>
+        <a class="btn" href="./support.html">Support</a>
+        <a class="btn" href="./rules.html">Rules</a>
+        <a class="btn" href="./settings.html">Settings</a>
+        <a class="btn" href="./login.html">Login</a>
+        <button class="btn" id="logoutBtn" type="button">Logout</button>
+        <span class="badge" id="authState">AUTH CHECKING</span>
+        <span class="badge" id="memoryState">MEMORY READY</span>
+      </div>
+        <div class="memory-mobile-helper">Mobile view: each memory item is now a card with full-width edit, approve, disable, and delete controls. Changes remain browser-local preview only in this phase.</div>
+    </section>
+
+    <section class="grid four compact">
+      <div class="panel"><div class="kicker">Health Mode</div><div class="value green" id="healthMode">—</div><small>Phase 15.5 expected.</small></div>
+      <div class="panel"><div class="kicker">Memory Items</div><div class="value" id="memoryCount">0</div><small>Browser-local preview list.</small></div>
+      <div class="panel"><div class="kicker">Active / Suggested</div><div class="value"><span id="activeCount">0</span> / <span id="suggestedCount">0</span></div><small>Founder-visible status.</small></div>
+      <div class="panel"><div class="kicker">Disabled / Archived</div><div class="value warn-value" id="disabledCount">0</div><small>Not eligible for future prompt use.</small></div>
+    </section>
+
+    <section class="panel memory-hero">
+      <div class="memory-hero-copy">
+        <div class="kicker">Phase 15.5 retained · v0.8.3 mobile-ready</div>
+        <h2>Memory Management UI</h2>
+        <p class="note">Founder can view, edit, delete, approve suggested memory, and disable memory items. This phase is intentionally safe: it uses founder-visible browser-local preview plus API validation. It does not inject memory into Claude, auto-capture memories, invoke tools, create actions, execute anything, or auto-run.</p>
+        <p class="note warn"><strong>Safety rule:</strong> disabled, archived, or deleted memory must not be used in future prompts. Active memory still does not grant execution approval.</p>
+      </div>
+      <div class="memory-badges" aria-label="Memory UI safety badges">
+        <span>View</span><span>Edit</span><span>Delete</span><span>Approve suggested</span><span>Disable</span><span>No Claude injection</span><span>No auto-capture</span><span>No DB write this phase</span>
+      </div>
+    </section>
+
+    <section class="grid four compact">
+      <div class="panel"><div class="kicker">UI Mode</div><div class="value amber" id="uiMode">LOCAL PREVIEW</div><small>Safe browser-local management.</small></div>
+      <div class="panel"><div class="kicker">Auto Capture</div><div class="value" id="captureState">OFF</div><small>No automatic memory saving.</small></div>
+      <div class="panel"><div class="kicker">Prompt Injection</div><div class="value" id="promptState">OFF</div><small>No memory sent to Claude.</small></div>
+      <div class="panel"><div class="kicker">Mobile Readiness</div><div class="value">0.8.3</div><small>Memory cards and controls are phone-ready.</small></div>
+    </section>
+
+    <section class="panel">
+      <div class="memory-toolbar">
+        <label><span>Search memory</span><input id="memorySearch" type="search" placeholder="brand voice, discount, support tone…" /></label>
+        <label><span>Type</span><select id="memoryTypeFilter"><option value="all">All types</option><option value="brand_voice">Brand voice</option><option value="approved_content_style">Approved content style</option><option value="support_tone">Support tone</option><option value="past_decision">Past decision</option><option value="discount_policy">Discount policy</option><option value="banned_phrase">Banned phrase</option><option value="founder_preference">Founder preference</option></select></label>
+        <label><span>Status</span><select id="memoryStatusFilter"><option value="all">All statuses</option><option value="suggested">Suggested</option><option value="active">Active</option><option value="disabled">Disabled</option><option value="archived">Archived</option></select></label>
+        <div class="footer-actions"><button class="btn" id="refreshMemoryBtn" type="button">Refresh Status</button><button class="btn" id="loadExamplesBtn" type="button">Load Examples</button><button class="btn primary" id="newMemoryBtn" type="button">New Memory</button></div>
+      </div>
+    </section>
+
+    <section class="grid two">
+      <article class="panel">
+        <div class="panel-header-row"><div><div class="kicker">Memory List</div><h2>Founder-Visible Memory</h2></div><span class="badge">LOCAL PREVIEW</span></div>
+        <div class="memory-list" id="memoryList" aria-live="polite"></div>
+      </article>
+      <article class="panel">
+        <div class="panel-header-row"><div><div class="kicker">Editor</div><h2>Edit Memory</h2></div><span class="badge warn-badge">REVIEW ONLY</span></div>
+        <div class="memory-editor">
+          <label><span>ID</span><input id="memoryId" type="text" readonly /></label>
+          <label><span>Type</span><select id="memoryType"><option value="brand_voice">Brand voice</option><option value="approved_content_style">Approved content style</option><option value="support_tone">Support tone</option><option value="past_decision">Past decision</option><option value="discount_policy">Discount policy</option><option value="banned_phrase">Banned phrase</option><option value="founder_preference">Founder preference</option></select></label>
+          <label><span>Scope</span><select id="memoryScope"><option value="workspace">Workspace</option><option value="content">Content</option><option value="support">Support</option><option value="ads">Ads</option><option value="founder">Founder</option><option value="global_safe_default">Global safe default</option></select></label>
+          <label><span>Status</span><select id="memoryStatus"><option value="suggested">Suggested</option><option value="active">Active</option><option value="disabled">Disabled</option><option value="archived">Archived</option></select></label>
+          <label class="wide"><span>Title</span><input id="memoryTitle" type="text" placeholder="Short memory title" /></label>
+          <label class="wide"><span>Memory value</span><textarea id="memoryValue" placeholder="Safe founder-visible memory text. Do not paste secrets, raw provider payloads, or private customer data."></textarea></label>
+          <label><span>Tags</span><input id="memoryTags" type="text" placeholder="brand, support, policy" /></label>
+          <label><span>Reason</span><input id="memoryReason" type="text" placeholder="Optional audit reason for disable/delete" /></label>
+        </div>
+        <div class="footer-actions" style="margin-top:14px"><button class="btn primary" id="saveMemoryBtn" type="button">Save Local Preview</button></div>
+        <p class="note" id="memoryMessage">Memory UI is ready. Changes stay in browser-local preview in this phase.</p>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header-row"><div><div class="kicker">API Operation Preview</div><h2>Safety Validation Output</h2></div><span class="badge">NO EXECUTION</span></div>
+      <pre class="memory-preview" id="operationPreview">Operation previews will appear here.</pre>
+    </section>
+  </main>
+  <script src="./assets/js/runtime-config.js"></script>
+  <script src="./assets/js/memory.js"></script>
+<script src="./assets/js/lifesaver-version.js"></script>
+<script src="./assets/js/lifesaver-mobile-shell.js"></script>
+</body>
+</html>

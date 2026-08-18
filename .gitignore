@@ -1,0 +1,34 @@
+# Secrets — never commit. Use .env.example as the template.
+.env
+.env.local
+.env.*.local
+!.env.example
+!.env.*.example
+!.env.*-template
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Test / coverage
+coverage/
+.nyc_output/
+
+# Packaging archives
+*.zip

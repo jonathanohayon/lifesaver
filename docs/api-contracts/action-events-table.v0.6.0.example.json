@@ -1,0 +1,104 @@
+{
+  "version": "0.6.0",
+  "phase": "2.5",
+  "name": "action_events_table",
+  "purpose": "Audit every important action lifecycle event before any V2 executor or external write connector is enabled.",
+  "migration": "database/migrations/010_create_action_events_table.sql",
+  "table": "action_events",
+  "safety": {
+    "storageOnly": true,
+    "approvalApisAdded": false,
+    "executorsAdded": false,
+    "externalWritesEnabled": false,
+    "v1ReadAdviseDraftOnlyPreserved": true
+  },
+  "fields": {
+    "id": { "type": "uuid", "required": true, "primaryKey": true, "default": "gen_random_uuid()" },
+    "action_id": { "type": "uuid", "required": true, "references": "actions.id" },
+    "workspace_id": { "type": "uuid", "required": true, "references": "workspaces.id", "note": "Service logic must derive this from the action, not from browser input." },
+    "actor_user_id": { "type": "uuid", "required": false, "references": "users.id", "nullableFor": ["system", "worker", "policy"] },
+    "event_type": { "type": "text", "required": true },
+    "from_status": { "type": "text", "required": false },
+    "to_status": { "type": "text", "required": false },
+    "message": { "type": "text", "required": false },
+    "metadata_json": { "type": "jsonb", "required": true, "default": {} },
+    "created_at": { "type": "timestamptz", "required": true, "default": "now()" }
+  },
+  "eventTypes": [
+    "action_created",
+    "policy_evaluated",
+    "approved",
+    "rejected",
+    "cancelled",
+    "queued",
+    "execution_started",
+    "execution_finished",
+    "execution_failed",
+    "rollback_requested",
+    "rollback_started",
+    "rollback_finished",
+    "rollback_failed"
+  ],
+  "statusValues": [
+    "proposed",
+    "approval_required",
+    "auto_approved",
+    "approved",
+    "rejected",
+    "cancelled",
+    "queued",
+    "executing",
+    "executed",
+    "failed",
+    "rollback_requested",
+    "rolled_back"
+  ],
+  "exampleRows": [
+    {
+      "event_type": "action_created",
+      "from_status": null,
+      "to_status": "proposed",
+      "message": "A proposed content action was created for review.",
+      "metadata_json": {
+        "source": "chat",
+        "action_type": "content_publish",
+        "risk_level": "low"
+      }
+    },
+    {
+      "event_type": "approved",
+      "from_status": "approval_required",
+      "to_status": "approved",
+      "message": "Founder approved the proposed action. Execution is not included in Phase 2.5.",
+      "metadata_json": {
+        "approval_mode": "manual",
+        "external_write_attempted": false
+      }
+    },
+    {
+      "event_type": "execution_failed",
+      "from_status": "executing",
+      "to_status": "failed",
+      "message": "Future executor failed safely and stored the error summary.",
+      "metadata_json": {
+        "executor_name": "future_sandbox_executor",
+        "safe_error_summary": "Example only"
+      }
+    }
+  ],
+  "forbiddenMetadataKeys": [
+    "api_key",
+    "apikey",
+    "access_token",
+    "refresh_token",
+    "password",
+    "secret",
+    "authorization",
+    "database_url",
+    "DATABASE_URL",
+    "CLAUDE_API_KEY",
+    "TRIPLE_WHALE_API_KEY",
+    "APP_ENCRYPTION_KEY",
+    "WORKER_SHARED_SECRET"
+  ]
+}

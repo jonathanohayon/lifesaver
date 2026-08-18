@@ -1,0 +1,28 @@
+LIFE.SAVER v0.7.0 — Phase 15.8 Daily Action Digest
+
+Deliverable
+V2 Daily Brief action digest.
+
+Daily Brief sections
+1. Actions executed.
+2. Actions failed.
+3. Actions waiting for approval.
+4. Actions blocked by policy.
+5. What LIFE.SAVER recommends next.
+
+Implementation
+The phase adds a digest builder and preview endpoints. It accepts safe action summaries, classifies them into Daily Brief buckets, builds a concise brief text, and returns recommendations. It does not create actions, execute actions, call connectors, or enable scheduled proactive jobs.
+
+Endpoints
+- GET  /api/v1/orchestrator/daily-action-digest/status
+- GET  /api/v1/orchestrator/daily-action-digest/report
+- GET  /api/v1/orchestrator/daily-action-digest/example
+- POST /api/v1/orchestrator/daily-action-digest/preview
+
+Safety
+- No scheduler enabled.
+- No executor call.
+- No auto-run.
+- No external connector call.
+- No raw secrets or raw provider payloads in output.
+- No database migration required.

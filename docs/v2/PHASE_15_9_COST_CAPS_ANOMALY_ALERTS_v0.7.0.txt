@@ -1,0 +1,33 @@
+LIFE.SAVER v0.7.0 — Phase 15.9 Cost Caps + Anomaly Alerts
+
+Deliverable
+Cost and anomaly hardening.
+
+Caps
+- Claude/model usage.
+- Executor rate.
+- Notification sends.
+- Auto-actions per hour/day.
+
+Alerts
+- Unexpected action volume.
+- API failures.
+- Cap exceeded.
+- Suspicious policy behavior.
+
+Implementation
+The phase adds a safe preview evaluator and reporting endpoints. The evaluator accepts usage counters and limits, returns cap status, returns alert status, and recommends a decision such as within_caps, warning, blocked_by_cap, or blocked_by_safety_gate.
+
+Endpoints
+- GET  /api/v1/orchestrator/cost-anomaly-hardening/status
+- GET  /api/v1/orchestrator/cost-anomaly-hardening/report
+- GET  /api/v1/orchestrator/cost-anomaly-hardening/example
+- POST /api/v1/orchestrator/cost-anomaly-hardening/preview
+
+Safety
+- No scheduler enabled.
+- No notification send.
+- No Claude call from this module.
+- No action creation, approval, executor call, auto-run, or external connector call.
+- No real-world mutation.
+- No database migration required.

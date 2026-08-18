@@ -1,0 +1,62 @@
+LIFE.SAVER V2 — Phase 5.10 Pause QA
+Version: v0.6.0
+Deliverable: Pause QA results
+
+Purpose
+Verify that the Master Pause foundation behaves safely before any executor or auto-run policy is enabled.
+
+QA checks
+1. Global pause blocks content.
+2. Global pause blocks support.
+3. Global pause blocks ads.
+4. Category pause blocks only that category.
+5. Audit logs record pause/resume changes.
+
+Automated command
+npm.cmd run autonomy:pause-qa:test
+
+Expected automated result
+- success=true
+- failed=0
+
+What the automated test validates
+- pause_all_autonomy blocks content/support/ads.
+- An ads category pause blocks ads but not content/support/research/dev.
+- Pause maps to autonomy_pause_enabled.
+- Resume maps to autonomy_pause_disabled.
+- QA remains non-executing.
+
+Manual UI QA
+1. Log in locally.
+2. Open http://localhost:3000/settings.html.
+3. Confirm Master Pause Switch panel appears.
+4. Click Pause All Autonomy.
+5. Confirm state changes to PAUSED.
+6. Confirm Last Updated By and Last Updated At update.
+7. Confirm audit event is recorded in system_events.
+8. Click Resume All Autonomy.
+9. Confirm state changes to ACTIVE.
+10. Confirm resume does not execute waiting actions.
+
+Category QA
+1. Pause Ads only.
+2. Confirm Ads shows PAUSED.
+3. Confirm Content/Support/Research/Dev remain ACTIVE unless global pause or emergency safe mode is active.
+4. Resume Ads.
+5. Confirm Ads returns to ACTIVE.
+
+Safety result
+Phase 5.10 does not enable:
+- executors
+- sandbox executor
+- real executor
+- auto-run policies
+- external write connectors
+- content publishing
+- support sending
+- ad spend changes
+- campaign pause execution
+- rollback execution
+
+Current product safety state
+READ + ADVISE + DRAFT + INTERNAL APPROVAL/REJECTION/CANCELLATION + PAUSE CONTROL ONLY.

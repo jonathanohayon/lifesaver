@@ -1,0 +1,42 @@
+{
+  "version": "0.6.0",
+  "phase": "v0.6.0 Phase 5.7 Policy Pause Enforcement",
+  "purpose": "Future policy engines must check global/category pause state before returning auto_approve.",
+  "samplePausedDecision": {
+    "workspaceId": "workspace_uuid",
+    "actionType": "content_publish",
+    "category": "content",
+    "requestedDecision": "auto_approve",
+    "effectiveDecision": "ask",
+    "paused": true,
+    "blocked": false,
+    "blockReason": "global_pause",
+    "pauseAllAutonomy": true,
+    "categoryPaused": false,
+    "autoApprovalAllowed": false,
+    "executorExecutionAllowed": false,
+    "manualReviewAllowed": true,
+    "proposedActionCreationAllowed": true,
+    "policyCheckedPauseState": true,
+    "safety": {
+      "autoApproved": false,
+      "externalWritesAttempted": false,
+      "executorRan": false
+    }
+  },
+  "rules": [
+    "If paused, policy must return ask or block, never auto_approve.",
+    "If pause state cannot be read, policy must fail closed.",
+    "Existing proposed actions remain reviewable while paused.",
+    "Safe new proposed actions may still be created for manual review."
+  ],
+  "disabledCapabilities": [
+    "policy auto-run",
+    "executor execution",
+    "external writes",
+    "content publishing",
+    "support reply sending",
+    "ad budget changes",
+    "campaign pause execution"
+  ]
+}

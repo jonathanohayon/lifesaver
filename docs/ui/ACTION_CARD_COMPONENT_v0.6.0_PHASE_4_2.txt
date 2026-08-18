@@ -1,0 +1,39 @@
+LIFE.SAVER UI — ACTION CARD COMPONENT
+Version: v0.6.0
+Phase: 4.2
+
+Component location:
+- apps/web/src/assets/js/action-card.js
+- apps/web/src/assets/css/actions.css
+
+Primary page:
+- apps/web/src/actions.html
+
+The card component renders a founder-friendly review card for one action. It is built
+for the future Approval Queue page and Dashboard preview. The component is intentionally
+safe and does not perform approval/rejection/execution in this phase.
+
+Card fields:
+- action title
+- action type
+- status badge
+- risk badge
+- platform/channel hint
+- created time
+- short reason
+- approve button
+- reject button
+- detail link
+- safety footer
+
+Button status:
+- visible but guarded
+- no approve API call yet
+- no reject API call yet
+- no executor call ever from this phase
+
+Next UI phases:
+- Phase 4.3: Detail drawer/modal
+- Phase 4.4: Status filters
+- Phase 4.5: Approve confirmation modal
+- Phase 4.6: Reject with reason modal

@@ -1,0 +1,35 @@
+LIFE.SAVER v0.8.0 — Functional Audit
+============================================================
+Deliverable: Functional Audit + UI-to-API Connection Map
+Health mode: v2-functional-0-8-0-audit
+
+Goal
+The v0.8.0 package begins the functional-readiness stage after V2 Phase 15.10 and the v0.7.1-v0.7.5 mobile-readiness pass. It does not activate new functionality. It creates a safe audit layer so the team can see what is already functional, what is partial, what is still UI preview, and what needs backend persistence.
+
+Mapped areas
+- Dashboard KPIs.
+- Daily Brief and Weekly Summary.
+- AI Chat and Voice Input.
+- Actions and Approval Queue.
+- Rules and Policy UI.
+- Memory Management.
+- Support Workspace.
+- Notifications and Approval Reminders.
+- Settings, Connected Accounts, and Team.
+- Admin and Launch Readiness.
+- Proactivity Triggers and Daily Action Digest.
+- Real-executor-capable paths.
+
+Status categories
+- backend_connected: already uses backend APIs.
+- partial_backend_connected: some backend support exists, but functionality is not complete.
+- ui_preview_only: currently browser/local preview only.
+- needs_backend_persistence: UI/schema exists but persistence still needs implementation.
+- framework_only: definitions/report builders exist but no live job/scheduler/action is enabled.
+- connector_disabled_by_design: capability must stay off until explicit approval and controlled live test scope.
+
+Safety boundary
+This phase is audit/report only. It does not add migrations, create actions, approve actions, call executors, call Claude, call connectors, send notifications, publish content, send support replies, mutate ads, or enable auto-run.
+
+Important next step
+The next phase should be v0.8.1 Backend Persistence Plan. It should select the first safe persistence targets, likely memory and rules, and plan exact migrations/endpoints without enabling real external writes.

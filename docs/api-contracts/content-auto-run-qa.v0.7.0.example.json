@@ -1,0 +1,53 @@
+{
+  "status": "success",
+  "data": {
+    "phase": "phase_11_10_auto_run_qa",
+    "healthMode": "v2-phase-11-10-auto-run-qa",
+    "deliverable": "safe_content_auto_run_qa",
+    "platform": "linkedin",
+    "channel": "linkedin_member_feed",
+    "actionType": "content_publish",
+    "qaStatus": "partial",
+    "realAutoRunExecuted": false,
+    "controlledRealAutoRunApprovalPhraseRequired": "I APPROVE ONE CONTROLLED CONTENT AUTO-RUN TEST",
+    "summary": {
+      "totalScenarios": 5,
+      "passedScenarios": 2,
+      "blockedAsExpectedScenarios": 2,
+      "notRunScenarios": 1,
+      "failedScenarios": 0
+    },
+    "scenarios": [
+      {
+        "name": "sandbox_auto_run",
+        "status": "passed",
+        "passed": true,
+        "expected": "A sandbox-only auto-run candidate passes all decision and final validation gates without calling LinkedIn.",
+        "actual": "Sandbox candidate passed final validation. No external API was called.",
+        "reason": "The safe candidate is ready for a future executor handoff preview only; this QA report does not publish.",
+        "safety": {
+          "externalApiCalled": false,
+          "publishCalled": false,
+          "databaseWritten": false,
+          "tokenAccessed": false,
+          "rawPayloadReturned": false
+        },
+        "evidence": {}
+      }
+    ],
+    "safety": {
+      "qaReportOnly": true,
+      "sandboxOnlyByDefault": true,
+      "controlledRealAutoRunRequiresExplicitApproval": true,
+      "doesNotPublishFromReport": true,
+      "externalApiCalled": false,
+      "noDatabaseWrites": true,
+      "noActionStatusMutation": true,
+      "noTokenDecryption": true,
+      "rawTokenNotReturned": true,
+      "rawPayloadNotReturned": true,
+      "rollbackPayloadNotReturned": true,
+      "autoRunNotEnabledByThisPhase": true
+    }
+  }
+}

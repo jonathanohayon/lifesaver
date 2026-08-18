@@ -1,0 +1,23 @@
+{
+  "version": "0.6.0",
+  "phase": "V2 Phase 5.10 Pause QA",
+  "command": "npm.cmd run autonomy:pause-qa:test",
+  "expected": {
+    "success": true,
+    "failed": 0
+  },
+  "checks": [
+    "global_pause_blocks_content",
+    "global_pause_blocks_support",
+    "global_pause_blocks_ads",
+    "category_pause_blocks_only_that_category",
+    "audit_logs_record_pause_and_resume_changes"
+  ],
+  "safety": {
+    "runsExecutors": false,
+    "publishesContent": false,
+    "sendsSupportReplies": false,
+    "changesAdSpend": false,
+    "writesToExternalPlatforms": false
+  }
+}

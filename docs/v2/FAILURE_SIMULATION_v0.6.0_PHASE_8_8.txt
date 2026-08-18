@@ -1,0 +1,48 @@
+# LIFE.SAVER v0.6.0 — Phase 8.8 Failure Simulation
+
+## Goal
+
+Allow forced fake failure for QA.
+
+Example:
+
+```json
+{
+  "sandbox_should_fail": true
+}
+```
+
+## Deliverable
+
+Failed action status tested.
+
+## Implementation
+
+Phase 8.8 adds a small failure simulation layer around the sandbox lifecycle.
+
+The flag can be set in:
+
+- payload root
+- payload data
+- lifecycle metadata
+
+When the flag is detected, the action still validates normally, then fails before any sandbox success result is returned.
+
+## Expected lifecycle
+
+```txt
+proposed -> approved -> executing -> failed
+```
+
+## Result log behavior
+
+The forced failure is mapped into an `action_results`-compatible record preview with:
+
+- `result_status=failed`
+- safe error message
+- sandbox-only metadata
+- external writes attempted = false
+
+## Safety
+
+The failure is fake and sandbox-only. No external platform is called.

@@ -1,0 +1,29 @@
+PHASE 15.10 — V2 RELEASE READINESS
+====================================
+
+Goal:
+Create the final V2 operator release checklist.
+
+Final QA checks:
+- V1 still works.
+- Approval queue works.
+- Policy engine works.
+- Master pause works.
+- Sandbox executor works.
+- Real-executor-capable paths work only through manual approval and feature flags.
+- Audit logs work.
+- Rollback works where supported.
+- No hidden autonomy exists.
+- Client acceptance passed.
+
+Deliverable:
+V2 operator release checklist.
+
+Implementation:
+- Added a checklist/report module under apps/api/src/modules/orchestrator.
+- Added preview-only endpoint for safe readiness evidence evaluation.
+- Added final release checklist endpoint.
+- Added test coverage for pass, partial, fail, force ignored, and secret-like field rejection.
+
+Safety:
+This phase does not execute actions, call Claude, call external connectors, create actions, approve actions, send notifications, publish content, send support replies, mutate ads, or enable auto-run.

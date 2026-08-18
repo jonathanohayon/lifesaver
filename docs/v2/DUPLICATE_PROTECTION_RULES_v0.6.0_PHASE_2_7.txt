@@ -1,0 +1,276 @@
+LIFE.SAVER V2 — PHASE 2.7 DUPLICATE PROTECTION RULES
+Version: v0.6.0
+Phase: 2.7 — Idempotency + Duplicate Protection
+Status: Foundation rules + non-destructive schema extension
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 2.7 defines how LIFE.SAVER prevents duplicate action creation, duplicate
+approval side effects, duplicate executor runs, and accidental double-click actions.
+
+This is essential before V2 can safely approve or execute anything.
+
+In plain English:
+- If the browser retries a request, it must not create two actions.
+- If the worker retries after a timeout, it must not create two actions.
+- If the founder double-clicks Approve later, it must not execute twice.
+- If an executor times out and retries later, the same real-world action must not run twice.
+
+================================================================================
+V1/V2 SAFETY BOUNDARY
+================================================================================
+
+This phase does NOT enable action execution.
+This phase does NOT add approval APIs.
+This phase does NOT publish content.
+This phase does NOT send support replies.
+This phase does NOT adjust ad spend.
+This phase does NOT pause campaigns.
+This phase does NOT write back to Triple Whale or any external platform.
+
+V1 remains READ + ADVISE + DRAFT ONLY.
+
+Phase 2.7 only adds duplicate-protection rules and two safe metadata fields:
+- actions.idempotency_key
+- actions.action_hash
+
+================================================================================
+KEY CONCEPTS
+================================================================================
+
+1. idempotency_key
+------------------
+A unique key representing one action-creation request inside one workspace.
+
+Use cases:
+- browser request retry
+- AI tool retry
+- worker retry
+- network timeout retry
+- accidental double submit
+
+Rule:
+The same workspace_id + idempotency_key must return or reference the same action.
+It must not create a new duplicate action.
+
+Example:
+workspace_id = abc
+idempotency_key = content_publish:2026-06-29T17:00:00Z:local-request-123
+
+If the same request is received again, the backend should return the already-created
+action instead of creating another row.
+
+2. action_hash
+--------------
+A stable hash/fingerprint of the intended action.
+
+It should be generated from safe normalized values such as:
+- workspace_id
+- action_type
+- target platform/channel
+- target external object ID when applicable
+- normalized payload body
+- scheduled_time when applicable
+
+It must NOT include secrets.
+It must NOT include API keys.
+It must NOT include OAuth tokens.
+It must NOT include raw customer secrets.
+
+Purpose:
+Prevent two active actions with the exact same intent from existing at the same time.
+
+Example:
+If LIFE.SAVER proposes the same Instagram post twice with the same caption, same media,
+same platform, and same scheduled time, the backend should detect the duplicate.
+
+================================================================================
+DATABASE SAFETY RULES
+================================================================================
+
+Migration added:
+- database/migrations/012_add_action_duplicate_protection.sql
+
+The migration is non-destructive.
+It only adds fields/indexes to the existing actions table.
+
+New fields:
+- idempotency_key TEXT NULL
+- action_hash TEXT NULL
+
+Indexes:
+- Unique workspace_id + idempotency_key when idempotency_key is not null
+- Unique active workspace_id + action_hash when action_hash is not null
+
+Active statuses protected by action_hash:
+- proposed
+- approval_required
+- auto_approved
+- approved
+- queued
+- executing
+- executed
+- rollback_requested
+- rolled_back
+
+Inactive statuses allowed to be replaced later:
+- rejected
+- cancelled
+- failed
+
+Reason:
+If a founder rejects, cancels, or a proposal fails, a corrected replacement action may be
+created later.
+
+================================================================================
+BACKEND CREATION RULES FOR PHASE 3
+================================================================================
+
+When createProposedAction() is built in Phase 3, it must follow this order:
+
+1. Validate workspace_id and user permissions.
+2. Validate action_type against the Action Type Registry.
+3. Validate payload_json against the Phase 2.4 payload schema.
+4. Generate or receive an idempotency_key.
+5. Build a stable action_hash from safe normalized action data.
+6. Check for existing action by workspace_id + idempotency_key.
+7. If found, return existing action safely.
+8. Check for existing active action by workspace_id + action_hash.
+9. If found, return duplicate_action_detected with the existing action reference.
+10. Insert new action.
+11. Insert action_created event in action_events.
+12. Never execute anything during creation.
+
+================================================================================
+DOUBLE-CLICK APPROVE PROTECTION FOR PHASE 3
+================================================================================
+
+When the Approve Action endpoint is built later:
+
+Endpoint planned:
+POST /api/v1/actions/:id/approve
+
+The endpoint must not execute twice if the founder double-clicks.
+
+Required rules:
+
+1. Use a database transaction.
+2. Lock the action row using SELECT ... FOR UPDATE or an atomic UPDATE ... WHERE status IN (...).
+3. Only allow approve from safe pre-approval statuses:
+   - proposed
+   - approval_required
+   - auto_approved
+4. If the action is already approved, queued, executing, executed, rejected, or cancelled,
+   do not perform another approval side effect.
+5. Insert exactly one approved event.
+6. Do not call an executor until executor phases are intentionally built.
+7. Later, when executors exist, execution must also have its own idempotency guard.
+
+Important:
+Approved does not mean executed.
+Executed must only be set after executor result confirmation.
+
+================================================================================
+FUTURE EXECUTOR DUPLICATE PROTECTION
+================================================================================
+
+Before any future executor runs, it must check:
+
+1. Master pause is not active.
+2. Category pause is not active.
+3. Action status is allowed for execution.
+4. Existing action_results does not already show success for this action.
+5. action_hash does not conflict with another executing/executed active action.
+6. External platform idempotency is used when available.
+7. If external platform has no idempotency support, LIFE.SAVER must rely on internal lock/result checks.
+
+Executor result rule:
+Never mark action.status = executed unless the executor result confirms success.
+
+================================================================================
+ERROR / RESPONSE RULES
+================================================================================
+
+Recommended future error codes:
+
+DUPLICATE_IDEMPOTENCY_KEY
+Meaning:
+The same idempotency key already exists for this workspace.
+Recommended response:
+Return the existing action safely.
+
+DUPLICATE_ACTION_INTENT
+Meaning:
+An active action with the same action_hash already exists.
+Recommended response:
+Return existing action summary and ask founder to review it.
+
+ACTION_ALREADY_APPROVED
+Meaning:
+Approve was clicked again after approval already happened.
+Recommended response:
+Do not error aggressively; return current action status.
+
+ACTION_ALREADY_EXECUTED
+Meaning:
+Executor already succeeded.
+Recommended response:
+Do not run executor again. Return result summary.
+
+EXECUTION_ALREADY_IN_PROGRESS
+Meaning:
+Another worker/request is already executing the action.
+Recommended response:
+Return 409-style safe conflict with current status.
+
+================================================================================
+WHAT MUST NEVER BE STORED IN IDEMPOTENCY OR HASH DATA
+================================================================================
+
+Never store these values directly:
+- Claude API key
+- Triple Whale API key
+- OAuth access token
+- OAuth refresh token
+- raw .env values
+- DATABASE_URL
+- AUTH_TOKEN_SECRET
+- APP_ENCRYPTION_KEY
+- WORKER_SHARED_SECRET
+- passwords
+- payment/card information
+- unnecessary private customer message bodies in logs
+
+Hash input may use normalized safe business fields, but final stored value should be a
+hash/fingerprint, not raw secret-containing content.
+
+================================================================================
+PHASE 2.7 DEFINITION OF DONE
+================================================================================
+
+Phase 2.7 is complete when:
+
+- idempotency_key is defined.
+- action_hash is defined.
+- Non-destructive migration adds both fields.
+- Unique duplicate-protection indexes exist.
+- Double-click approve protection rules are documented.
+- Future create/approve/execute services know the safe order of operations.
+- No external execution is enabled.
+
+================================================================================
+NEXT PHASE
+================================================================================
+
+Next recommended phase:
+Phase 2.8 — Workspace + User Scoping
+
+Purpose:
+Make sure every action and action-related query is scoped to the correct workspace and
+protected by role-based permissions before approval APIs are built.
+
+================================================================================
+END
+================================================================================

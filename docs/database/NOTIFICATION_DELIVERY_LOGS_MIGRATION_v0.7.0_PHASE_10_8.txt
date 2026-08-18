@@ -1,0 +1,30 @@
+================================================================================
+DATABASE MIGRATION — PHASE 10.8 NOTIFICATION DELIVERY LOGS
+================================================================================
+
+Migration file:
+database/migrations/019_create_notification_delivery_logs.sql
+
+Table:
+notification_delivery_logs
+
+Purpose:
+Store safe audit records for notification lifecycle events.
+
+Allowed event types:
+- notification_created
+- notification_sent
+- notification_failed
+- notification_opened
+
+Allowed channels:
+- in_app
+- email
+- slack
+
+Safety:
+This migration is additive only. It does not drop, rename, truncate, or rewrite existing tables.
+It does not send notifications and does not call any external provider.
+
+Important storage rule:
+metadata_json must contain safe metadata only. Do not store tokens, raw provider response bodies, raw action payload_json, rollback payloads, Authorization headers, API keys, passwords, or .env values.

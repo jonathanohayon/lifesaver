@@ -1,0 +1,150 @@
+# LIFE.SAVER — Phase 9.1 Selected Platform Plan
+
+Version: v0.7.0
+Phase: V2 Phase 9.1 — Choose First Platform
+Package: lifesaver-v0.7.0-phase-9-1-choose-first-platform.zip
+Health mode: v2-phase-9-1-choose-first-platform
+
+================================================================================
+1. DECISION
+================================================================================
+
+Selected first platform: LinkedIn
+
+Initial publishing lane:
+
+- LinkedIn member text/link post first.
+- LinkedIn member image post second, only after media asset handling is designed.
+- LinkedIn organization/company page posting later only if required and explicitly approved.
+
+Phase 9.1 deliverable status: selected platform plan complete.
+
+================================================================================
+2. WHY LINKEDIN FIRST
+================================================================================
+
+The purpose of Phase 9 is not to immediately build every social connector. The purpose is to add the first real content executor carefully, starting with one content platform and manual approval only.
+
+LinkedIn is the recommended first platform because:
+
+1. It has a relatively clean OAuth + post creation model.
+2. It allows a text-only proof before media upload complexity.
+3. It is safer for the first live test than a consumer short-video platform.
+4. It helps prove LIFE.SAVER's approval -> execute -> result-log path with lower operational risk.
+5. It avoids starting with YouTube video upload audits, TikTok direct-post audit requirements, or Instagram media container/app-review complexity.
+6. It is still commercially useful for founder thought-leadership, brand updates, announcements, investor/client updates, and product/business insights.
+
+================================================================================
+3. WHY NOT THE OTHER OPTIONS FIRST
+================================================================================
+
+Instagram:
+
+- Strong ecommerce relevance.
+- Good future target.
+- More complex for first executor because real publishing generally requires Meta app setup, account/page linkage, correct permissions, media container creation, publish call, and app review considerations.
+- Recommended later after the executor safety pattern is proven.
+
+TikTok:
+
+- Strong short-form content relevance.
+- Heavier media/video workflow.
+- Direct posting requires explicit user consent, content export/init flow, and audit considerations.
+- Recommended later after media handling and approval patterns are stronger.
+
+YouTube:
+
+- Good for video publishing.
+- Not ideal first because video upload, large file handling, quota, processing status, privacy status, and API compliance/audit requirements add complexity.
+- Recommended later for video-specific phase.
+
+Facebook:
+
+- Good future target, especially if paired with Meta/Instagram.
+- Page publishing depends on Meta app, page permissions, page token handling, and app review considerations.
+- Recommended after Meta credential model and Instagram/Facebook combined planning.
+
+================================================================================
+4. PHASE 9.1 SAFETY BOUNDARY
+================================================================================
+
+This phase adds no real execution capability.
+
+Not added:
+
+- No LinkedIn OAuth routes.
+- No LinkedIn API client.
+- No access token storage.
+- No refresh token storage.
+- No post API calls.
+- No real publishing.
+- No image/video upload.
+- No auto-run.
+- No scheduler/proactive publishing.
+- No support sending.
+- No ads execution.
+- No external writes.
+
+The existing Phase 8 sandbox executor remains the only executor demonstration path in this package.
+
+================================================================================
+5. FUTURE PHASE 9.2 SCOPE PREVIEW
+================================================================================
+
+Phase 9.2 should plan LinkedIn write scope and OAuth details only.
+
+Expected Phase 9.2 checklist:
+
+- LinkedIn Developer app setup.
+- OAuth redirect URL for local and Render.
+- Required product/scope planning.
+- Token expiry/refresh behavior.
+- User identity/member URN retrieval planning.
+- Whether organization/page posting is required.
+- Privacy/status rules.
+- Disconnect/revoke behavior.
+- Error and permission denial handling.
+- No raw token exposure.
+
+Recommended Phase 9.2 first scope:
+
+- Member posting only.
+- Text/link post only.
+- Manual approval only.
+- One workspace connection.
+- Encrypted token storage design.
+
+================================================================================
+6. FUTURE REAL EXECUTOR GATES
+================================================================================
+
+Before any real publish call can happen in Phase 9.6 or later, the executor must verify:
+
+1. Workspace-scoped connected account exists.
+2. Access token is available server-side only.
+3. Action type is content_publish.
+4. Platform is linkedin.
+5. Action is manually approved by owner/admin.
+6. Master pause is off.
+7. Content category pause is off.
+8. Emergency safe mode is off.
+9. Policy decision does not block.
+10. Hard caps are not exceeded.
+11. Idempotency key has not already executed.
+12. Payload validates against content publish schema.
+13. Result is logged in action_results.
+14. Failure is logged and visible.
+15. Rollback behavior is defined as delete_supported, delete_not_supported, or rollback_not_supported depending on LinkedIn API support and permissions.
+
+================================================================================
+7. SELECTED PLATFORM RECORD
+================================================================================
+
+selected_platform: linkedin
+selected_platform_label: LinkedIn
+selected_initial_author_type: member
+selected_initial_content_type: text_link_post
+real_external_writes_added: false
+auto_run_enabled: false
+manual_approval_required_for_future_publish: true
+phase_9_2_next_step: Write Scope Planning for LinkedIn

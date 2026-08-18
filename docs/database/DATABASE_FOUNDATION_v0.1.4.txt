@@ -1,0 +1,22 @@
+LIFE.SAVER v0.1.4 — DATABASE-BACKED ADMIN FOUNDATION
+
+Purpose:
+v0.1.3 created the tables and migration runner. v0.1.4 starts using the database for real admin visibility.
+
+What was added:
+- db:seed command.
+- Default founder user: founder@lifesaver.local.
+- Default workspace: LIFE.SAVER Dev Workspace / lifesaver-dev.
+- workspace_members owner relationship.
+- connected_accounts placeholder for Triple Whale.
+- system_events first seed event.
+- /api/v1/admin/overview now reads database counts.
+- admin.html now displays database counts and latest system events.
+
+Commands:
+- npm.cmd run db:status
+- npm.cmd run db:migrate
+- npm.cmd run db:seed
+
+Important:
+The default user is not a login account yet. Password authentication will be added later. This seed exists only to prepare the SaaS/workspace model before Triple Whale and Claude integration.

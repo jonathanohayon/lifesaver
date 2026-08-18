@@ -1,0 +1,49 @@
+================================================================================
+PHASE 11.7 — DAILY ACTION DIGEST
+================================================================================
+
+Goal:
+Daily Brief reports:
+- what was published
+- why it was published
+- what is waiting for approval
+- what failed
+
+Deliverable:
+Content action digest.
+
+Implementation summary:
+The package adds a deterministic digest builder under the content-auto-run module. It accepts safe action summaries and produces a Daily Brief-ready section named "Content Actions".
+
+Buckets:
+1. Published
+   - status: executed or published
+   - includes title, platform/channel, timestamp, safe LinkedIn permalink when available, and safe reason summary.
+
+2. Waiting for approval
+   - status: proposed, approved, or pending_approval
+   - includes title, risk level, timestamp, and why founder review is still needed.
+
+3. Failed
+   - status: failed or blocked
+   - includes title, timestamp, and safe failure reason.
+
+Ignored actions:
+- Non-content actions are counted as ignoredNonContentActions.
+- Support, ads, dev, research, notification, and rollback actions are not included in this content digest.
+
+Security and privacy:
+- Does not return raw payload_json.
+- Does not return raw_payload.
+- Does not return rollback_payload.
+- Does not return tokens.
+- Does not return Authorization headers.
+- Does not call LinkedIn.
+- Does not approve, reject, execute, rollback, publish, send email, or notify.
+
+New endpoints:
+- GET /api/v1/content-auto-run/action-digest/status
+- GET /api/v1/content-auto-run/action-digest/preview
+
+Future integration note:
+A later phase can connect this digest builder to the Daily Brief generation service and worker. This phase only provides the safe digest contract and preview.

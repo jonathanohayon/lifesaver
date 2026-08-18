@@ -1,0 +1,45 @@
+{
+  "schema_version": "content_media_asset.v0.7.0.phase_9_5",
+  "platform": "linkedin",
+  "asset_kind": "image",
+  "safe_file_name": "founder-performance-preview.png",
+  "mime_type": "image/png",
+  "size_bytes": 1200000,
+  "size_mb_approx": 1.14,
+  "has_checksum": true,
+  "image": {
+    "width_pixels": 1200,
+    "height_pixels": 628,
+    "pixel_count": 753600,
+    "has_alt_text": true
+  },
+  "video": null,
+  "storage": {
+    "provider": "supabase_storage",
+    "bucket_hint": "private_bucket_configured",
+    "visibility": "private",
+    "object_key_present": true,
+    "object_key_exposed_to_browser": false
+  },
+  "preview": {
+    "url_type": "short_lived_signed_url",
+    "signed_preview_url_ttl_seconds": 300,
+    "public_preview_url_allowed": false,
+    "permanent_public_url_allowed": false
+  },
+  "linkedin": {
+    "future_upload_api": "images_api",
+    "urn_required_before_post": "urn:li:image:{id}",
+    "linkedIn_upload_enabled_now": false,
+    "external_api_called": false
+  },
+  "safety": {
+    "manual_approval_required": true,
+    "media_upload_endpoint_added": false,
+    "publish_executor_added": false,
+    "auto_run_enabled": false,
+    "browser_receives_access_token": false,
+    "browser_receives_linkedin_upload_url": false,
+    "raw_upload_url_in_preview": false
+  }
+}

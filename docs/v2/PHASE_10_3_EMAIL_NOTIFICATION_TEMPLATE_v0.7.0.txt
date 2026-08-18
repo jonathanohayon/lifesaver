@@ -1,0 +1,61 @@
+================================================================================
+PHASE 10.3 — EMAIL NOTIFICATION TEMPLATE
+================================================================================
+
+Version: v0.7.0
+Health mode: v2-phase-10-3-email-notification-template
+Deliverable: Email notification template
+
+Goal:
+Create the email content that will eventually notify a founder when an action needs approval.
+
+Required fields included:
+- Action title
+- Action type
+- Risk level
+- Reason
+- Link to review
+
+Template outputs:
+- subject
+- preheader
+- textBody
+- htmlBody
+- reviewUrl
+- safe action summary
+- safety metadata
+
+Important:
+This phase does not send an email. It only creates the approved template shape and safety checks.
+
+Main module:
+- apps/api/src/modules/notifications/notification-email-template.model.ts
+
+Test module:
+- apps/api/src/modules/notifications/notification-email-template-tests.ts
+
+Shared contract:
+- packages/shared/src/notification-email-template.ts
+
+Safety checks:
+- Blocks javascript:, data:, and file: review URLs.
+- Requires HTTPS for absolute review URLs.
+- Allows safe relative review links for local/dashboard use.
+- Redacts secret-like text in title, reason, action type, and workspace name.
+- Rejects template output containing token/secret/raw-payload fragments.
+- Rejects unsafe HTML fragments such as script, iframe, form, and input.
+
+No external systems added:
+- No SMTP.
+- No SendGrid.
+- No Postmark.
+- No Resend.
+- No Mailgun.
+- No Slack.
+- No worker job.
+- No notification delivery queue.
+
+Phase 9 safety preserved:
+- LinkedIn real publish executor remains default-off.
+- Manual approval remains required.
+- Auto-run remains disabled.

@@ -1,0 +1,76 @@
+LIFE.SAVER V2 — Phase 5.5 Pause Switch UI
+Version: v0.6.0
+Deliverable: Master pause UI
+
+Purpose
+Create a visible founder-facing pause control so owner/admin users can pause or resume autonomy from the customer settings surface.
+
+UI placement
+Primary location:
+- settings.html
+
+Reason:
+- Pause controls are workspace safety settings.
+- They belong near team permissions and connected-account controls.
+- Actions page remains focused on reviewing proposed actions.
+
+UI includes
+- Big master switch.
+- Warning message.
+- Current pause state.
+- Last updated by.
+- Last updated at.
+- Emergency safe mode indicator.
+- Category pause controls for content, support, ads, research, and dev.
+- Optional reason field for audit logging.
+
+Endpoints used
+- GET /api/v1/autonomy/status
+- POST /api/v1/autonomy/pause
+- POST /api/v1/autonomy/resume
+
+Master switch behavior
+When pause_all_autonomy is false:
+- Button says Pause All Autonomy.
+- Clicking sends POST /api/v1/autonomy/pause with scope=all.
+- The UI asks for confirmation before global pause.
+
+When pause_all_autonomy is true:
+- Button says Resume All Autonomy.
+- Clicking sends POST /api/v1/autonomy/resume with scope=all.
+- Resume does not execute waiting actions.
+
+Category controls
+The UI also provides safe category toggles for:
+- content
+- support
+- ads
+- research
+- dev
+
+These call the same pause/resume endpoints with the matching scope.
+
+Permission behavior
+- Owner/admin can update pause settings.
+- Member/viewer can view pause state but cannot pause or resume.
+- Normal customers cannot access other workspaces.
+
+Safety boundary
+This UI does not:
+- queue actions
+- execute actions
+- auto-approve actions
+- publish content
+- send support replies
+- change ad spend
+- pause campaigns on ad platforms
+- refund orders
+- edit products
+- rollback actions
+- write to external platforms
+
+Resume safety
+Resume only updates pause state. It does not execute approved, queued, waiting, or proposed actions.
+
+Emergency safe mode
+If EMERGENCY_SAFE_MODE=true, the UI shows emergency active. Environment-level safe mode remains the strongest backend override.

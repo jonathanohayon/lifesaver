@@ -1,0 +1,32 @@
+{
+  "version": "0.6.0",
+  "phase": "V2 Phase 6.2 Default Ask Policy",
+  "behavior": "default_ask_when_no_rule_matches",
+  "rule": {
+    "whenNoEnabledPolicyRuleMatches": {
+      "effectiveDecision": "ask",
+      "approvalRequired": true,
+      "autoApprovalAllowed": false,
+      "executorExecutionAllowed": false
+    },
+    "whenCallerRequestsAutoApproveWithoutMatchedRule": {
+      "requestedDecision": "auto_approve",
+      "effectiveDecision": "ask",
+      "defaultAskApplied": true,
+      "autoApprovalAllowed": false
+    },
+    "whenExplicitRuleMatchesAutoApprove": {
+      "matchedPolicyId": "policy_example_content_low_risk",
+      "matchedPolicyDecision": "auto_approve",
+      "effectiveDecision": "auto_approve",
+      "note": "Still cannot execute. Later safety checks must pass before any future executor can run."
+    }
+  },
+  "safety": {
+    "policyRulesUiAdded": false,
+    "fullPolicyEvaluationAdded": false,
+    "autoRunRulesEnabled": false,
+    "executorEnabled": false,
+    "externalWritesEnabled": false
+  }
+}

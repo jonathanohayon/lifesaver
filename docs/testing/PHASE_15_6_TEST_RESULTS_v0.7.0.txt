@@ -1,0 +1,29 @@
+LIFE.SAVER v0.7.0 — Phase 15.6 Test Results
+
+Command:
+npm run phase15:proactivity-triggers:test
+
+Result:
+PASS — Phase 15.6 proactivity trigger framework tests passed.
+
+Covered:
+- Health mode is v2-phase-15-6-proactive-triggers.
+- Six roadmap triggers are defined.
+- ROAS drop routes to ads specialist.
+- New support ticket routes to support specialist.
+- Scheduled content slot routes to content specialist.
+- Failed executor event is critical and routes to dev/human review.
+- Master pause blocks trigger handling.
+- force=true is ignored.
+- Secret/raw payload fragments are blocked.
+- No action creation, notification sending, Claude calls, tool invocation, external connector calls, executor calls, or auto-run enabled.
+
+Regression commands run for package sign-off:
+npm run phase15:proactivity-triggers:test
+npm run phase15:memory-ui:test
+npm run phase15:memory-schema:test
+npm run phase15:tool-routing:test
+npm run phase15:specialist-prompts:test
+npm run phase15:request-classifier:test
+npm run phase14:ads-safety-qa:test
+npm run build

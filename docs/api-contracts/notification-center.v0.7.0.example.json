@@ -1,0 +1,68 @@
+{
+  "success": true,
+  "data": {
+    "version": "0.7.0",
+    "phase": "phase_10_2_in_app_notification_center",
+    "workspaceId": "workspace-id",
+    "generatedAt": "2026-07-06T12:00:00.000Z",
+    "counts": {
+      "pendingApprovals": 1,
+      "recentEvents": 2,
+      "highRiskPendingApprovals": 1
+    },
+    "pendingApprovals": [
+      {
+        "id": "action-id",
+        "actionId": "action-id",
+        "title": "Approve LinkedIn test post",
+        "description": "Manual approval required before controlled publishing.",
+        "actionType": "content_publish",
+        "status": "approval_required",
+        "riskLevel": "high",
+        "approvalRequired": true,
+        "policyDecision": "ask",
+        "createdAt": "2026-07-06T12:00:00.000Z",
+        "updatedAt": "2026-07-06T12:00:00.000Z",
+        "actionUrl": "./actions.html?actionId=action-id",
+        "priority": "elevated"
+      }
+    ],
+    "recentEvents": [
+      {
+        "id": "event-id",
+        "actionId": "action-id",
+        "actionTitle": "Approve LinkedIn test post",
+        "actionType": "content_publish",
+        "actionStatus": "approval_required",
+        "riskLevel": "high",
+        "eventType": "action_created",
+        "fromStatus": null,
+        "toStatus": "approval_required",
+        "message": "Action needs founder approval.",
+        "actorUserId": "user-id",
+        "createdAt": "2026-07-06T12:05:00.000Z",
+        "actionUrl": "./actions.html?actionId=action-id",
+        "metadataPreview": {
+          "safe": true
+        }
+      }
+    ],
+    "preferencesSummary": {
+      "inAppCenterEnabled": true,
+      "emailDeliveryImplemented": false,
+      "slackDeliveryImplemented": false,
+      "quietHoursEnforcedForUiOnly": false
+    },
+    "safety": {
+      "readOnly": true,
+      "canApproveFromThisEndpoint": false,
+      "canExecuteFromThisEndpoint": false,
+      "sendsEmailInThisPhase": false,
+      "sendsSlackInThisPhase": false,
+      "callsExternalServices": false,
+      "exposesActionPayloadJson": false,
+      "exposesTokensOrSecrets": false,
+      "note": "Phase 10.2 notification center is read-only."
+    }
+  }
+}

@@ -1,0 +1,133 @@
+LIFE.SAVER V2 — PHASE 6.2 DEFAULT ASK POLICY
+Version: v0.6.0
+Phase: 6.2
+Deliverable: Default ask behavior
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 6.2 defines the safest fallback behavior for the future policy/rules engine.
+
+Rule:
+If no enabled policy rule matches an action, LIFE.SAVER must return ask/manual review.
+
+This protects the founder from accidental autonomy.
+
+================================================================================
+DEFAULT ASK RULE
+================================================================================
+
+When a proposed action enters policy evaluation:
+
+1. If an explicit enabled policy rule matches:
+   - The matched rule decision may continue to later safety checks.
+   - Possible matched decisions: ask, auto_approve, block.
+
+2. If no enabled policy rule matches:
+   - Effective decision must be ask.
+   - approval_required must be true.
+   - autoApprovalAllowed must be false.
+   - executorExecutionAllowed must be false.
+
+3. If caller/tool requests auto_approve without a matched rule:
+   - LIFE.SAVER forces ask.
+   - The caller cannot self-authorize autonomy.
+
+================================================================================
+WHY THIS MATTERS
+================================================================================
+
+V2 will eventually allow LIFE.SAVER to act as an operator. That means policy decisions
+must be conservative by default.
+
+Without this rule, a bug, tool, worker, or prompt mistake could accidentally create an
+auto-approved action even when the founder did not create a rule allowing it.
+
+Default ask makes the safe path simple:
+
+No rule = ask the founder.
+
+================================================================================
+IMPLEMENTATION
+================================================================================
+
+Added backend module:
+- apps/api/src/modules/policies/policy.default-ask.ts
+
+Added test command:
+- npm.cmd run policy:default-ask:test
+
+Added shared reference:
+- packages/shared/src/policy-default-ask.ts
+
+createProposedAction now applies default ask before pause enforcement:
+
+1. validate proposed action input
+2. evaluateDefaultAskPolicy
+3. enforceDefaultAskDecision
+4. apply policy pause enforcement
+5. apply duplicate protection
+6. insert proposed action + action_created event
+
+================================================================================
+SAFETY CONTRACT
+================================================================================
+
+Phase 6.2 does not add:
+- policy rules UI
+- full policy evaluation service
+- caps engine
+- executor registry activation
+- sandbox executor
+- real executor
+- content publishing
+- support sending
+- ad spend changes
+- campaign pause execution
+- rollback execution
+- external write connectors
+- auto-run rules
+
+Current system state remains:
+READ + ADVISE + DRAFT + INTERNAL APPROVAL/REJECTION/CANCELLATION + PAUSE CONTROL ONLY
+
+================================================================================
+EVENT METADATA
+================================================================================
+
+createProposedAction action_created events now include default ask metadata:
+
+- default_ask_phase
+- default_ask_checked
+- default_ask_rule_match_state
+- default_ask_requested_decision
+- default_ask_effective_decision
+- default_ask_applied
+- default_ask_auto_approval_allowed
+
+================================================================================
+QA COMMANDS
+================================================================================
+
+Run:
+
+npm.cmd run policy:default-ask:test
+npm.cmd run policy:schema:test
+npm.cmd run policy:pause:test
+npm.cmd run executor:pause:test
+npm.cmd run actions:test:backend
+npm.cmd run client:test-checklist
+npm.cmd run security:check
+npm.cmd run env:check
+
+Expected:
+- no rule defaults to ask
+- requested auto_approve without matched rule becomes ask
+- matched auto_approve may continue to later safety checks but does not execute
+- no external writes
+- no executor runs
+
+================================================================================
+END
+================================================================================

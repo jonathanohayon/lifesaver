@@ -1,0 +1,28 @@
+LIFE.SAVER v0.6.0 — Phase 6.6 Global Caps Foundation Test Results
+
+Expected command:
+npm.cmd run policy:scope-matching:test
+
+Expected result:
+- success=true
+- all scope assertions pass
+- no executor enabled
+- no external writes enabled
+- no auto-run triggered
+
+Coverage:
+- empty scope passes
+- action type match/mismatch
+- platform match
+- channel match
+- workspace match
+- exact risk level match
+- risk_below match
+- amount_below match
+- category match
+- confidence_above match
+- top-level scope keys
+- list values
+- unsupported missing amount fails closed
+
+No external writes, no executors, and no auto-run execution are enabled in Phase 6.5.

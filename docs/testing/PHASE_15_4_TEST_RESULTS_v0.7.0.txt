@@ -1,0 +1,34 @@
+LIFE.SAVER v0.7.0 — Phase 15.4 Memory Table Test Results
+
+Commands run:
+- npm run phase15:memory-schema:test
+- npm run phase15:tool-routing:test
+- npm run phase15:specialist-prompts:test
+- npm run phase15:request-classifier:test
+- npm run phase14:ads-safety-qa:test
+- npm run phase13:support-send-qa:test
+- npm run build
+
+Expected result:
+- All pass.
+
+Coverage:
+- Phase 15.4 package constants and health mode.
+- All roadmap memory categories are represented.
+- Schema columns include workspace scoping, review status, safe value fields, timestamps, and approval metadata.
+- Migration is additive and contains safe constraints/indexes/comments.
+- Preview validation normalizes valid future memory items without storing them.
+- Secret-like fragments are blocked.
+- Prompt-injection/bypass signals are warned and cannot be injected into Claude this phase.
+- Report and status remain safe.
+
+Safety confirmation:
+- No memory UI.
+- No automatic memory capture.
+- No Claude memory injection.
+- No tool invocation.
+- No connector call.
+- No action creation.
+- No executor call.
+- No auto-run.
+- Additive migration only.

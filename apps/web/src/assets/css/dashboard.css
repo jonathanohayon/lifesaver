@@ -1,0 +1,167 @@
+/* LIFE.SAVER v0.8.3 Mobile Operator UI Release QA
+   Responsive hardening for the founder dashboard only.
+   Safety scope: frontend UI only; no API/action/executor behavior changes. */
+
+:root{
+  --ls-dashboard-gap:13px;
+  --ls-dashboard-mobile-x:12px;
+  --ls-dashboard-touch:46px;
+}
+
+.wrap{max-width:100%;}
+.panel,.brief,.weekly,.interface{min-width:0;}
+.panel canvas,.interface canvas{max-width:100%;}
+
+.ls-dashboard-mobile-jumpbar{display:none;}
+.ls-dashboard-mobile-note{display:none;}
+
+/* Tablet: two-column dashboard with the AI/chat core full width. */
+@media (min-width:681px) and (max-width:1180px){
+  body{overflow-x:hidden;}
+  .wrap{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto;gap:var(--ls-dashboard-gap);padding:12px;}
+  .brief,.weekly,.nav,.center{grid-column:1/-1;}
+  .center{order:2;}
+  .col{display:flex;min-width:0;}
+  .col:first-of-type{order:3;}
+  .col:last-of-type{order:4;}
+  .weekly{order:5;}
+  .nav{order:6;}
+  .orbstage{min-height:340px;}
+  .wk-tiles{grid-template-columns:repeat(3,minmax(0,1fr));}
+  .draft-stats{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .brief-actions .chip{min-height:44px;display:inline-flex;align-items:center;justify-content:center;}
+}
+
+/* Phone: single-column founder console with large tap targets and no horizontal scrolling. */
+@media (max-width:680px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden;}
+  body{padding:0;background:radial-gradient(ellipse 80% 45% at 50% 18%, rgba(20,70,140,.24), transparent 70%),#02040a;}
+  .wrap{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto;gap:10px;padding:10px;min-height:100vh;width:100%;max-width:100%;}
+  .brief,.weekly,.nav,.center,.col{grid-column:1!important;width:100%;max-width:100%;min-width:0;}
+  .brief{order:1;align-items:flex-start;gap:12px;padding:14px;}
+  .ls-dashboard-mobile-jumpbar{order:2;}
+  .center{order:3;}
+  .col:first-of-type{order:4;}
+  .col:last-of-type{order:5;}
+  .weekly{order:6;}
+  .nav{order:7;}
+
+  .panel{padding:13px;border-radius:0;overflow:hidden;}
+  .ph{align-items:flex-start;gap:10px;}
+  .ph h3{font-size:13px;line-height:1.25;letter-spacing:1.6px;}
+  .ph .sub{font-size:9px;line-height:1.35;}
+  .ph .tag{min-height:28px;display:inline-flex;align-items:center;justify-content:center;padding:0 8px;border:1px solid var(--line2);background:rgba(43,180,255,.05);}
+
+  .brief-orb{width:30px;height:30px;}
+  .brief-main{min-width:0;flex:1 1 calc(100% - 42px);}
+  .brief-head{flex-direction:column;align-items:flex-start;gap:3px;}
+  .bh-title{font-size:12px;letter-spacing:1.8px;}
+  .bh-date{font-size:9.5px;line-height:1.35;}
+  .brief-text{font-size:13px;line-height:1.65;overflow-wrap:anywhere;}
+  .brief-actions{width:100%;display:grid;grid-template-columns:1fr;gap:8px;}
+  .chip{white-space:normal;min-height:var(--ls-dashboard-touch);display:flex;align-items:center;justify-content:center;text-align:center;padding:10px 12px;line-height:1.35;}
+
+  .ls-dashboard-mobile-jumpbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;border:1px solid var(--line);background:var(--panel);padding:10px;}
+  .ls-dashboard-jump{min-height:var(--ls-dashboard-touch);border:1px solid var(--line);background:rgba(43,180,255,.08);color:var(--blueb);font-family:var(--ui);font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;}
+  .ls-dashboard-jump:active,.ls-dashboard-jump:focus{outline:2px solid rgba(127,220,255,.45);outline-offset:2px;}
+  .ls-dashboard-mobile-note{display:block;grid-column:1/-1;color:var(--txt2);font-size:10.5px;line-height:1.45;text-align:center;border-top:1px solid var(--line2);padding-top:8px;}
+
+  .voicebar{padding:10px;gap:9px;flex-wrap:wrap;}
+  .voicebar .vi{width:28px;height:28px;}
+  .voicebar .nm{font-size:12px;letter-spacing:1.4px;}
+  .voicebar .on{font-size:8.8px;}
+  #waveTop{order:4;width:100%;flex-basis:100%;height:30px;}
+  .voicebar .vl{margin-left:auto;min-height:44px;display:flex;flex-direction:column;justify-content:center;align-items:flex-end;}
+
+  .orbstage{min-height:260px;max-height:360px;}
+  .wm{font-size:clamp(29px,12vw,42px);letter-spacing:.18em;line-height:1.08;}
+  .wmsub{font-size:10px;letter-spacing:.28em;line-height:1.4;}
+  .qc{font-size:10px;letter-spacing:.18em;line-height:1.45;}
+  .statuspill{padding:8px 14px;}
+  .statuspill .sv{font-size:12px;letter-spacing:2px;}
+
+  .interface{padding:14px;text-align:left;}
+  .interface .il{font-size:8.8px;letter-spacing:1.6px;}
+  .interface .big{text-align:left;font-size:21px;letter-spacing:2px;line-height:1.25;}
+  .interface .msg{font-size:13px;line-height:1.65;min-height:44px;overflow-wrap:anywhere;}
+  #waveBot{height:36px;}
+  .ibar{display:grid;grid-template-columns:1fr;gap:8px;}
+  #inp{width:100%;min-height:var(--ls-dashboard-touch);font-size:16px;padding:12px 13px;}
+  #send{width:100%;min-height:var(--ls-dashboard-touch);font-size:12px;padding:12px 16px;}
+
+  .gauge,.lockwrap{align-items:flex-start;gap:12px;}
+  .gauge svg{width:72px;height:72px;}
+  .lockcirc{width:64px;height:64px;}
+  .statrow{gap:10px;align-items:flex-start;padding:9px 0;}
+  .statrow .k{font-size:10px;line-height:1.35;}
+  .statrow .v{font-size:13px;text-align:right;line-height:1.35;overflow-wrap:anywhere;}
+
+  .botstats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+  .botstats .b{border:1px solid var(--line2);background:rgba(43,180,255,.04);padding:8px;}
+  .mapc,#traffic,#mapAgent{height:110px!important;}
+  .legend{width:100%;gap:8px;}
+  .legend .lg{min-height:28px;}
+
+  .draft-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+  .draft-actions{display:grid;grid-template-columns:1fr;gap:8px;}
+  .mini-btn{min-height:var(--ls-dashboard-touch);font-size:10px;padding:10px 12px;text-align:center;}
+  .draft-list{max-height:none;overflow:visible;padding-right:0;}
+  .draft-card{padding:11px;}
+  .draft-card-head{flex-direction:column;align-items:flex-start;}
+  .draft-status{white-space:normal;min-height:28px;display:inline-flex;align-items:center;}
+  .draft-content,.draft-prompt{font-size:11.5px;line-height:1.55;}
+  .draft-card-actions{display:grid;grid-template-columns:1fr;gap:8px;}
+
+  .wk-tiles{grid-template-columns:1fr;gap:8px;}
+  .wk{padding:12px;}
+  .wkv{font-size:19px;line-height:1.25;}
+  .wk-note{font-size:12.5px;line-height:1.65;}
+
+  .trrow{font-size:11px;align-items:flex-start;}
+  .trrow .tm{width:auto;min-width:48px;}
+
+  .nav{padding:10px;}
+  .nav .up,.nav .va,.ls-dashboard-version-chip{text-align:center;}
+}
+
+@media (max-width:380px){
+  .wrap{padding:8px;gap:8px;}
+  .panel,.brief,.interface{padding:11px;}
+  .wm{font-size:28px;letter-spacing:.14em;}
+  .ls-dashboard-mobile-jumpbar{grid-template-columns:1fr;}
+  .botstats,.draft-stats{grid-template-columns:1fr;}
+  .gauge,.lockwrap{flex-direction:column;align-items:stretch;}
+}
+
+/* v0.8.3 functional audience reach widget */
+.ls-audience-live{color:var(--green);border-color:rgba(55,224,138,.45);background:rgba(55,224,138,.08);}
+.ls-audience-derived{color:var(--blueb);border-color:rgba(127,220,255,.45);background:rgba(43,180,255,.08);}
+.ls-audience-reach-functional #audienceReachSub{color:var(--blueb);}
+#audienceCustomers,#audienceReachEstimate,#audienceChannels,#audienceEngagement{transition:color .18s ease, text-shadow .18s ease;}
+.ls-audience-reach-functional #audienceCustomers,
+.ls-audience-reach-functional #audienceChannels{color:var(--blueb);text-shadow:0 0 10px rgba(43,180,255,.25);}
+.ls-audience-reach-functional #audienceEngagement{color:var(--green);text-shadow:0 0 10px rgba(55,224,138,.2);}
+@media (max-width:680px){
+  #audienceReachStatus{min-height:32px;display:inline-flex;align-items:center;justify-content:center;}
+  #audienceMetricOneLabel,#audienceMetricTwoLabel,#audienceMetricThreeLabel,#audienceMetricFourLabel{font-size:9.5px;line-height:1.3;}
+  #audienceCustomers,#audienceReachEstimate,#audienceChannels,#audienceEngagement{font-size:16px;line-height:1.25;overflow-wrap:anywhere;}
+}
+
+/* v0.8.3 audience mapping guidance */
+.ls-audience-note{
+  margin:10px 0 0;
+  padding:9px 10px;
+  border:1px solid rgba(255,181,61,.25);
+  background:rgba(255,181,61,.055);
+  color:#a9c3d8;
+  font-size:10.5px;
+  line-height:1.45;
+  letter-spacing:.04em;
+}
+.ls-audience-reach-functional #audienceReachEstimate,
+.ls-audience-reach-functional #audienceEngagement{
+  color:var(--green);
+}
+@media (max-width:680px){
+  .ls-audience-note{font-size:10px;padding:8px;}
+}

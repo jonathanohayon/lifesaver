@@ -1,0 +1,59 @@
+{
+  "statusEndpoint": "GET /api/v1/support/escalation-rules/status",
+  "exampleEndpoint": "GET /api/v1/support/escalation-rules/example",
+  "previewEndpoint": "POST /api/v1/support/escalation-rules/preview",
+  "requestExample": {
+    "ticketId": "ticket_refund_legal_001",
+    "threadId": "gmail_thread_refund_legal_001",
+    "customerEmail": "customer@example.com",
+    "subject": "Refund request and legal action",
+    "bodySnippet": "I want a refund today or I will contact my lawyer and dispute this charge.",
+    "category": "refund",
+    "sensitiveFlag": false,
+    "classifierConfidence": 0.91,
+    "highValueCustomer": false,
+    "highValueCustomerEscalationEnabled": false
+  },
+  "responseShape": {
+    "valid": true,
+    "result": {
+      "ticketId": "ticket_refund_legal_001",
+      "threadId": "gmail_thread_refund_legal_001",
+      "decision": "escalate_to_founder",
+      "escalationRequired": true,
+      "severity": "critical",
+      "matchedRules": [
+        {
+          "ruleId": "refund_request",
+          "label": "Refund request",
+          "severity": "high",
+          "reason": "Refund requests can affect cash, policy, and customer trust, so they must be escalated.",
+          "alwaysEscalate": true
+        }
+      ],
+      "founderReviewRequired": true,
+      "suggestedQueue": "founder_review",
+      "customerEmailHint": "cu***@example.com",
+      "subjectPreview": "Refund request and legal action",
+      "bodySnippetPreview": "I want a refund today or I will contact my lawyer and dispute this charge.",
+      "rawTicketPayloadReturned": false,
+      "fullBodyReturned": false,
+      "emailSent": false,
+      "externalApiCalled": false,
+      "supportReplyActionCreated": false,
+      "safeForBrowser": true
+    },
+    "warnings": [
+      "Ticket must be escalated to founder/manual review before any support reply action can be approved or sent."
+    ]
+  },
+  "safety": {
+    "gmailApiClientAdded": false,
+    "gmailExternalApiCalled": false,
+    "emailSendAdded": false,
+    "supportAutoReplyAdded": false,
+    "supportReplyActionCreated": false,
+    "rawTicketPayloadReturned": false,
+    "fullBodyReturned": false
+  }
+}

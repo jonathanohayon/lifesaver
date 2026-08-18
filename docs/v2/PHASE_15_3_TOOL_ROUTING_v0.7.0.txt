@@ -1,0 +1,68 @@
+================================================================================
+LIFE.SAVER v0.7.0 — PHASE 15.3 TOOL ROUTING
+================================================================================
+
+Purpose:
+Add unified orchestrator routing so LIFE.SAVER can classify a request, select the correct internal specialist route, and return the matching safe candidate toolset while the founder still hears one LIFE.SAVER voice.
+
+Goal:
+- Orchestrator routes request to correct specialist/toolset.
+
+Deliverable:
+- Unified orchestrator routing.
+
+Implementation:
+- apps/api/src/modules/orchestrator/tool-routing.types.ts
+- apps/api/src/modules/orchestrator/tool-routing.model.ts
+- apps/api/src/modules/orchestrator/tool-routing.controller.ts
+- apps/api/src/modules/orchestrator/tool-routing.routes.ts
+- apps/api/src/modules/orchestrator/tool-routing-tests.ts
+
+Endpoints:
+- GET  /api/v1/orchestrator/tool-routing/status
+- GET  /api/v1/orchestrator/tool-routing/report
+- GET  /api/v1/orchestrator/tool-routing/map
+- GET  /api/v1/orchestrator/tool-routing/example
+- POST /api/v1/orchestrator/tool-routing/preview
+
+How routing works:
+1. Phase 15.1 classifier determines the route:
+   - content
+   - ads
+   - support
+   - research
+   - dev
+   - metrics
+   - general_advisor
+2. Phase 15.3 maps the route to a handler kind:
+   - specialist_prompt_pack for content/ads/support/research/dev
+   - metrics_read_only_toolset for metrics
+   - general_advisor_front_voice for general advisor
+3. For specialist routes, Phase 15.3 reads the Phase 15.2 prompt/tool registry and returns candidate tools.
+4. For metrics and general advisor, Phase 15.3 returns safe front-voice toolset candidates.
+5. The router selects a safe candidate tool for context only.
+
+Important:
+- The selected tool is not invoked.
+- The route plan is a planning/preview object only.
+- Actual tool invocation, action creation, connector calls, and execution remain disabled.
+
+Safety boundary:
+- Routing plan only.
+- No Claude call from router.
+- No specialist execution.
+- No tool invocation.
+- No external connector call.
+- No action row creation.
+- No approval.
+- No executor call.
+- No auto-run.
+- No content publishing.
+- No support sending.
+- No ads mutation.
+- No raw secrets.
+- No database migration.
+
+Next phase:
+- Phase 15.4 — Memory Table.
+================================================================================

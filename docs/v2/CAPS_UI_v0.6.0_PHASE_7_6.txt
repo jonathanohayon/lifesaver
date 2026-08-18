@@ -1,0 +1,18 @@
+LIFE.SAVER V2 — PHASE 7.6 CAPS UI
+
+Purpose:
+Let the founder preview global autonomy caps safely before database-backed policy/cap editing exists.
+
+Caps included:
+- Posts per day.
+- Auto-replies per day.
+- Ad budget change per day.
+- Model token usage per day.
+- Model cost usage per day.
+- Actions per hour.
+
+Deliverable:
+Caps settings UI under /rules.html.
+
+Safety boundary:
+This is local preview only. It does not create/update policies, does not persist caps to DB, and does not enable execution.

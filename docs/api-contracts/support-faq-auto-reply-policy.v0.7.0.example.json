@@ -1,0 +1,51 @@
+{
+  "statusEndpoint": "GET /api/v1/support/faq-auto-reply-policy/status",
+  "exampleEndpoint": "GET /api/v1/support/faq-auto-reply-policy/example",
+  "previewEndpoint": "POST /api/v1/support/faq-auto-reply-policy/preview",
+  "healthMode": "v2-phase-13-5-faq-auto-reply-policy",
+  "previewRequestExample": {
+    "actionType": "support_reply_send",
+    "provider": "gmail",
+    "category": "faq",
+    "confidenceScore": 0.96,
+    "riskLevel": "low",
+    "sensitiveFlag": false,
+    "escalationRequired": false,
+    "recipientCount": 1,
+    "threadAssociationVerified": true,
+    "capUsage": {
+      "maxSupportAutoRepliesPerDay": 5,
+      "sentSupportAutoRepliesToday": 1,
+      "maxSupportAutoRepliesPerHour": 2,
+      "sentSupportAutoRepliesThisHour": 0
+    },
+    "explicitRule": {
+      "id": "policy_faq_auto_reply_preview",
+      "name": "FAQ auto-reply preview policy",
+      "enabled": true,
+      "actionType": "support_reply_send",
+      "provider": "gmail",
+      "category": "faq",
+      "decision": "auto_approve",
+      "allowAutoReply": true,
+      "minConfidenceScore": 0.9,
+      "maxRiskLevel": "low"
+    }
+  },
+  "safeResponseShape": {
+    "eligibleForFutureAutoReply": true,
+    "autoSendNow": false,
+    "decision": "eligible_future_auto_reply_manual_gate_active",
+    "safety": {
+      "evaluationOnly": true,
+      "autoSendEnabledNow": false,
+      "manualApprovalStillRequiredThisPhase": true,
+      "emailSent": false,
+      "gmailApiCalled": false,
+      "bulkSendAllowed": false,
+      "rawProviderPayloadReturned": false,
+      "rawTokenReturned": false,
+      "rawMimeReturned": false
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "statusEndpoint": "GET /api/v1/content-auto-run/final-validator/status",
+  "previewEndpoint": "GET /api/v1/content-auto-run/final-validator/preview",
+  "healthMode": "v2-phase-11-6-pre-publish-final-validation",
+  "requiredScope": "w_member_social",
+  "examplePreviewQuery": {
+    "platform": "linkedin",
+    "channel": "linkedin_member_feed",
+    "actionType": "content_publish",
+    "mediaType": "none",
+    "scheduledTime": "2026-07-06T10:00:00.000Z",
+    "tokenConnected": "true",
+    "tokenExpiresAt": "2099-01-01T00:00:00.000Z",
+    "tokenHasRequiredScope": "true",
+    "ruleStillEnabled": "true"
+  },
+  "exampleResult": {
+    "phase": "phase_11_6_pre_publish_final_validation",
+    "deliverable": "final_publish_validator",
+    "decision": "ready_for_executor_handoff",
+    "readyForExecutorHandoff": true,
+    "publishCalled": false,
+    "externalApiCalled": false,
+    "tokenStatusSummary": {
+      "tokenConnected": true,
+      "tokenExpiresAt": "2099-01-01T00:00:00.000Z",
+      "tokenExpired": false,
+      "requiredScopePresent": true,
+      "rawTokenReturned": false
+    },
+    "safety": {
+      "validatorOnly": true,
+      "doesNotPublish": true,
+      "externalApiCalled": false,
+      "noDatabaseWrites": true,
+      "noActionStatusMutation": true,
+      "noTokenDecryption": true,
+      "rawTokenNotReturned": true,
+      "rawPayloadNotReturned": true,
+      "finalGateBeforeAnyFutureExecutor": true
+    }
+  }
+}

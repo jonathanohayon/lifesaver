@@ -1,0 +1,73 @@
+LIFE.SAVER v0.7.0 — Phase 13.4 Thread Association
+==================================================
+
+Purpose
+-------
+Phase 13.4 makes support reply execution thread-safe. A support_reply_send action must be bound to the correct imported Gmail support ticket thread before the Gmail send executor can call Gmail.
+
+Why this is needed
+------------------
+Phase 13.2 added the manual-approved Gmail support send executor. Phase 13.3 made manual founder/admin approval mandatory. Phase 13.4 adds the next safety gate: the approved action must prove it belongs to the imported ticket/thread it is replying to.
+
+Thread-safe rules
+-----------------
+1. action_type must be support_reply_send.
+2. support_provider must be gmail.
+3. ticket_id and thread_id must exist in the action payload.
+4. The imported support ticket must exist in the same workspace.
+5. The payload thread_id must match the imported ticket external_thread_id.
+6. If the imported ticket has a known customer email, the payload customer_email must match it.
+7. Archived/spam tickets are blocked.
+8. Gmail users.messages.send must use the validated threadId.
+
+Executor behavior
+-----------------
+The support send executor checks these gates in order:
+1. Database/feature flag.
+2. Action exists and is support_reply_send.
+3. Manual approval gate from Phase 13.3.
+4. Master pause/support pause/emergency safe mode.
+5. Payload validation.
+6. Phase 13.4 thread association verification.
+7. Gmail credential/scope validation.
+8. Status transition to executing.
+9. Gmail send request.
+10. Result log and final action status.
+
+If Phase 13.4 fails, Gmail is not called.
+
+New files
+---------
+- apps/api/src/modules/support/support-thread-association.types.ts
+- apps/api/src/modules/support/support-thread-association.model.ts
+- apps/api/src/modules/support/support-thread-association.repository.ts
+- apps/api/src/modules/support/support-thread-association.controller.ts
+- apps/api/src/modules/support/support-thread-association.routes.ts
+- apps/api/src/modules/support/support-thread-association-tests.ts
+
+Updated files
+-------------
+- apps/api/src/modules/support/support-send-executor.model.ts
+- apps/api/src/modules/support/support-send-executor.types.ts
+- apps/api/src/modules/support/support-send-executor-tests.ts
+- apps/api/src/routes/api-v1.ts
+- apps/api/src/modules/health/health.controller.ts
+- package.json
+- apps/api/package.json
+- README.txt
+- CHANGELOG.txt
+
+Database
+--------
+No migration required. Phase 13.4 reuses the existing support_tickets table from Phase 12.2/12.3.
+
+Safety status
+-------------
+- No auto-reply added.
+- No bulk send added.
+- No new Gmail OAuth route added.
+- No raw provider payload returned.
+- No raw token returned.
+- No raw MIME returned.
+- No Gmail call from preview endpoints.
+- Real support send remains feature-flag gated and manual-approval-first.

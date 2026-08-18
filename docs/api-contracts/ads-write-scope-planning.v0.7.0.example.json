@@ -1,0 +1,66 @@
+{
+  "statusEndpoint": {
+    "success": true,
+    "data": {
+      "phase": "V2 Phase 14.2 — Write Scope Planning",
+      "healthMode": "v2-phase-14-2-write-scope-planning",
+      "deliverable": "ads_write_scope_checklist",
+      "planningOnly": true,
+      "platforms": ["Meta Marketing API", "Google Ads API"],
+      "accountPermissionPlanned": true,
+      "oauthPlanned": true,
+      "appReviewPlanned": true,
+      "leastPrivilegePlanned": true,
+      "encryptedTokenStoragePlanned": true,
+      "adApiClientAdded": false,
+      "oauthRouteAdded": false,
+      "tokenStorageAdded": false,
+      "writeScopeRequested": false,
+      "campaignPaused": false,
+      "budgetChanged": false,
+      "adsAutoRunEnabled": false,
+      "externalAdApiCalled": false,
+      "noDatabaseMigrationRequired": true,
+      "nextStep": "Phase 14.3 — Ads Action Types"
+    }
+  },
+  "checklistEndpoint": {
+    "success": true,
+    "data": {
+      "version": "0.7.0",
+      "phase": "phase_14_2_write_scope_planning",
+      "healthMode": "v2-phase-14-2-write-scope-planning",
+      "deliverable": "ads_write_scope_checklist",
+      "planningOnly": true,
+      "platforms": [
+        {
+          "platform": "meta_marketing_api",
+          "label": "Meta Marketing API",
+          "futureControls": ["pause campaign", "pause ad set", "restore campaign/ad set status"]
+        },
+        {
+          "platform": "google_ads_api",
+          "label": "Google Ads API",
+          "futureControls": ["pause campaign", "pause ad group where supported by approved scope", "restore previous status"]
+        }
+      ],
+      "checklistCategories": ["account_permission", "oauth", "app_review", "least_privilege", "token_storage"],
+      "safety": {
+        "planningOnly": true,
+        "noAdApiClientAdded": true,
+        "noOAuthRouteAdded": true,
+        "noTokenStorageAdded": true,
+        "noWriteScopeRequested": true,
+        "noCampaignPaused": true,
+        "noBudgetChanged": true,
+        "noAdsAutoRunEnabled": true,
+        "noExternalAdApiCalled": true,
+        "tripleWhaleReadOnlyStill": true,
+        "noRawTokensReturned": true,
+        "noRawProviderPayloadReturned": true,
+        "noDatabaseMigrationRequired": true
+      },
+      "nextStep": "Phase 14.3 — Ads Action Types"
+    }
+  }
+}

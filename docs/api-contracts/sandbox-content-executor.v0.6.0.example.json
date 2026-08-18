@@ -1,0 +1,31 @@
+{
+  "version": "0.6.0",
+  "phase": "V2 Phase 8.3 Sandbox Content Executor",
+  "executorName": "sandboxContentExecutor",
+  "actionType": "content_publish",
+  "mode": "sandbox",
+  "validate": {
+    "ok": true,
+    "externalWritesAllowed": false
+  },
+  "executeResult": {
+    "ok": true,
+    "status": "executed",
+    "result": {
+      "sandbox_success": true,
+      "fake_external_post_id": "sandbox-post-00000000-0000-0000-0000-000000000202",
+      "fake_permalink": "https://sandbox.lifesaveragent.com/instagram/sandbox-post-00000000-0000-0000-0000-000000000202",
+      "external_platform_called": false,
+      "simulated_only": true
+    },
+    "externalWritesAttempted": false,
+    "externalWritesSucceeded": false,
+    "rollbackSupported": true
+  },
+  "safety": {
+    "contentPublished": false,
+    "externalWritesEnabled": false,
+    "autoRunEnabled": false,
+    "realExecutorImplemented": false
+  }
+}

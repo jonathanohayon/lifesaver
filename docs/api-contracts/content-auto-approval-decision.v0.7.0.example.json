@@ -1,0 +1,75 @@
+{
+  "endpointStatus": "GET /api/v1/content-auto-run/auto-approval/status",
+  "endpointPreview": "GET /api/v1/content-auto-run/auto-approval/preview",
+  "method": "GET",
+  "authRequired": true,
+  "queryPreviewExample": {
+    "platform": "linkedin",
+    "channel": "linkedin_member_feed",
+    "actionType": "content_publish",
+    "mediaType": "none",
+    "timezone": "UTC",
+    "scheduledTime": "2026-07-06T10:00:00.000Z",
+    "maxPostsPerDay": 3,
+    "publishedTodayCount": 0,
+    "reservedTodayCount": 0,
+    "policyAutoApprovalRuleMatched": true
+  },
+  "responseShape": {
+    "ok": true,
+    "data": {
+      "phase": "phase_11_5_auto_approval_decision",
+      "healthMode": "v2-phase-11-5-auto-approval-decision",
+      "deliverable": "auto_approval_decision_record",
+      "finalDecision": "auto_approved | manual_review_required | blocked",
+      "autoApproved": true,
+      "autoPublishAllowedNow": false,
+      "decisionRecordedInDatabase": false,
+      "gates": [
+        {
+          "gate": "style_profile_matched",
+          "passed": true,
+          "severity": "pass",
+          "reason": "Caption matches the approved Phase 11.1 style profile."
+        }
+      ],
+      "policyDecisionSnapshot": {
+        "decision": "auto_approved",
+        "matchedPolicyRuleKey": "content_linkedin_safe_style_auto_approval_v1",
+        "styleDecision": "style_match",
+        "riskDecision": "eligible_for_future_auto_run_review",
+        "dailyCapDecision": "allowed_for_future_auto_run_review",
+        "channelTimeDecision": "allowed_for_future_auto_run_review",
+        "riskLevel": "low",
+        "riskScore": 0
+      },
+      "safeContentSummary": {
+        "captionCharacters": 151,
+        "hashtagCount": 0,
+        "mediaType": "none",
+        "hasLinkUrl": false,
+        "scheduledTimeProvided": true
+      },
+      "safety": {
+        "decisionRecordOnly": true,
+        "autoApprovalDecisionCanBeReturned": true,
+        "autoPublishEnabled": false,
+        "doesNotPublish": true,
+        "externalApiCalled": false,
+        "noDatabaseWrites": true,
+        "doesNotMutateActionStatus": true,
+        "noTokenAccess": true,
+        "rawPayloadNotReturned": true,
+        "futureExecutorGateStillRequired": true
+      }
+    }
+  },
+  "neverReturned": [
+    "raw access token",
+    "refresh token",
+    "Authorization header",
+    "raw payload_json",
+    "raw caption payload",
+    "rollback payload"
+  ]
+}

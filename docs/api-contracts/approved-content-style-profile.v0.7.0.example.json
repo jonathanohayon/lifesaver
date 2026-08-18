@@ -1,0 +1,42 @@
+{
+  "status": "ok",
+  "data": {
+    "version": "0.7.0",
+    "phase": "phase_11_1_approved_style_definition",
+    "healthMode": "v2-phase-11-1-approved-style-definition",
+    "profileKey": "default_linkedin_approved_content_style_v1",
+    "profileStatus": "definition_only",
+    "actionType": "content_publish",
+    "platform": "linkedin",
+    "tone": {
+      "primaryTone": "calm_strategic_founder_focused",
+      "allowedToneTraits": ["calm", "clear", "practical", "founder-focused"],
+      "disallowedToneTraits": ["aggressive hype", "fear-based selling", "misleading urgency"]
+    },
+    "length": {
+      "platform": "linkedin",
+      "minCharacters": 80,
+      "idealMinCharacters": 180,
+      "idealMaxCharacters": 900,
+      "maxCharacters": 1200,
+      "maxLineBreakGroups": 6
+    },
+    "hashtags": {
+      "style": "low_volume_relevant_hashtags",
+      "minHashtags": 0,
+      "maxHashtags": 3
+    },
+    "discountPolicy": {
+      "discountClaimsAllowed": "only_when_explicit_offer_is_attached",
+      "requiresOfferSourceForDiscount": true
+    },
+    "safety": {
+      "definitionOnly": true,
+      "autoRunEnabled": false,
+      "doesNotPublish": true,
+      "doesNotApproveActions": true,
+      "externalApiCalled": false,
+      "manualApprovalStillRequired": true
+    }
+  }
+}

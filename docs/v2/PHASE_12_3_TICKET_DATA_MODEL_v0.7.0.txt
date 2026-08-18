@@ -1,0 +1,30 @@
+PHASE 12.3 — TICKET DATA MODEL
+
+Goal:
+Define the canonical LIFE.SAVER support ticket schema before support drafts become proposed actions.
+
+Fields covered:
+- ticket_id
+- customer_email
+- subject
+- body_snippet
+- thread_id
+- status
+- category
+- sensitive_flag
+
+Design notes:
+- ticket_id maps to support_tickets.id for persisted records, with API field ticketId.
+- customer_email is server-side support workflow data. Browser views should prefer customerEmailHint.
+- body_snippet is a cleaned, short message preview. Sensitive values should be redacted before browser output.
+- thread_id maps to the provider thread id, currently Gmail external_thread_id.
+- sensitive_flag is true for payment/security/identity/health/refund/secret-like tickets.
+- raw_provider_payload_json remains separate from normalized ticket fields.
+
+Safety boundaries:
+- No Gmail API call is added.
+- No Gmail OAuth route is added.
+- No email send scope is added.
+- No support reply action is created.
+- No support send executor is added.
+- No external support write is added.

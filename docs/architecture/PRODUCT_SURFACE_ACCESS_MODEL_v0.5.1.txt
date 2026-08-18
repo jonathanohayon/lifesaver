@@ -1,0 +1,152 @@
+LIFE.SAVER v0.5.1 - Product Surface + Access Model
+
+Purpose
+-------
+This version defines the SaaS product surface split before adding team permissions, billing, or public launch workflows.
+
+Recommended production domains
+------------------------------
+mydomain.com          = Public marketing website
+app.mydomain.com      = Customer app: login, onboarding, dashboard, settings, AI, drafts
+admin.mydomain.com    = Internal LIFE.SAVER Super Admin panel
+api.mydomain.com      = Express backend API
+worker service        = Private background service, no public URL
+
+Public website rules
+--------------------
+Allowed:
+- Landing page
+- Features
+- How it works
+- Safety promise
+- Pricing placeholder later
+- Login/start access CTA
+
+Forbidden:
+- Customer dashboard data
+- Customer metrics
+- Admin logs
+- Raw payloads
+- API keys
+- Claude settings
+- Worker secrets
+
+Customer app rules
+------------------
+Allowed:
+- Login/signup
+- Onboarding
+- Dashboard
+- Customer settings
+- Triple Whale API-key entry/update/disconnect
+- Daily Brief / Weekly Summary
+- LIFE.SAVER chat
+- Draft Review Panel
+
+Forbidden:
+- Other customer/workspace data
+- System-wide logs
+- Raw Claude key
+- Worker secret
+- Admin-only operations
+
+Internal admin rules
+--------------------
+Allowed:
+- Workspace/customer monitoring
+- Connected account status
+- Sync health
+- Worker status/logs
+- System events
+- Usage logs
+- Security/environment status
+- Billing status later
+
+Forbidden:
+- Displaying raw customer Triple Whale API keys
+- Displaying raw Claude API key
+- Performing unapproved external actions
+- Destructive database operations without explicit approval and backup
+
+Backend API rules
+-----------------
+Allowed:
+- Auth/session
+- Workspace permission enforcement
+- Encrypted customer connected account storage
+- Server-side Claude calls
+- Triple Whale read-only sync/probes
+- Metrics/briefs/drafts/admin endpoints
+- Worker internal endpoints
+
+Forbidden:
+- Returning raw API keys
+- Trusting frontend-supplied workspace_id without membership checks
+- Adding write/action-taking AI tools in v1
+
+Secret ownership
+----------------
+Claude API key:
+- Owned by LIFE.SAVER platform
+- Stored in backend/hosting environment only
+- Managed by admin/developer only
+- Never shown to customers
+
+Triple Whale API key:
+- Owned by each customer workspace
+- Customer adds it in app settings
+- Backend encrypts it server-side
+- Stored per workspace in connected_accounts
+- Raw key is never returned after save
+
+APP_ENCRYPTION_KEY:
+- Owned by LIFE.SAVER platform/environment
+- Must remain stable after connected accounts are stored
+- Never shown in browser
+
+WORKER_SHARED_SECRET:
+- Owned by LIFE.SAVER platform
+- Used only between worker and API
+- Never shown in browser
+
+New v0.5.1 endpoint
+-------------------
+GET /api/v1/product-surfaces
+
+This endpoint returns a public-safe JSON model of the product surfaces, access rules, configured URLs, secret ownership, and next implementation notes.
+
+New v0.5.1 frontend pages
+-------------------------
+/landing.html
+- Public website placeholder for mydomain.com.
+
+/surface-access.html
+- Visual product surface/access model.
+- Helps confirm what belongs to public, customer app, admin, API, and worker before more SaaS features are added.
+
+Environment variables added
+---------------------------
+PUBLIC_SITE_URL=http://localhost:3000/landing.html
+APP_URL=http://localhost:3000
+ADMIN_URL=http://localhost:3000/admin.html
+API_URL=http://localhost:4000
+PRODUCT_SURFACE_MODE=single-service-local
+
+Production examples:
+PUBLIC_SITE_URL=https://mydomain.com
+APP_URL=https://app.mydomain.com
+ADMIN_URL=https://admin.mydomain.com
+API_URL=https://api.mydomain.com
+PRODUCT_SURFACE_MODE=subdomain-production-ready
+ALLOWED_ORIGINS=https://mydomain.com,https://app.mydomain.com,https://admin.mydomain.com
+
+What did not change
+-------------------
+- No billing added.
+- No team invites added.
+- No destructive database migration added.
+- No external write actions added.
+- Triple Whale remains customer/workspace-owned.
+- Claude remains platform/backend-owned.
+- v0.5.0 onboarding remains intact.
+- v1 remains read + advise + draft only.

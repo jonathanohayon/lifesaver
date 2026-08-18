@@ -1,0 +1,77 @@
+================================================================================
+LIFE.SAVER v0.7.0 — PHASE 10.8 DELIVERY LOGS
+================================================================================
+
+Purpose
+-------
+Phase 10.8 adds notification delivery logs so LIFE.SAVER can audit the lifecycle of future approval notifications.
+
+Events logged
+-------------
+- notification_created
+- notification_sent
+- notification_failed
+- notification_opened
+
+Why it is needed
+----------------
+Before real email/Slack delivery is enabled, the system needs safe auditable storage for notification lifecycle events. This gives the founder and developer a clear trail of whether a notification was created, sent, failed, or opened.
+
+Scope
+-----
+This phase creates a delivery log model and table, plus safe API access to view logs. It also allows authenticated opening of an approval deep link to record a notification_opened log. The actions page now calls the opened-log endpoint only after login and only when the deep link source is a notification source.
+
+Out of scope
+------------
+- Sending email.
+- Sending Slack messages.
+- Push notifications.
+- Worker scheduling.
+- Auto-approval.
+- Auto-execution.
+- LinkedIn publishing changes.
+- Exposing raw action payloads or provider responses.
+
+Safety notes
+------------
+Delivery logs are audit records only. They must not store raw OAuth tokens, API keys, Authorization headers, full raw provider payloads, raw action payload_json, rollback payloads, passwords, .env values, or private provider responses.
+
+Endpoints
+---------
+GET /api/v1/notifications/delivery-logs/status
+Returns phase status and safety flags.
+
+GET /api/v1/notifications/delivery-logs
+Returns safe workspace-scoped delivery logs for the authenticated user.
+Optional filters:
+- limit
+- eventType
+- channel
+
+POST /api/v1/notifications/delivery-logs/opened
+Records notification_opened when an authenticated user opens a review link. The link itself still cannot approve or execute anything.
+
+Database
+--------
+notification_delivery_logs:
+- id
+- workspace_id
+- action_id
+- user_id
+- notification_key
+- channel
+- event_type
+- recipient_hint
+- delivery_provider
+- message
+- error_message
+- metadata_json
+- created_at
+
+Security
+--------
+All endpoints require login through existing /api/v1 auth middleware. Workspace membership is checked before listing logs or recording opened logs.
+
+Current safety status
+---------------------
+Phase 10.8 is logging/audit only. It does not deliver email, does not call Slack, does not mutate actions, does not execute actions, and does not call external services.

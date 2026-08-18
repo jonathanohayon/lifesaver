@@ -1,0 +1,65 @@
+LIFE.SAVER v0.7.0 — Phase 9.10 Controlled Live Test Report
+
+Goal:
+Publish one approved LinkedIn test post only after explicit founder/client approval and produce a safe evidence report.
+
+Selected platform:
+LinkedIn
+
+Executor lane:
+linkedinManualApprovedContentExecutor
+
+Required approval phrase:
+I APPROVE ONE LINKEDIN TEST POST
+
+Phase 9.10 adds no new publishing ability by itself. It adds the controlled test protocol and the report endpoint that reads safe action/result data after the manual publish endpoint has been used.
+
+New report endpoint:
+GET /api/v1/actions/:id/content-live-test-report
+
+Report checks:
+- Database configured.
+- Action exists.
+- Action type is content_publish.
+- Action was manually approved.
+- Action is executed or rolled_back after publish.
+- Exactly one successful publish result exists.
+- No failed publish result exists.
+- Platform post ID is stored.
+- Published time is stored.
+- Platform response summary is stored.
+- Raw token was not returned.
+- Raw platform response body was not returned.
+- Rollback payload was not returned.
+
+Report statuses:
+- pass: all required checks passed.
+- partial: enough evidence exists, but not all checks passed.
+- fail: evidence exists but critical checks failed.
+- not_ready: database/action evidence is missing.
+
+Safety boundary:
+- Report endpoint is read-only.
+- Report endpoint does not publish.
+- Report endpoint does not delete/unpublish.
+- Report endpoint does not call LinkedIn.
+- Report endpoint does not expose raw OAuth tokens.
+- Auto-run remains disabled.
+- Worker scheduling remains disabled.
+
+Live test procedure:
+1. Confirm founder/client approval in writing.
+2. Capture the required approval phrase.
+3. Confirm LinkedIn connector status.
+4. Confirm master/content pause are off and emergency safe mode is off.
+5. Confirm caps allow one post.
+6. Create one text/link content_publish action.
+7. Manually approve it.
+8. Enable CONTENT_REAL_PUBLISH_EXECUTOR_ENABLED=true temporarily.
+9. Execute the action once.
+10. Immediately disable CONTENT_REAL_PUBLISH_EXECUTOR_ENABLED=false.
+11. Open the report endpoint and save the output.
+12. Do not repeat real publishing without a new roadmap-approved phase.
+
+Phase 9 final note:
+Phase 9 now has a carefully gated real LinkedIn content executor lane, but it is not autonomous. It remains manual-approved, default-off, cap-gated, pause-gated, token-gated, and reportable.

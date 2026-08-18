@@ -1,0 +1,25 @@
+{
+  "version": "0.6.0",
+  "phase": "4.8",
+  "feature": "approval_queue_live_refresh",
+  "page": "actions.html",
+  "defaultIntervalMs": 60000,
+  "allowedIntervalsMs": [30000, 45000, 60000],
+  "manualRefresh": true,
+  "polling": {
+    "enabledByDefault": true,
+    "endpoint": "GET /api/v1/actions",
+    "usesCurrentFilters": true,
+    "pausesWhenTabHidden": true,
+    "pausesDuringReviewModal": true
+  },
+  "safety": {
+    "readOnly": true,
+    "doesNotApprove": true,
+    "doesNotReject": true,
+    "doesNotCancel": true,
+    "doesNotQueue": true,
+    "doesNotExecute": true,
+    "externalWritesEnabled": false
+  }
+}

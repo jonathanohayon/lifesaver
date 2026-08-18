@@ -1,0 +1,12 @@
+.voice-input-row{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}.voice-mic-btn{border:1px solid rgba(43,180,255,.42);background:rgba(43,180,255,.08);color:#7fdcff;font-family:var(--ui);font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:9px 12px;cursor:pointer;min-height:40px}.voice-mic-btn:hover{background:rgba(43,180,255,.16)}.voice-mic-btn.is-listening{color:#37e08a;border-color:rgba(55,224,138,.55);box-shadow:0 0 14px rgba(55,224,138,.18)}.voice-mic-btn.is-unsupported{opacity:.55;cursor:not-allowed}.voice-submit-btn{border:1px solid rgba(55,224,138,.42);background:rgba(55,224,138,.08);color:#37e08a;font-family:var(--ui);font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:9px 12px;cursor:pointer;min-height:40px}.voice-submit-btn:disabled{opacity:.45;cursor:not-allowed}.voice-status{font-size:10px;letter-spacing:1.2px;color:var(--dim);text-transform:uppercase;line-height:1.4;flex:1;min-width:180px}.voice-status b{color:var(--blueb)}.voice-status .ok{color:#37e08a}.voice-status .warn{color:#ffb53d}.voice-status .err{color:#ff5252}@media(max-width:600px){.voice-input-row{align-items:stretch}.voice-mic-btn,.voice-submit-btn{flex:1}.voice-status{min-width:100%;font-size:9.5px}}
+
+/* v0.8.3 mobile voice/chat hardening */
+@media(max-width:680px){
+  .voice-input-row{display:grid;grid-template-columns:1fr;gap:8px;align-items:stretch;margin-top:10px;width:100%;}
+  .voice-mic-btn,.voice-submit-btn{width:100%;min-height:46px;padding:12px 14px;font-size:11px;letter-spacing:1.2px;border-radius:0;}
+  .voice-status{min-width:0;width:100%;font-size:10.5px;line-height:1.5;text-align:left;border:1px solid rgba(56,140,220,.14);background:rgba(43,180,255,.04);padding:9px 10px;text-transform:none;letter-spacing:.6px;}
+}
+@media(min-width:681px) and (max-width:980px){
+  .voice-input-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .voice-status{grid-column:1/-1;min-width:0;width:100%;}
+}

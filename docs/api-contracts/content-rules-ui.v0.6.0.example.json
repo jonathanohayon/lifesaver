@@ -1,0 +1,41 @@
+{
+  "phase": "v0.6.0 Phase 7.3 Content Rules UI",
+  "previewOnly": true,
+  "persistence": "browser_local_preview_only_no_database_write",
+  "formFields": {
+    "platform": "instagram",
+    "approved_style": "Calm, premium, founder-approved brand voice.",
+    "max_posts_per_day": 3,
+    "allowed_content_type": "image_post",
+    "auto_publish_allowed": false,
+    "approval_required_above_risk_level": "medium"
+  },
+  "policyPreviewShape": {
+    "action_type": "content_publish",
+    "scope": {
+      "platform": "instagram",
+      "channel": "organic_social",
+      "category": "content"
+    },
+    "conditions_json": {
+      "match": "all",
+      "conditions": [
+        { "field": "platform", "operator": "equals", "value": "instagram" },
+        { "field": "payload.content_type", "operator": "equals", "value": "image_post" },
+        { "field": "risk_level", "operator": "risk_below", "value": "medium" }
+      ]
+    },
+    "decision": "ask",
+    "caps_json": {
+      "max_posts_per_day": 3
+    },
+    "enabled": false
+  },
+  "safety": {
+    "databaseWritesAttempted": false,
+    "policyEndpointCalled": false,
+    "externalWritesAttempted": false,
+    "executorRan": false,
+    "contentPublished": false
+  }
+}

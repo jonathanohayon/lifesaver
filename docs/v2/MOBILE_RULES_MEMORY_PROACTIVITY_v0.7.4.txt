@@ -1,0 +1,55 @@
+LIFE.SAVER v0.7.4 — Mobile Rules Memory Proactivity
+
+Deliverable:
+Mobile-friendly Rules + Memory + Proactivity control surfaces.
+
+Scope:
+This phase hardens complex V2 control UI for mobile devices. It does not alter backend execution, approval, policy, or connector behavior.
+
+Rules mobile structure:
+- Master Pause
+- Content Rules
+- Support Rules
+- Ads Rules
+- Global Caps
+- Simulation
+- History / Audit
+- Permission QA
+- Proactivity Trigger Registry
+
+Rules changes:
+- Adds mobile section shortcuts.
+- Adds collapsible mobile accordions.
+- Prevents wide forms and JSON previews from breaking the viewport.
+- Keeps desktop layout available.
+- Makes rule buttons tap-friendly.
+
+Memory changes:
+- Keeps memory items as founder-visible cards.
+- Improves Edit, Approve, Disable, and Delete touch controls.
+- Improves editor spacing on phones.
+- Keeps memory changes browser-local preview only in this UI phase.
+
+Proactivity changes:
+- Adds a mobile-readable proactive trigger registry section.
+- Shows the six supported framework triggers:
+  - roas_drop
+  - new_support_ticket
+  - scheduled_content_slot
+  - weekly_ad_review
+  - pending_action_reminder
+  - failed_executor_event
+- Can load the existing registry endpoint when available.
+- Falls back to safe static display.
+
+Safety boundaries:
+- No scheduler enabled.
+- No proactive job enabled.
+- No notification send.
+- No action creation.
+- No Claude call.
+- No tool invocation.
+- No external connector call.
+- No executor call.
+- No auto-run.
+- No external writes.

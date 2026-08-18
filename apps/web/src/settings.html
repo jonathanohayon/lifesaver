@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LIFE.SAVER — Customer Settings</title>
+<link rel="stylesheet" href="./assets/css/admin.css" />
+<link rel="stylesheet" href="./assets/css/mobile-shell.css" />
+<link rel="stylesheet" href="./assets/css/mobile-release-qa.css" />
+</head>
+<body>
+  <main class="admin-shell">
+    <section class="topbar">
+      <div class="brand">
+        <h1>LIFE.SAVER SETTINGS</h1>
+        <span>Customer workspace settings · Active Platform Conversion · v0.8.3</span>
+      </div>
+      <div class="footer-actions">
+        <a class="btn" href="./landing.html">Public Site</a>
+        <a class="btn" href="./index.html">← Dashboard</a>
+        <a class="btn" href="./actions.html">Actions</a>
+        <a class="btn" href="./rules.html">Rules</a>
+        <a class="btn" href="./notifications.html">Notifications</a>
+        <a class="btn" href="./onboarding.html">Onboarding</a>
+        <a class="btn" href="./surface-access.html">Surfaces</a>
+        <a class="btn" href="./launch-readiness.html">Launch Prep</a>
+        <a class="btn" href="./functional-audit.html">Functional Audit</a>
+        <a class="btn" href="./admin.html">Super Admin</a>
+        <a class="btn" href="./login.html">Login</a>
+        <button class="btn" id="logoutBtn" type="button">Logout</button>
+        <span class="badge" id="authState">AUTH CHECKING</span>
+        <span class="badge" id="loadState">API CONNECTED</span>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="panel"><div class="kicker">Logged In As</div><div class="value" id="loggedInUser">—</div><small id="loggedInWorkspace">—</small></div>
+      <div class="panel"><div class="kicker">Version</div><div class="value" id="appVersion" data-ls-version>0.8.3</div><small data-ls-version-small>Active Platform Conversion</small></div>
+      <div class="panel"><div class="kicker">Mode</div><div class="value green">Customer Settings</div><small>Workspace-scoped SaaS settings.</small></div>
+      <div class="panel"><div class="kicker">Safety</div><div class="value green">APPROVAL FIRST</div><small>No hidden autonomy. Founder-approved V2 guardrails remain active.</small></div>
+    </section>
+
+
+    <section class="panel autonomy-panel" id="autonomyPausePanel">
+      <div class="autonomy-head">
+        <div>
+          <h2>Master Pause Switch</h2>
+          <p class="note warn">This is the founder safety switch for V2 autonomy. When paused, LIFE.SAVER must not auto-approve or execute future actions. Existing proposed actions remain reviewable, and resume does not execute waiting actions.</p>
+        </div>
+        <div class="autonomy-master-state" id="autonomyMasterState">CHECKING</div>
+      </div>
+
+      <div class="grid four compact autonomy-state-grid">
+        <div class="mini"><span>Current Pause State</span><strong id="pauseAllState">—</strong></div>
+        <div class="mini"><span>Last Updated By</span><strong id="pauseUpdatedBy">—</strong></div>
+        <div class="mini"><span>Last Updated At</span><strong id="pauseUpdatedAt">—</strong></div>
+        <div class="mini"><span>Emergency Safe Mode</span><strong id="pauseEmergencyState">—</strong></div>
+      </div>
+
+      <div class="autonomy-switch-card" id="autonomySwitchCard">
+        <div class="autonomy-switch-copy">
+          <strong id="pauseWarningTitle">Autonomy status loading…</strong>
+          <p id="pauseWarningMessage">Loading current workspace pause state. No external writes are triggered by this screen.</p>
+        </div>
+        <div class="autonomy-switch-actions">
+          <input id="pauseReasonInput" class="autonomy-reason" type="text" maxlength="260" placeholder="Optional reason for audit log" />
+          <button class="btn primary autonomy-master-btn" id="masterPauseToggleBtn" type="button" disabled>Loading Pause State…</button>
+          <button class="btn" id="refreshPauseStatusBtn" type="button">Refresh Pause State</button>
+        </div>
+      </div>
+
+      <div class="autonomy-category-board" aria-label="Category pause controls">
+        <div class="autonomy-category-row" data-scope="content">
+          <div><strong>Content</strong><small>content_publish</small></div><span class="ops-pill" id="pauseContentState">—</span><button class="btn autonomy-category-toggle" type="button" data-scope="content">Toggle Content</button>
+        </div>
+        <div class="autonomy-category-row" data-scope="support">
+          <div><strong>Support</strong><small>support_reply_send</small></div><span class="ops-pill" id="pauseSupportState">—</span><button class="btn autonomy-category-toggle" type="button" data-scope="support">Toggle Support</button>
+        </div>
+        <div class="autonomy-category-row" data-scope="ads">
+          <div><strong>Ads</strong><small>ad_budget_adjust · ad_pause</small></div><span class="ops-pill" id="pauseAdsState">—</span><button class="btn autonomy-category-toggle" type="button" data-scope="ads">Toggle Ads</button>
+        </div>
+        <div class="autonomy-category-row" data-scope="research">
+          <div><strong>Research</strong><small>research_task</small></div><span class="ops-pill" id="pauseResearchState">—</span><button class="btn autonomy-category-toggle" type="button" data-scope="research">Toggle Research</button>
+        </div>
+        <div class="autonomy-category-row" data-scope="dev">
+          <div><strong>Dev</strong><small>dev_task</small></div><span class="ops-pill" id="pauseDevState">—</span><button class="btn autonomy-category-toggle" type="button" data-scope="dev">Toggle Dev</button>
+        </div>
+      </div>
+      <div class="note" id="pauseUiMessage">Pause status will load after login.</div>
+    </section>
+
+    <section class="panel">
+      <h2>API Ownership Model</h2>
+      <p class="note">v0.8.3 keeps the ownership rule explicit: Claude is a platform-owned backend secret controlled by LIFE.SAVER, while Triple Whale belongs to each customer workspace and is added by the customer in their own settings.</p>
+      <div class="grid two">
+        <div class="note">
+          <strong>Claude API</strong><br>
+          <span id="claudeOwnership">Platform-owned · backend environment only · customer never sees the key.</span>
+        </div>
+        <div class="note green-note">
+          <strong>Triple Whale API</strong><br>
+          <span id="tripleWhaleOwnership">Customer/workspace-owned · encrypted server-side · raw key never returned.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Workspace Profile</h2>
+      <p class="note">These settings describe the customer workspace. They are stored against the logged-in workspace and are not shared with other customers.</p>
+      <form id="workspaceProfileForm" class="login-form connection-form">
+        <div class="grid two">
+          <label>
+            <span>Business / Workspace Name</span>
+            <input id="workspaceNameInput" type="text" autocomplete="organization" placeholder="Example: BudClub" />
+          </label>
+          <label>
+            <span>Store Domain</span>
+            <input id="storeDomainInput" type="text" autocomplete="url" placeholder="example.com" />
+          </label>
+        </div>
+        <div class="grid two">
+          <label>
+            <span>Timezone</span>
+            <select id="timezoneInput" autocomplete="off">
+              <option value="">Loading timezones…</option>
+            </select>
+          </label>
+          <label>
+            <span>Currency</span>
+            <select id="currencyInput" autocomplete="off">
+              <option value="">Loading currencies…</option>
+            </select>
+          </label>
+        </div>
+        <p class="note small-note">Choose a standard IANA timezone such as America/New_York and a 3-letter ISO currency such as USD. This keeps future reporting, billing, and brief scheduling cleaner.</p>
+        <div class="footer-actions align-left">
+          <button class="btn primary" id="saveWorkspaceProfileBtn" type="submit">Save Workspace Profile</button>
+          <span class="badge" id="workspaceRoleBadge">ROLE —</span>
+        </div>
+      </form>
+      <div class="note" id="workspaceProfileMessage">Workspace profile will load after login.</div>
+    </section>
+
+    <section class="panel">
+      <h2>Connected Accounts</h2>
+      <p class="note">This is the customer-facing place where each LIFE.SAVER customer manages their own Triple Whale connection. Super Admin monitors status only; customers paste/update their own key inside their own workspace.</p>
+      <div class="grid three">
+        <div class="note"><strong>Provider</strong><br><span>Triple Whale</span></div>
+        <div class="note"><strong>Status</strong><br><span id="twStatus">Checking…</span></div>
+        <div class="note"><strong>Key Hint</strong><br><span id="twKeyHint">—</span></div>
+      </div>
+      <div class="grid three settings-meta">
+        <div class="note"><strong>Last Connected</strong><br><span id="twLastConnected">—</span></div>
+        <div class="note"><strong>Last Updated</strong><br><span id="twUpdatedAt">—</span></div>
+        <div class="note warn"><strong>Access Rule</strong><br><span id="twAccessRule">Only workspace owner/admin can replace or disconnect the key.</span></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Triple Whale API Key</h2>
+      <p class="note">Paste the customer workspace Triple Whale API key here. LIFE.SAVER sends it only to the backend, encrypts it server-side, stores only the encrypted value in PostgreSQL, and never shows the raw key again.</p>
+      <form id="tripleWhaleForm" class="login-form connection-form">
+        <label>
+          <span>Triple Whale API Key</span>
+          <input id="tripleWhaleApiKey" type="password" autocomplete="off" placeholder="Paste Triple Whale API key" />
+        </label>
+        <div class="footer-actions align-left">
+          <button class="btn primary" id="connectTripleWhaleBtn" type="submit">Store / Update Encrypted Key</button>
+          <button class="btn" id="disconnectTripleWhaleBtn" type="button">Disconnect</button>
+        </div>
+      </form>
+      <div class="note" id="twMessage">No raw API key is displayed here.</div>
+    </section>
+
+    <section class="panel">
+      <h2>Safe Verification + Snapshot Tools</h2>
+      <p class="note">Validation, Summary Probe, Attribution Probe, and manual metrics refresh are read-only. They do not write back to Triple Whale, ad platforms, Shopify, email, or social platforms.</p>
+      <div class="footer-actions align-left sync-actions">
+        <button class="btn" id="testTripleWhaleBtn" type="button">Validate Triple Whale Key</button>
+        <button class="btn primary" id="refreshMetricsBtn" type="button">Refresh Metrics Snapshot</button>
+        <button class="btn" id="probeSummaryBtn" type="button">Probe Summary API</button>
+        <button class="btn" id="probeAttributionBtn" type="button">Probe Attribution / Pixel API</button>
+        <button class="btn" id="loadRawBtn" type="button">Load Summary Probe Response</button>
+        <button class="btn" id="loadAttributionBtn" type="button">Load Attribution Probe Response</button>
+        <button class="btn" id="loadValidationBtn" type="button">Load API-Key Validation Snapshot</button>
+        <button class="btn" id="snapshotHistoryBtn" type="button">Snapshot History</button>
+        <button class="btn" id="mappingPreviewBtn" type="button">Preview Metric Mapping</button>
+        <a class="btn" href="http://localhost:4000/api/v1/metrics" target="_blank" rel="noreferrer">Open /metrics</a>
+      </div>
+      <div class="note" id="testMessage">Ready after the encrypted key is stored.</div>
+      <div class="note" id="syncMessage">Ready for protected manual metrics refresh.</div>
+      <div class="note" id="probeMessage">v0.8.3 redacted raw previews and snapshot history will appear below. Sensitive auth/user fields are redacted in browser previews.</div>
+      <pre id="rawResponsePreview" class="raw-preview">No raw preview loaded yet.</pre>
+    </section>
+
+
+    <section class="panel">
+      <h2>Team Members + Workspace Permissions</h2>
+      <p class="note">v0.8.3 preserves the workspace team foundation. Owner/admin can add team members and assign safe workspace roles. Invite emails and password setup are not automated yet.</p>
+      <div class="grid four compact">
+        <div class="mini"><span>Your Role</span><strong id="teamCurrentRole">—</strong></div>
+        <div class="mini"><span>Can Manage Team</span><strong id="teamCanManage">—</strong></div>
+        <div class="mini"><span>Members</span><strong id="teamMemberCount">0</strong></div>
+        <div class="mini"><span>Protected Role</span><strong>OWNER</strong></div>
+      </div>
+      <form id="teamMemberForm" class="login-form connection-form">
+        <div class="grid three">
+          <label>
+            <span>Email</span>
+            <input id="teamEmailInput" type="email" autocomplete="email" placeholder="team@example.com" />
+          </label>
+          <label>
+            <span>Full Name</span>
+            <input id="teamNameInput" type="text" autocomplete="name" placeholder="Optional" />
+          </label>
+          <label>
+            <span>Role</span>
+            <select id="teamRoleInput">
+              <option value="viewer">Viewer — read-only dashboard</option>
+              <option value="member">Member — dashboard, chat, drafts</option>
+              <option value="admin">Admin — settings + Triple Whale key</option>
+            </select>
+          </label>
+        </div>
+        <div class="footer-actions align-left">
+          <button class="btn primary" id="addTeamMemberBtn" type="submit">Add Team Member</button>
+          <button class="btn" id="refreshTeamBtn" type="button">Refresh Team</button>
+        </div>
+      </form>
+      <div class="note" id="teamMessage">Team members will load after login.</div>
+      <div id="teamMembersList" class="team-list"></div>
+      <p class="note warn small-note" style="margin-top:12px">Safety: v0.8.3 keeps founder approval, policy gates, master pause, audit logs, and no-hidden-autonomy controls in place.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Customer vs Super Admin Rule</h2>
+      <div class="grid three">
+        <div class="note"><strong>Customer Settings</strong><br>Customer manages workspace profile and their own Triple Whale connection.</div>
+        <div class="note"><strong>Super Admin</strong><br>You monitor connection status, errors, usage, and health. You do not need raw customer API keys.</div>
+        <div class="note warn"><strong>Security</strong><br>The browser never receives Claude or Triple Whale secrets. Raw keys are never returned by API responses.</div>
+      </div>
+    </section>
+  </main>
+
+<script src="./assets/js/runtime-config.js"></script>
+<script src="./assets/js/settings.js"></script>
+<script src="./assets/js/lifesaver-version.js"></script>
+<script src="./assets/js/lifesaver-mobile-shell.js"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+================================================================================
+PHASE 11.3 — MAX POSTS PER DAY ENFORCEMENT
+================================================================================
+
+Version:
+v0.7.0
+
+Health mode:
+v2-phase-11-3-max-posts-per-day-enforcement
+
+Goal:
+Auto-publish cannot exceed the configured daily post cap.
+
+Deliverable:
+Daily post cap check.
+
+Current implementation:
+Phase 11.3 introduces a deterministic cap check for the future narrow LinkedIn content
+auto-run lane. It is intentionally read-only and no-write.
+
+Inputs:
+- platform
+- actionType
+- timezone
+- maxPostsPerDay
+- publishedTodayCount
+- reservedTodayCount
+- proposedNewPosts
+
+Outputs:
+- projectedTotalToday
+- remainingToday
+- capExceeded
+- decision
+- reason
+- safety flags
+
+Decision values:
+- allowed_for_future_auto_run_review
+- blocked_daily_cap_exceeded
+- blocked_invalid_cap
+
+Cap rule:
+projectedTotalToday = publishedTodayCount + reservedTodayCount + proposedNewPosts
+
+If projectedTotalToday > maxPostsPerDay, the future auto-run candidate is blocked by
+the daily post cap.
+
+Important safety boundary:
+Even when the cap check returns allowed_for_future_auto_run_review, Phase 11.3 does
+not allow auto-run now. It only means this single gate would pass in a future combined
+auto-run gate.
+
+Auto-run still requires later phases to combine:
+- approved style profile
+- content risk score
+- daily cap check
+- master pause check
+- content pause check
+- policy/rule permission
+- connector/token validity
+- result logging
+- notification traceability
+
+Safety status:
+- Auto-run is not enabled.
+- Auto-approval is not enabled.
+- Manual approval remains required.
+- No LinkedIn API call is made.
+- No post is published.
+- No database write is performed.
+- No worker/scheduler is added.

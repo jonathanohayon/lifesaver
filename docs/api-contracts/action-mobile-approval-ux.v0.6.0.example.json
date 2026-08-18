@@ -1,0 +1,25 @@
+{
+  "version": "0.6.0",
+  "phase": "4.9",
+  "name": "Mobile Approval UX",
+  "page": "actions.html",
+  "mobileBreakpointsPx": {
+    "tablet": 900,
+    "phone": 520,
+    "narrowPhone": 380
+  },
+  "checks": [
+    "buttons_large_enough",
+    "modal_readable",
+    "no_horizontal_overflow",
+    "final_approval_visible",
+    "rejection_reason_easy_to_enter"
+  ],
+  "safety": {
+    "externalWritesEnabled": false,
+    "executorEnabled": false,
+    "queueingEnabled": false,
+    "approvalEffect": "internal_status_only",
+    "rejectionEffect": "internal_status_only"
+  }
+}

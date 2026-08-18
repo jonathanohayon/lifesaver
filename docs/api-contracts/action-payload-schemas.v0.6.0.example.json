@@ -1,0 +1,303 @@
+{
+  "registry_version": "v0.6.0-phase-2.4",
+  "schema_version": "action-payload/v0.6.0",
+  "status": "definition_only_no_execution",
+  "safety": {
+    "payloads_describe_intent_only": true,
+    "approval_does_not_mean_execution": true,
+    "executors_not_added_in_this_phase": true,
+    "forbidden_payload_keys": [
+      "api_key",
+      "apikey",
+      "access_token",
+      "refresh_token",
+      "password",
+      "secret",
+      "cookie",
+      "authorization",
+      "database_url",
+      "DATABASE_URL",
+      "CLAUDE_API_KEY",
+      "TRIPLE_WHALE_API_KEY",
+      "APP_ENCRYPTION_KEY",
+      "WORKER_SHARED_SECRET"
+    ]
+  },
+  "common_envelope": {
+    "required": [
+      "schema_version",
+      "action_type",
+      "source",
+      "intent_summary",
+      "data"
+    ],
+    "properties": {
+      "schema_version": {
+        "type": "string",
+        "const": "action-payload/v0.6.0"
+      },
+      "action_type": {
+        "type": "string"
+      },
+      "source": {
+        "type": "string",
+        "enum": [
+          "chat",
+          "draft",
+          "worker",
+          "admin",
+          "policy",
+          "system",
+          "import"
+        ]
+      },
+      "intent_summary": {
+        "type": "string",
+        "maxLength": 280
+      },
+      "created_reason": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "risk_notes": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "idempotency_hint": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "data": {
+        "type": "object"
+      }
+    }
+  },
+  "action_payloads": {
+    "content_publish": {
+      "default_approval_required": true,
+      "future_auto_run_eligible": "only_after_policy_pause_caps_content_risk_and_sandbox_pass",
+      "required_data_fields": [
+        "platform",
+        "caption"
+      ],
+      "optional_data_fields": [
+        "post_type",
+        "media_url",
+        "media_asset_id",
+        "hashtags",
+        "scheduled_time",
+        "account_id_hint",
+        "call_to_action_url",
+        "approval_notes",
+        "brand_voice_profile_id"
+      ],
+      "example_data": {
+        "platform": "instagram",
+        "post_type": "feed_post",
+        "caption": "Your approved caption goes here.",
+        "media_url": "https://example.com/safe-preview-image.jpg",
+        "media_asset_id": null,
+        "hashtags": [
+          "#brand",
+          "#ecommerce"
+        ],
+        "scheduled_time": "2026-07-01T15:00:00Z",
+        "account_id_hint": "ig_account_ending_1234",
+        "call_to_action_url": "https://example.com/products",
+        "approval_notes": "Founder should review claims and timing before publishing."
+      }
+    },
+    "support_reply_send": {
+      "default_approval_required": true,
+      "future_auto_run_eligible": "only_low_risk_faq_after_support_connector_policy_caps_and_sensitive_guards",
+      "required_data_fields": [
+        "ticket_id",
+        "thread_id",
+        "reply_body"
+      ],
+      "optional_data_fields": [
+        "support_provider",
+        "customer_email",
+        "customer_name",
+        "subject",
+        "category",
+        "confidence_score",
+        "sensitive_flag",
+        "escalation_required",
+        "approval_notes"
+      ],
+      "example_data": {
+        "support_provider": "gmail",
+        "ticket_id": "ticket_12345",
+        "thread_id": "thread_abc123",
+        "customer_email": "customer@example.com",
+        "customer_name": "Customer",
+        "subject": "Shipping question",
+        "reply_body": "Certainly \u2014 here is the suggested reply body.",
+        "category": "shipping",
+        "confidence_score": 0.91,
+        "sensitive_flag": false,
+        "escalation_required": false,
+        "approval_notes": "Manual approval required until support executor phases are complete."
+      }
+    },
+    "ad_budget_adjust": {
+      "default_approval_required": true,
+      "future_auto_run_eligible": "only_after_ads_connector_hard_caps_policy_pause_snapshots_and_rollback_support",
+      "required_data_fields": [
+        "platform",
+        "campaign_id",
+        "current_budget",
+        "proposed_budget",
+        "change_amount",
+        "currency"
+      ],
+      "optional_data_fields": [
+        "account_id_hint",
+        "adset_id",
+        "current_budget_period",
+        "proposed_budget_period",
+        "change_percent",
+        "reason",
+        "metric_window",
+        "performance_snapshot",
+        "rollback_budget",
+        "approval_notes"
+      ],
+      "example_data": {
+        "platform": "meta",
+        "account_id_hint": "ad_account_ending_7890",
+        "campaign_id": "campaign_123",
+        "adset_id": "adset_456",
+        "current_budget": 100.0,
+        "proposed_budget": 120.0,
+        "currency": "USD",
+        "current_budget_period": "daily",
+        "proposed_budget_period": "daily",
+        "change_amount": 20.0,
+        "change_percent": 20,
+        "reason": "ROAS improved above threshold.",
+        "metric_window": "last_24_hours",
+        "performance_snapshot": {
+          "revenue": 342.54,
+          "orders": 6,
+          "roas": 1.55,
+          "ad_spend": 220.95
+        },
+        "rollback_budget": 100.0,
+        "approval_notes": "Do not execute until ads executor and hard caps are implemented."
+      }
+    },
+    "ad_pause": {
+      "default_approval_required": true,
+      "future_auto_run_eligible": "only_after_ads_connector_hard_caps_policy_pause_anomaly_checks_and_rollback_support",
+      "required_data_fields": [
+        "platform",
+        "target_level",
+        "target_id",
+        "current_status",
+        "proposed_status",
+        "reason"
+      ],
+      "optional_data_fields": [
+        "account_id_hint",
+        "campaign_id",
+        "adset_id",
+        "ad_id",
+        "metric_window",
+        "performance_snapshot",
+        "rollback_status",
+        "approval_notes"
+      ],
+      "example_data": {
+        "platform": "meta",
+        "target_level": "adset",
+        "target_id": "adset_456",
+        "campaign_id": "campaign_123",
+        "adset_id": "adset_456",
+        "ad_id": null,
+        "current_status": "active",
+        "proposed_status": "paused",
+        "reason": "Spend increased while ROAS stayed below threshold.",
+        "metric_window": "last_24_hours",
+        "performance_snapshot": {
+          "roas": 0.72,
+          "ad_spend": 150.0,
+          "revenue": 108.0
+        },
+        "rollback_status": "active",
+        "approval_notes": "Pause action requires explicit approval in early V2."
+      }
+    },
+    "research_task": {
+      "default_approval_required": false,
+      "future_auto_run_eligible": "internal_only_unless_policy_blocks",
+      "required_data_fields": [
+        "question",
+        "objective"
+      ],
+      "optional_data_fields": [
+        "allowed_sources",
+        "blocked_sources",
+        "output_format",
+        "due_at",
+        "confidence_required",
+        "deliverable_notes"
+      ]
+    },
+    "dev_task": {
+      "default_approval_required": true,
+      "future_auto_run_eligible": "no_code_changes_or_deploys_without_approval",
+      "required_data_fields": [
+        "task_summary",
+        "area"
+      ],
+      "optional_data_fields": [
+        "files_expected",
+        "acceptance_criteria",
+        "test_commands",
+        "deployment_required",
+        "rollback_notes",
+        "risk_notes"
+      ]
+    },
+    "notification_send": {
+      "default_approval_required": true,
+      "future_auto_run_eligible": "only_after_notification_preferences_quiet_hours_delivery_logs_and_secure_links",
+      "required_data_fields": [
+        "channel",
+        "recipient_user_id",
+        "message"
+      ],
+      "optional_data_fields": [
+        "template_key",
+        "subject",
+        "deep_link_action_id",
+        "quiet_hours_policy",
+        "urgency",
+        "expires_at"
+      ]
+    },
+    "rollback_action": {
+      "default_approval_required": true,
+      "future_auto_run_eligible": "manual_approval_first",
+      "required_data_fields": [
+        "original_action_id",
+        "rollback_type",
+        "reason"
+      ],
+      "optional_data_fields": [
+        "rollback_payload",
+        "rollback_supported",
+        "expected_result",
+        "manual_followup_required"
+      ]
+    }
+  }
+}

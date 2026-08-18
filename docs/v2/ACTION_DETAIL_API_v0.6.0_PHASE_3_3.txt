@@ -1,0 +1,259 @@
+LIFE.SAVER V2 — PHASE 3.3 ACTION DETAIL API
+Version: v0.6.0
+Phase: 3.3 — Action Detail API
+Status: Backend read-only detail endpoint added
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 3.3 adds the workspace-scoped action detail endpoint:
+
+GET /api/v1/actions/:id
+
+This endpoint lets an authenticated workspace user safely review one V2 action in
+more detail before future approve/reject/cancel APIs are added.
+
+This endpoint is still read-only. It does not approve, reject, cancel, queue, or
+execute any action.
+
+================================================================================
+ENDPOINT
+================================================================================
+
+GET /api/v1/actions/:id
+
+Auth:
+- Required.
+- Request must include the normal LIFE.SAVER Bearer token.
+- The token determines userId and workspaceId.
+- The browser/user cannot choose another workspace through query parameters.
+
+Path params:
+- id: action UUID
+
+Example:
+GET /api/v1/actions/00000000-0000-0000-0000-000000000000
+
+================================================================================
+RESPONSE SHAPE
+================================================================================
+
+The endpoint returns:
+- version
+- phase
+- workspaceId
+- userRole
+- action summary
+- payloadPreview
+- risk
+- policy
+- statusHistory
+- resultSummary
+- safety
+
+Action summary includes:
+- id
+- workspaceId
+- createdByUserId
+- actionType
+- title
+- description
+- status
+- riskLevel
+- approvalRequired
+- policyDecision
+- idempotencyKey
+- actionHash
+- createdAt
+- updatedAt
+- approvedAt
+- executedAt
+- hasPayload=true
+
+================================================================================
+PAYLOAD PREVIEW RULE
+================================================================================
+
+The endpoint intentionally returns payloadPreview, not raw payload_json.
+
+Why:
+- payload_json may eventually contain customer context, ticket context, URLs, or
+  external platform identifiers.
+- Future connectors may add sensitive data if developers are careless.
+- Detail view should show enough for review without exposing secrets.
+
+Payload preview includes:
+- schemaVersion
+- actionType
+- source
+- intentSummary
+- dataKeys
+- preview
+- redactedFields
+- includesFullPayloadJson=false
+- note
+
+Forbidden from detail response:
+- raw API keys
+- OAuth tokens
+- passwords
+- raw .env values
+- database URLs
+- Claude API key
+- Triple Whale API key
+- APP_ENCRYPTION_KEY
+- WORKER_SHARED_SECRET
+- full raw payload_json
+- full rollback_payload
+
+================================================================================
+ACTION TYPE PREVIEW BEHAVIOUR
+================================================================================
+
+content_publish:
+- Shows platform, caption preview, media presence, hashtags, scheduled time, and notes.
+- Does not publish anything.
+
+support_reply_send:
+- Shows ticket/thread identifiers, reply body preview, category, confidence, and flags.
+- Masks customer email/name presence.
+- Does not send anything.
+
+ad_budget_adjust:
+- Shows platform, campaign/adset IDs, current/proposed budget, change amount, currency,
+  reason preview, and rollback budget.
+- Does not change spend.
+
+ad_pause:
+- Shows platform, target identifiers, current/proposed status, and reason preview.
+- Does not pause anything.
+
+research_task/dev_task/notification_send/rollback_action:
+- Shows safe task or notification intent preview.
+- Does not run, send, or rollback anything.
+
+================================================================================
+STATUS HISTORY
+================================================================================
+
+Status history is loaded from action_events.
+
+It includes:
+- eventType
+- fromStatus
+- toStatus
+- actorUserId
+- message
+- metadataPreview
+- createdAt
+
+metadata_json is redacted before returning as metadataPreview.
+
+================================================================================
+RESULT SUMMARY
+================================================================================
+
+Result summary is loaded from action_results.
+
+It includes:
+- executorName
+- resultStatus
+- resultSummary
+- errorMessage
+- externalId
+- externalUrl
+- rollbackSupported
+- rollbackPayloadIncluded=false
+- metadataPreview
+- createdAt
+- updatedAt
+
+Important:
+- rollback_payload is not returned by this endpoint.
+- Real executors are not enabled yet.
+- In current local tests, resultSummary may be empty until sandbox/executor phases.
+
+================================================================================
+WORKSPACE SCOPING RULE
+================================================================================
+
+The endpoint uses the authenticated token's workspaceId and verifies that the user
+has an active workspace_members row for that workspace.
+
+Rules:
+- A user can only view action details from their own workspace.
+- The route cannot be used to view another workspace's action.
+- If the action does not belong to the current workspace, return ACTION_NOT_FOUND.
+- Internal admin monitoring must remain redacted and separate from customer detail APIs.
+
+================================================================================
+ERRORS
+================================================================================
+
+Possible safe errors:
+- AUTH_REQUIRED
+- INVALID_TOKEN
+- VALIDATION_ERROR
+- DATABASE_NOT_CONFIGURED
+- ACTION_WORKSPACE_FORBIDDEN
+- ACTION_NOT_FOUND
+
+================================================================================
+WHAT THIS PHASE DOES NOT DO
+================================================================================
+
+Phase 3.3 does not add:
+- create proposed action endpoint
+- approve endpoint
+- reject endpoint
+- cancel endpoint
+- queue endpoint
+- executor registry
+- sandbox executor
+- real content publishing
+- support reply sending
+- ad budget changes
+- campaign pause
+- external write connectors
+- auto-run rules
+
+V1 remains READ + ADVISE + DRAFT ONLY.
+
+================================================================================
+TESTING CHECKLIST
+================================================================================
+
+After copying the working .env into this package and running the backend:
+
+1. Login normally.
+2. Apply migrations if needed:
+   npm.cmd run db:migrate
+3. Seed local action fixtures only in local testing:
+   npm.cmd run db:seed:actions:local
+4. Call:
+   GET http://localhost:4000/api/v1/actions
+5. Copy one action id from the list response.
+6. Call:
+   GET http://localhost:4000/api/v1/actions/<ACTION_ID>
+7. Confirm the response includes:
+   - action summary
+   - payloadPreview
+   - risk
+   - policy
+   - statusHistory
+   - resultSummary
+   - safety
+8. Confirm full raw payload_json is not present.
+9. Confirm rollback_payload is not present.
+10. Confirm no approve/reject/cancel/execute endpoint is available yet.
+11. Confirm no external write happened.
+
+================================================================================
+NEXT PHASE
+================================================================================
+
+Phase 3.4 — Create Proposed Action Service
+
+The next phase should add an internal service that can create proposed actions from
+chat/tools/workers safely, still without any real execution.

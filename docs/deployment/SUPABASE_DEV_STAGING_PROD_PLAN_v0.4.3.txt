@@ -1,0 +1,34 @@
+LIFE.SAVER Supabase Environment Plan
+
+Development Supabase:
+- Used for local testing.
+- Safe for experiments.
+- Can contain test users, test snapshots, and dev events.
+- Current local .env may point here.
+
+Staging Supabase:
+- Optional but recommended before client handoff.
+- Used to test production-like deployment without risking production data.
+- Should have its own database password and API secrets.
+
+Production Supabase:
+- Required before live client/customer use.
+- Must be a separate project from development.
+- Must use strong database password.
+- Must use production-only AUTH_TOKEN_SECRET, APP_ENCRYPTION_KEY, and WORKER_SHARED_SECRET.
+- Must have backup/restore plan.
+
+Before production:
+1. Create a fresh Supabase production project.
+2. Copy DATABASE_URL from Supabase production project.
+3. Put it in hosting environment variables, not inside GitHub.
+4. Run migrations against production intentionally:
+   npm.cmd run db:migrate
+5. Run only safe seeds if needed. Do not create dev-only demo users for real client without approval.
+6. Add the production Triple Whale key through Customer Settings after deployment.
+
+Do not:
+- Reuse development DATABASE_URL for production.
+- Commit .env to GitHub.
+- Use the development APP_ENCRYPTION_KEY for production unless this is an intentional single-client private deployment and you understand the risk.
+- Run destructive migrations without backup.

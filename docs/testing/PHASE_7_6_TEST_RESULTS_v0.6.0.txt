@@ -1,0 +1,29 @@
+LIFE.SAVER — PHASE 7.6 TEST RESULTS
+
+Package:
+lifesaver-v0.6.0-phase-7-6-caps-ui
+
+Expected tests:
+- npm run build
+- npm run rules:caps:test
+- npm run rules:ads:test
+- npm run rules:support:test
+- npm run rules:content:test
+- npm run rules:wizard:test
+- npm run rules:layout:test
+- npm run policy:tests:test
+- npm run client:test-checklist
+- npm run security:check
+- npm run env:check
+
+Key Phase 7.6 checks:
+- Caps settings form exists.
+- Posts/day field exists.
+- Auto-replies/day field exists.
+- Ad budget change/day field exists.
+- Model tokens/day and model cost/day fields exist.
+- Actions/hour field exists.
+- Preview JSON includes Phase 6.6 cap keys.
+- Save is localStorage only.
+- No /api/v1/policies call.
+- No executor/external write.

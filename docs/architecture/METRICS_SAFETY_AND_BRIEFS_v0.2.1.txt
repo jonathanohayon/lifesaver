@@ -1,0 +1,26 @@
+LIFE.SAVER v0.2.8 — Metrics Safety + Database Briefs Foundation
+
+Purpose:
+This version prevents placeholder metrics from being mistaken for real production Triple Whale data and adds database-backed Daily Brief / Weekly Summary generation.
+
+Key rule:
+If metric paths start with sample.* then the values are sample placeholders only. The UI/API should label them as sample_placeholder and productionReady=false.
+
+New protected endpoints:
+- POST /api/v1/brief/generate
+- POST /api/v1/weekly/generate
+
+Public read endpoints:
+- GET /api/v1/brief
+- GET /api/v1/weekly
+
+Read order:
+1. Latest stored brief/weekly from PostgreSQL.
+2. Safe generated template from latest metrics snapshot.
+3. Mock fallback if no database metrics exist.
+
+Why this matters:
+Founder trust is more important than flashy numbers. The app must not present demo/sample data as real Triple Whale data.
+
+Next:
+Connect Claude server-side so Daily Briefs and Weekly Summaries can be written by Claude from stored metrics, with cost guards and no external actions.

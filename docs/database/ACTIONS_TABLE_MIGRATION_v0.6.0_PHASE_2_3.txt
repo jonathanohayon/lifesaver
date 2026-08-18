@@ -1,0 +1,247 @@
+LIFE.SAVER v0.6.0 — Phase 2.3 Actions Table Migration
+
+Phase: 2.3 — Actions Table Migration
+Deliverable: Non-destructive actions table migration
+Migration file: database/migrations/009_create_actions_table.sql
+
+================================================================================
+PURPOSE
+================================================================================
+
+This phase creates the main V2 actions table.
+
+The actions table is the central record for work LIFE.SAVER may propose in V2,
+such as content publishing, support reply sending, ad budget adjustments, research
+tasks, developer tasks, notifications, and rollback actions.
+
+This migration is a foundation step only. It stores action intent and lifecycle state.
+It does not execute actions.
+
+================================================================================
+SAFETY BOUNDARY
+================================================================================
+
+This phase does NOT add:
+
+- social posting
+- support email sending
+- ad budget changes
+- campaign pauses
+- refunds
+- product edits
+- external platform write-backs
+- executor workers
+- auto-run policies
+- approval queue APIs
+
+V1 remains READ + ADVISE + DRAFT ONLY.
+
+The actions table is allowed to store proposed action records, but no proposed action
+should be treated as completed until a future executor result confirms execution.
+
+================================================================================
+TABLE CREATED
+================================================================================
+
+Table:
+- actions
+
+Primary fields:
+- id
+- workspace_id
+- created_by_user_id
+- action_type
+- title
+- description
+- payload_json
+- status
+- risk_level
+- approval_required
+- policy_decision
+- created_at
+- updated_at
+- approved_at
+- executed_at
+
+================================================================================
+ACTION TYPES ALLOWED
+================================================================================
+
+The migration locks action_type to the Phase 2.1 registry:
+
+- content_publish
+- support_reply_send
+- ad_budget_adjust
+- ad_pause
+- research_task
+- dev_task
+- notification_send
+- rollback_action
+
+Reason:
+The database should not accept random action types, because future approval,
+policy, executor, logging, and rollback logic must be predictable.
+
+================================================================================
+ACTION STATUSES ALLOWED
+================================================================================
+
+The migration locks status to the Phase 2.2 lifecycle:
+
+- proposed
+- approval_required
+- auto_approved
+- approved
+- rejected
+- cancelled
+- queued
+- executing
+- executed
+- failed
+- rollback_requested
+- rolled_back
+
+Important:
+- approved does not mean executed.
+- auto_approved does not mean executed.
+- executed must only be set after executor result confirmation.
+- rejected/cancelled actions must never execute.
+
+================================================================================
+RISK LEVELS ALLOWED
+================================================================================
+
+Allowed risk levels:
+
+- low
+- medium
+- high
+- critical
+
+Default:
+- low
+
+This is only a default storage value. Future action creation services should set
+risk_level carefully based on action type, payload, platform, money impact, and
+customer/business risk.
+
+Recommended early defaults:
+- research_task: low
+- dev_task: medium
+- notification_send: low or medium depending on channel
+- content_publish: medium
+- support_reply_send: high until support connector safety is proven
+- ad_pause: high
+- ad_budget_adjust: critical unless tiny and clearly within policy
+- rollback_action: high or critical depending on target action
+
+================================================================================
+POLICY DECISION
+================================================================================
+
+The migration includes policy_decision with these allowed values:
+
+- not_evaluated
+- ask
+- auto_approve
+- block
+
+Default:
+- not_evaluated
+
+The full policies table and policy evaluation engine arrive later. For now,
+policy_decision is included so future created actions can store a simple decision
+snapshot without requiring a destructive schema change later.
+
+================================================================================
+FOREIGN KEYS
+================================================================================
+
+workspace_id:
+- Required.
+- References workspaces(id).
+- ON DELETE CASCADE.
+
+created_by_user_id:
+- Optional.
+- References users(id).
+- ON DELETE SET NULL.
+
+Reason:
+Actions must always belong to a workspace. A user may be deleted later, but the
+action record should remain for audit continuity.
+
+================================================================================
+INDEXES CREATED
+================================================================================
+
+- idx_actions_workspace_created
+- idx_actions_workspace_status_created
+- idx_actions_workspace_type_status
+- idx_actions_created_by_user_created
+- idx_actions_approval_queue
+
+These indexes support the future approval queue, action history, workspace scoping,
+status filters, and admin monitoring.
+
+================================================================================
+NON-DESTRUCTIVE MIGRATION RULES
+================================================================================
+
+This migration uses:
+- CREATE TABLE IF NOT EXISTS
+- CREATE INDEX IF NOT EXISTS
+- CREATE EXTENSION IF NOT EXISTS pgcrypto
+
+It does not:
+- drop tables
+- rename tables
+- remove columns
+- alter existing V1 columns
+- delete data
+- seed real actions
+
+================================================================================
+LOCAL TESTING
+================================================================================
+
+After copying the working .env into this package, run:
+
+npm.cmd run db:status
+npm.cmd run db:migrate
+npm.cmd run db:status
+npm.cmd run build
+npm.cmd run client:test-checklist
+
+Expected migration result on first run:
+- Applying migration: 009_create_actions_table.sql
+- Applied migration: 009_create_actions_table.sql
+- Database migrations complete. Applied 1 migration(s).
+
+Expected migration result on second run:
+- Skipping already applied migration: 009_create_actions_table.sql
+- No new migrations to apply. Database is up to date.
+
+================================================================================
+PRODUCTION CAUTION
+================================================================================
+
+Before applying to a production database:
+
+1. Confirm the code is committed and pushed.
+2. Confirm the current V1 app is stable.
+3. Confirm a database backup/restore point exists.
+4. Confirm production APP_ENCRYPTION_KEY is unchanged.
+5. Confirm this migration is additive only.
+6. Run migrations once from the deployment environment.
+7. Verify the actions table exists.
+8. Do not seed any real action fixtures in production.
+
+================================================================================
+NEXT PHASE
+================================================================================
+
+Next: Phase 2.4 — Action Payload Schema
+
+Do not build approval APIs or executors until the table and payload schemas are both
+reviewed. The approval queue backend belongs to Phase 3.

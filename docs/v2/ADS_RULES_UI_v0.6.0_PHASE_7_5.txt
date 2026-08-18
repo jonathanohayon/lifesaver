@@ -1,0 +1,22 @@
+LIFE.SAVER V2 — PHASE 7.5 ADS RULES UI
+
+Purpose:
+Let the founder preview ad-specific autonomy rules safely before any ad connector or executor exists.
+
+Required roadmap fields:
+- Platform.
+- Campaign scope.
+- Max daily budget change.
+- Max percentage change.
+- Always ask above threshold.
+- Pause rules.
+
+Implementation:
+- Adds Ads Rules form to /rules.html.
+- Adds preview JSON builder in apps/web/src/assets/js/rules.js.
+- Stores preview only in browser localStorage.
+- Maps max daily budget change to max_ad_spend_change_per_day.
+- Adds safety flags proving no DB write, no executor run, no ad connector, no budget change, no campaign pause, and no external write.
+
+Safety boundary:
+This phase is UI preview only. It does not create database policies, call /api/v1/policies, connect to Meta/Google/TikTok/Snapchat/Pinterest/Microsoft Ads, adjust budgets, pause campaigns, or execute actions.

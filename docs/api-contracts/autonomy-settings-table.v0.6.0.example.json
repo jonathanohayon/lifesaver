@@ -1,0 +1,37 @@
+{
+  "version": "0.6.0",
+  "phase": "5.1",
+  "deliverable": "autonomy_settings table migration",
+  "table": "autonomy_settings",
+  "storageOnly": true,
+  "fields": {
+    "workspace_id": "uuid primary key references workspaces(id)",
+    "pause_all_autonomy": "boolean default false",
+    "pause_content_actions": "boolean default false",
+    "pause_support_actions": "boolean default false",
+    "pause_ads_actions": "boolean default false",
+    "updated_by": "uuid nullable references users(id)",
+    "updated_at": "timestamp with timezone default now()"
+  },
+  "defaultRecordExample": {
+    "workspace_id": "00000000-0000-0000-0000-000000000000",
+    "pause_all_autonomy": false,
+    "pause_content_actions": false,
+    "pause_support_actions": false,
+    "pause_ads_actions": false,
+    "updated_by": null,
+    "updated_at": "2026-06-29T00:00:00.000Z"
+  },
+  "safetyBoundary": {
+    "doesNotAdd": [
+      "pause API",
+      "pause UI",
+      "policy enforcement",
+      "executor enforcement",
+      "queueing",
+      "execution",
+      "external writes"
+    ],
+    "v1V2CurrentSafety": "READ + ADVISE + DRAFT + INTERNAL APPROVAL/REJECTION ONLY"
+  }
+}

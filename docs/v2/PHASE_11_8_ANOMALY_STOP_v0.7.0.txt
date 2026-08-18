@@ -1,0 +1,41 @@
+LIFE.SAVER v0.7.0 — Phase 11.8 Anomaly Stop
+============================================
+
+Purpose
+-------
+Pause or stop the future content auto-run lane when unusual conditions are detected.
+
+Scope
+-----
+This package implements a deterministic anomaly stop decision model for the LinkedIn member-feed content lane.
+
+It watches:
+- API failure.
+- Multiple failures.
+- Platform warning.
+- Cap exceeded.
+- Token expired.
+- Pause/safe-mode states.
+
+Deliverable
+-----------
+Anomaly stop behavior.
+
+Output decisions
+----------------
+- no_stop_needed
+- stop_recommended
+- content_auto_run_paused
+
+Important boundary
+------------------
+This package does not mutate production pause settings. It is intentionally read-only and returns a safe stop decision for a later orchestrator/worker integration phase.
+
+Safety status
+-------------
+No auto-run.
+No auto-publish.
+No LinkedIn API call.
+No token decryption.
+No database write.
+No external write.

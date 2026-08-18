@@ -1,0 +1,20 @@
+LIFE.SAVER v0.3.4 — Claude Live Tool-Calling Refinement
+
+This version adds controlled Claude tool-calling. The only tools available are safe v1 tools:
+
+1. get_business_metrics
+- Reads latest normalized metrics from PostgreSQL.
+- Read-only.
+- No external action.
+
+2. draft_content
+- Saves a content draft in LIFE.SAVER's drafts table.
+- Founder approval only.
+- No posting, scheduling, or publishing.
+
+3. draft_support_reply
+- Saves a support reply draft in LIFE.SAVER's drafts table.
+- Founder approval only.
+- No email, customer message, refund, or order modification.
+
+Claude tool calls are executed only on the backend. Tool call count is limited by CLAUDE_TOOL_MAX_CALLS. Tool execution is logged in usage_logs and chat_history metadata. No action-taking external tools exist in v1.

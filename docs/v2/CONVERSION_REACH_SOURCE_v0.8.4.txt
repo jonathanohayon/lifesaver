@@ -1,0 +1,26 @@
+# LIFE.SAVER v0.8.4 — Conversion + Reach Source Mapping
+
+This phase makes Audience Reach more functional and honest.
+
+The system now searches Triple Whale metric arrays for non-zero sessions/visitors/traffic metrics.
+
+When sessions/visitors exist:
+- Reach Est. = sessions/visitors.
+- Conv. = orders ÷ sessions × 100, if direct conversion rate is unavailable or 0.
+
+When direct non-zero conversion rate exists:
+- Conv. = direct conversion rate.
+- Reach Est. may be derived from orders ÷ conversion rate if sessions are unavailable.
+
+When neither exists:
+- Reach Est. = Awaiting Sessions.
+- Conv. = Awaiting Sessions.
+
+This prevents fake reach estimates and divide-by-zero calculation.
+
+The v0.8.3 active-platform conversion value behavior remains:
+- Include Meta/Facebook and Snapchat when non-zero.
+- Ignore Google/TikTok when 0/inactive.
+- Auto-include any mapped platform once it returns real non-zero values.
+
+Safety: read-only metrics mapping only.

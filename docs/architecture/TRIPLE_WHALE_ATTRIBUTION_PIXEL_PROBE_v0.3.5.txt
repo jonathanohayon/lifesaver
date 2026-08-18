@@ -1,0 +1,34 @@
+LIFE.SAVER v0.3.5 — Triple Whale Attribution / Pixel Probe
+
+Purpose:
+- Add a safe diagnostic probe for Triple Whale Pixel Attribution / customer journey data.
+- Keep dashboard core metrics powered by confirmed Summary Page metrics.
+- Do not treat attribution data as production-ready until field semantics are confirmed.
+
+Endpoint added:
+- POST /api/v1/triple-whale/attribution-probe
+
+Default Triple Whale endpoint:
+- /api/v2/attribution/get-orders-with-journeys-v2
+
+Default request body:
+- shop
+- startDate
+- endDate
+- page
+- pageSize
+- excludeJourneyData=true
+
+Safety rules:
+- Attribution/Pixels probe is read-only.
+- It stores diagnostic snapshots with provider triple_whale_attribution.
+- Browser previews are redacted and bounded.
+- Customer/journey fields are treated as sensitive developer data.
+- Dashboard attribution remains attributionProductionReady=false until mapping is manually confirmed.
+- /metrics prefers confirmed core Summary metrics so attribution probe snapshots do not overwrite dashboard core values.
+
+Frontend additions:
+- Probe Attribution / Pixel API
+- Load Attribution Probe Response
+
+This is the final v0.3 feature before full v3 testing.

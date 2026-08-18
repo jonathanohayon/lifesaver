@@ -1,0 +1,41 @@
+LIFE.SAVER v0.6.0 — Phase 6.7 Policy Conflict Resolution
+
+Purpose
+Phase 6.7 adds the conflict-resolution layer for the policy engine. When several policy rules match the same proposed action, LIFE.SAVER must choose the safest result using the roadmap rule: most restrictive rule wins.
+
+Implemented priority order
+1. Master pause, category pause, or emergency safe mode.
+2. Block rule.
+3. Hard cap exceeded.
+4. Ask rule.
+5. Auto-approve rule.
+
+New backend file
+- apps/api/src/modules/policies/policy.conflict-resolution.ts
+
+New shared contract
+- packages/shared/src/policy-conflict-resolution.ts
+
+Updated evaluator behavior
+- evaluateActionPolicy(action) now evaluates all matching policies.
+- Matching still uses Phase 6.5 action scope matching.
+- Conditions still use Phase 6.4 condition operators.
+- Caps still use Phase 6.6 global cap validation.
+- Phase 6.7 then resolves conflicts using the priority order above.
+
+Returned decision fields
+- decision: ask | auto_approve | block
+- reason
+- matched_policy_id
+- cap_status
+- conflictSummary
+
+Conflict summary includes
+- reasonCode
+- priorityOrder
+- matchedCandidateCount
+- winningCandidate
+- candidates
+
+Safety
+This phase is decision-only. It does not add executors, write connectors, auto-run execution, publishing, support sending, ad changes, rollback execution, or external writes.

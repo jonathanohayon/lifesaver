@@ -1,0 +1,82 @@
+# LIFE.SAVER v0.7.0 — Phase 13.2 Send Reply Executor
+
+## Goal
+
+Send an approved support reply to the correct support thread.
+
+## Deliverable
+
+Manual-approved support executor.
+
+## What was added
+
+Phase 13.2 adds the `gmailManualApprovedSupportReplyExecutor` for approved `support_reply_send` actions.
+
+The executor validates:
+
+1. Database is configured.
+2. `SUPPORT_SEND_EXECUTOR_ENABLED=true`.
+3. Action exists in the current workspace.
+4. Action type is `support_reply_send`.
+5. Action status is `approved`.
+6. A manual approval event exists.
+7. Master pause is off.
+8. Support pause is off.
+9. Emergency safe mode is off.
+10. Payload validates.
+11. Gmail thread ID is present.
+12. Customer email is present.
+13. Reply body is present.
+14. Attachments are not included.
+15. CC/BCC are not included.
+16. Gmail send token is valid.
+17. Gmail send scope is present.
+
+## Endpoints
+
+```txt
+GET  /api/v1/support/send-executor/status
+GET  /api/v1/support/send-executor/example
+POST /api/v1/support/send-executor/preview
+POST /api/v1/actions/:id/execute-support-reply-send
+```
+
+## Executor behavior
+
+When all gates pass, the executor builds a Gmail `users.messages.send` request using:
+
+- `userId = me`
+- one plain-text RFC 2822 MIME message
+- Gmail `threadId` from the approved action payload
+- `To` from the customer email in the approved action payload
+- `Subject` as a safe reply subject
+
+The executor then moves the action through:
+
+```txt
+approved -> executing -> executed
+```
+
+If Gmail returns an error or the request fails, the action is marked:
+
+```txt
+approved -> executing -> failed
+```
+
+## Safety boundaries
+
+Phase 13.2 does not add auto-reply. It does not send unapproved drafts. It does not support attachments, CC, or BCC. It does not return raw OAuth tokens, raw MIME, raw base64 message content, or raw Gmail responses to browser clients.
+
+The executor is default-off through:
+
+```txt
+SUPPORT_SEND_EXECUTOR_ENABLED=false
+```
+
+## Credential note
+
+Phase 13.2 adds the executor path and server-only credential interface. Real Gmail send execution still requires Gmail send OAuth/credential storage to be connected safely before the feature flag should be enabled outside a controlled test.
+
+## No migration
+
+No database migration is required. The executor uses the existing V2 action lifecycle tables.

@@ -1,0 +1,43 @@
+{
+  "statusEndpoint": "GET /api/v1/support/privacy-safeguards/status",
+  "exampleEndpoint": "GET /api/v1/support/privacy-safeguards/example",
+  "previewEndpoint": "POST /api/v1/support/privacy-safeguards/preview",
+  "healthMode": "v2-phase-12-6-customer-data-protection",
+  "deliverable": "support_privacy_safeguards",
+  "rules": {
+    "redactSensitiveDataInLogs": true,
+    "customerPrivateDataMinimized": true,
+    "fullRawTicketPayloadInAdminLogs": false,
+    "browserReturnsSafePreviewOnly": true
+  },
+  "sampleRequest": {
+    "event": "support_ticket_imported",
+    "ticketId": "ticket_456",
+    "threadId": "gmail_thread_456",
+    "customerEmail": "private.customer@example.com",
+    "subject": "Payment failed and card was charged twice",
+    "bodySnippet": "Customer included payment/private data by mistake.",
+    "category": "payment_issue",
+    "sensitiveFlag": true,
+    "rawTicketPayload": { "omittedFromResponse": true }
+  },
+  "safeResponseShape": {
+    "valid": true,
+    "decision": "sensitive_log_redacted",
+    "safeLog": {
+      "customerEmailHint": "pr***@example.com",
+      "subjectPreview": "Payment failed and card was charged twice",
+      "bodySnippetPreview": "Customer included payment/private data by mistake.",
+      "providerPayloadReturned": false,
+      "fullTicketBodyReturned": false,
+      "safeForAdminLog": true
+    }
+  },
+  "notAdded": [
+    "Gmail OAuth routes",
+    "Gmail API client",
+    "email sending",
+    "support send executor",
+    "support auto-reply"
+  ]
+}

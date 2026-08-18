@@ -1,0 +1,35 @@
+LIFE.SAVER v0.2.0 — Triple Whale Live API-Key Validation Architecture
+
+Purpose:
+This version moves beyond a pure skeleton and validates the stored Triple Whale API key using Triple Whale's official API-key validation endpoint.
+
+Official endpoint used:
+GET https://api.triplewhale.com/api/v2/users/api-keys/me
+Header: x-api-key: <stored encrypted key, decrypted only server-side>
+
+Why this matters:
+- Confirms the stored key is real and accepted by Triple Whale.
+- Keeps raw key away from the browser.
+- Proves the backend can safely call Triple Whale.
+- Allows Customer Settings to show a meaningful connection status.
+
+Still not finalized:
+- Summary Page metric mapping is not final in this version.
+- The known Summary endpoint is /api/v2/summary-page/get-data, but the request body/date range format must be confirmed before production mapping.
+- v0.2.0 supports TRIPLE_WHALE_SUMMARY_BODY_JSON for controlled testing, but leaves it empty by default.
+
+Refresh Metrics behavior:
+1. Load workspace's encrypted Triple Whale key.
+2. Decrypt key server-side.
+3. Validate key against Triple Whale official API-key endpoint.
+4. If validation fails, store status/error and stop.
+5. If validation succeeds and Summary body is not configured, store a safe validated placeholder snapshot.
+6. If Summary body is configured and Summary request succeeds, store raw payload and conservative normalized metrics.
+
+Safety rules:
+- No write scopes.
+- No data-in endpoints.
+- No ad/order/customer/product changes.
+- No raw API key returned to frontend.
+- Raw payload stored separately from normalized_metrics.
+- AI/dashboard must not treat unreviewed probe mapping as final truth.

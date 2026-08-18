@@ -1,0 +1,62 @@
+================================================================================
+PHASE 9.6 TEST RESULTS — REAL PUBLISH EXECUTOR
+================================================================================
+
+Version: v0.7.0
+Health mode: v2-phase-9-6-real-publish-executor
+Generated in package build session.
+
+Commands run:
+
+1. npm run phase9:real-publish:test
+Result: content-real:publish:test — 36 passed, 0 failed
+
+2. npm run phase9:media-assets:test
+Result: phase9:media-assets:test — 49 passed, 0 failed
+
+3. npm run phase9:content-payload:test
+Result: phase9:content-payload:test — 26 passed, 0 failed
+
+4. npm run phase9:credential-model:test
+Result: content-connector:credentials:test — 22 passed, 0 failed
+
+5. npm run phase9:write-scope:test
+Result: phase9:write-scope:test — 22 passed, 0 failed
+
+6. npm run phase9:platform-plan:test
+Result: phase9:platform-plan:test — 12 passed, 0 failed
+
+7. npm run build
+Result: passed
+
+Additional regression:
+
+8. npm run executor:safe-demo-qa:test
+Result: executor:safe-demo-qa:test — 28 passed, 0 failed
+
+9. npm run policy:tests:test
+Result: Phase 6.10 policy tests — 7 passed, 0 failed
+
+10. npm run rules:permission:test
+Result: 13 passed
+
+11. npm run actions:test:backend
+Result: 4 passed, 0 failed, 1 skipped because DATABASE_URL was not configured
+
+Install note:
+
+npm install --ignore-scripts completed successfully and reported 3 existing dependency audit findings:
+- 1 low
+- 2 moderate
+
+npm audit fix --force was NOT run.
+
+Safety verification:
+
+- Real publish executor is default-off via CONTENT_REAL_PUBLISH_EXECUTOR_ENABLED=false.
+- Tests use pure/mocked paths and do not call LinkedIn.
+- No real external API call was made in tests.
+- Auto-run remains disabled.
+- Raw token is not returned in API responses.
+- Media publishing is not enabled in Phase 9.6.
+================================================================================

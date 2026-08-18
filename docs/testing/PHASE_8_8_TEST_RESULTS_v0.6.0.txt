@@ -1,0 +1,36 @@
+# LIFE.SAVER v0.6.0 Phase 8.8 Test Results
+
+Package: lifesaver-v0.6.0-phase-8-8-failure-simulation.zip
+
+## Main result
+
+```txt
+executor:failure-simulation:test — 24 passed, 0 failed
+```
+
+## Regression tests also run
+
+```txt
+executor:result-logs:test
+executor:sandbox-lifecycle:test
+executor:sandbox-ads:test
+executor:sandbox-support:test
+executor:sandbox-content:test
+executor:registry:test
+executor:interface:test
+executor:pause:test
+policy:tests:test
+rules:permission:test
+actions:test:backend
+client:test-checklist
+security:check
+env:check
+```
+
+## Expected local warnings
+
+`security:check` and `env:check` can show expected warnings locally when the real `.env`, `DATABASE_URL`, and production secrets are not present.
+
+## Safety result
+
+No external platform writes were added or enabled.

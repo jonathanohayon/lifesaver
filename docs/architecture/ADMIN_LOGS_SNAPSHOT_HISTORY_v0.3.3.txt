@@ -1,0 +1,33 @@
+LIFE.SAVER v0.3.3 — Admin Logs + Snapshot History UI Polish
+
+Purpose:
+- Make Super Admin more useful as a real control panel instead of forcing the developer to inspect Supabase manually for every check.
+- Add a protected operations log endpoint that combines system events, metrics snapshot timeline, brief history, and AI/usage logs.
+- Keep this diagnostic view read-only and safe for v1.
+
+Backend additions:
+- GET /api/v1/admin/operations-log
+- Reads existing PostgreSQL tables only.
+- Returns redacted previews for browser/admin display.
+- Does not expose Triple Whale API keys, Claude keys, tokens, cookies, or secret-like fields.
+
+Frontend additions:
+- New Super Admin panel: Admin Logs + Snapshot History.
+- Load Admin Logs button.
+- Show Snapshot Timeline button.
+- Show System Events button.
+- Show Brief History button.
+- Show Usage Logs button.
+- Cleaner cards for snapshot kind, production readiness, metric values, event severity, brief source state, and usage costs.
+
+Data included:
+- system_events
+- metrics_snapshots
+- briefs
+- usage_logs
+
+Safety:
+- Read-only diagnostic UI only.
+- No external actions.
+- No posting, sending, ad edits, refunds, or platform writes.
+- Raw provider payloads remain developer-sensitive; admin preview is bounded/redacted.

@@ -1,0 +1,64 @@
+================================================================================
+LIFE.SAVER v0.7.0 — PHASE 11.1 APPROVED STYLE DEFINITION
+================================================================================
+
+Purpose:
+Define the first approved content style profile before any content auto-run lane is
+allowed. This is a foundational guardrail for Phase 11.
+
+Deliverable:
+Approved content style profile.
+
+Included profile sections:
+1. Tone
+   - calm
+   - clear
+   - practical
+   - founder-focused
+   - ecommerce-aware
+   - confident without hype
+
+2. Length
+   - LinkedIn only.
+   - Minimum: 80 characters.
+   - Ideal: 180 to 900 characters.
+   - Maximum internal LIFE.SAVER cap: 1200 characters.
+
+3. Hashtag style
+   - Low-volume, relevant hashtags only.
+   - Maximum 3 hashtags.
+   - Banned hashtags include get-rich-quick, fake profit, risk-free, and medical-cure style hashtags.
+
+4. Discount policy
+   - Discount, promo, sale, and urgency language requires an explicit attached offer source.
+   - Misleading scarcity and unverified countdowns are blocked.
+
+5. Banned phrases
+   - guaranteed results
+   - guaranteed profit
+   - risk-free income
+   - make money while you sleep
+   - get rich quick
+   - no effort required
+   - misleading urgency phrases unless backed by an approved source
+
+6. Compliance notes
+   - Only use verified workspace data for performance claims.
+   - No medical, legal, financial, or guaranteed-outcome claims.
+   - Regulated-product content requires workspace compliance context before future auto-run.
+
+Read-only endpoints:
+- GET /api/v1/content-auto-run/approved-style/status
+- GET /api/v1/content-auto-run/approved-style/profile
+- GET /api/v1/content-auto-run/approved-style/preview
+
+Safety:
+- This phase is definition-only.
+- Auto-run remains disabled.
+- Manual approval remains required.
+- No LinkedIn API call is made.
+- No external write is made.
+- No action approval or execution is added.
+- Future auto-run must still pass policy, pause, caps, permissions, result logs, and QA gates.
+
+================================================================================

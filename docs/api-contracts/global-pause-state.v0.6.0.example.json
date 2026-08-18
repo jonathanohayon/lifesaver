@@ -1,0 +1,32 @@
+{
+  "version": "0.6.0",
+  "phase": "5.2",
+  "name": "Global Pause State",
+  "workspaceId": "00000000-0000-0000-0000-000000000000",
+  "pauseAllAutonomy": true,
+  "pauseContentActions": false,
+  "pauseSupportActions": false,
+  "pauseAdsActions": false,
+  "updatedBy": null,
+  "updatedAt": "2026-06-30T00:00:00.000Z",
+  "enforcement": {
+    "autoApprovalAllowed": false,
+    "executorExecutionAllowed": false,
+    "proposedActionCreationAllowed": true,
+    "manualReviewAllowed": true,
+    "reason": "pause_all_autonomy is active. Future policy layers must not auto-approve actions and future executor layers must not execute actions. Existing proposed actions remain reviewable, and safe proposed actions may still be created for founder review."
+  },
+  "createProposedActionWhenPaused": {
+    "approval_required": true,
+    "policy_decision": "ask",
+    "status": "proposed",
+    "external_write_enabled": false
+  },
+  "forbiddenInPhase52": [
+    "pause/resume API endpoints",
+    "pause switch UI",
+    "auto-approval",
+    "executor execution",
+    "external platform writes"
+  ]
+}

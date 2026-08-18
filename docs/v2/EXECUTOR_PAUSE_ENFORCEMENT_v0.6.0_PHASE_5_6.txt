@@ -1,0 +1,112 @@
+LIFE.SAVER V2 — EXECUTOR PAUSE ENFORCEMENT
+Version: v0.6.0
+Phase: 5.6 — Executor Enforcement
+Status: Backend safety foundation only
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 5.6 creates the required backend pause guard contract for every future executor.
+
+The rule is non-negotiable:
+
+- Every executor must check pause state immediately before execution.
+- If pause_all_autonomy is true, execution is blocked even if the action was approved earlier.
+- If a matching category pause is true, execution is blocked for that category.
+- If pause state cannot be read, execution must fail closed.
+
+This phase does not register any executor and does not execute anything.
+
+================================================================================
+FILES ADDED
+================================================================================
+
+apps/api/src/modules/executors/executor.types.ts
+apps/api/src/modules/executors/executor.pause-guard.ts
+apps/api/src/modules/executors/executor.registry.ts
+apps/api/src/modules/executors/executor.pause-tests.ts
+packages/shared/src/executor-pause-enforcement.ts
+
+================================================================================
+CORE FUNCTIONS
+================================================================================
+
+evaluateExecutorPauseState(intent)
+- Reads workspace autonomy settings.
+- Maps action_type to autonomy category.
+- Returns whether execution is blocked.
+- Does not execute anything.
+
+assertExecutorNotPaused(intent)
+- Calls evaluateExecutorPauseState().
+- Throws AUTONOMY_EXECUTION_PAUSED if global/category pause blocks execution.
+- This is the function future executors must call immediately before execution.
+
+runWithExecutorPauseGuard(input, executor)
+- Wrapper pattern for future executor phases.
+- Runs the pause guard first.
+- Runs the provided executor only if pause guard allows continuation.
+- In Phase 5.6, no real executors are registered.
+
+listExecutorRegistrySafetyState()
+- Confirms executor registry is intentionally disabled.
+- Lists action types as not registered until future sandbox/real executor phases.
+
+================================================================================
+ENFORCEMENT RULES
+================================================================================
+
+Global pause:
+- pause_all_autonomy = true blocks all future executor execution.
+- Existing proposed/approved actions remain reviewable.
+- Resuming pause does not automatically execute waiting actions.
+
+Category pause:
+- pause_content_actions blocks content_publish execution.
+- pause_support_actions blocks support_reply_send execution.
+- pause_ads_actions blocks ad_budget_adjust and ad_pause execution.
+- pause_research_actions blocks research_task execution.
+- pause_dev_actions blocks dev_task execution.
+
+Fail-closed behavior:
+- If DATABASE_URL is missing or pause state cannot be verified, executor execution is blocked.
+- Future real executors must not run when pause state is unknown.
+
+================================================================================
+SAFETY BOUNDARY
+================================================================================
+
+This phase DOES NOT add:
+- executor registry activation
+- sandbox executor
+- real executor
+- content publishing
+- support sending
+- ad budget changes
+- campaign pausing
+- external write connectors
+- rollback execution
+- auto-run rules
+
+Current product safety remains:
+READ + ADVISE + DRAFT + INTERNAL APPROVAL/REJECTION/CANCELLATION ONLY
+
+================================================================================
+QA COMMAND
+================================================================================
+
+npm.cmd run executor:pause:test
+
+Expected without DATABASE_URL:
+- success=true
+- registry_has_no_enabled_executors=true
+- pause_guard_checks_immediately_before_execution=true
+- sandbox_without_database_fails_closed=true
+- no_external_write_attempted=true
+
+================================================================================
+NEXT PHASE NOTE
+================================================================================
+
+The roadmap normally includes Phase 5.5 Pause Switch UI before Phase 5.6. This package follows the requested Phase 5.6 order and does not add the Phase 5.5 UI yet.

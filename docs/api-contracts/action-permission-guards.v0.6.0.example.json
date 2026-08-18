@@ -1,0 +1,55 @@
+{
+  "version": "0.6.0",
+  "phase": "v0.6.0 Phase 3.8 Permission Guards",
+  "roleMatrix": {
+    "owner": {
+      "view": true,
+      "approveRiskLevels": ["low", "medium", "high", "critical"],
+      "reject": true,
+      "cancel": true,
+      "execute": false
+    },
+    "admin": {
+      "view": true,
+      "approveRiskLevels": ["low", "medium", "high"],
+      "reject": true,
+      "cancel": true,
+      "execute": false
+    },
+    "member": {
+      "view": true,
+      "approveRiskLevels": [],
+      "reject": false,
+      "cancel": false,
+      "execute": false
+    },
+    "viewer": {
+      "view": true,
+      "approveRiskLevels": [],
+      "reject": false,
+      "cancel": false,
+      "execute": false
+    },
+    "super_admin": {
+      "customerEndpointBypass": false,
+      "redactedMonitor": true,
+      "fullPayloadVisible": false,
+      "secretAccess": false,
+      "execute": false
+    }
+  },
+  "sampleDeniedApproval": {
+    "success": false,
+    "error": {
+      "code": "ACTION_CRITICAL_APPROVAL_REQUIRES_OWNER",
+      "message": "Critical actions require owner approval by default. Admin cannot approve critical actions until a later policy explicitly permits it."
+    }
+  },
+  "safety": {
+    "externalWritesEnabled": false,
+    "executorEnabled": false,
+    "queueingEnabled": false,
+    "rollbackEnabled": false,
+    "fullPayloadJsonReturned": false
+  }
+}

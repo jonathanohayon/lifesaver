@@ -1,0 +1,26 @@
+# v0.8.5 — Claude Backend Compatibility
+
+Package: `lifesaver-v0.8.5-claude-backend-compatibility.zip`
+Health mode: `v2-functional-0-8-5-claude-backend-compatibility`
+
+## Added
+
+- `ANTHROPIC_API_KEY` env support.
+- Claude API key normalization before request headers.
+- Alternate-key retry for unique `CLAUDE_API_KEY` / `ANTHROPIC_API_KEY` candidates on HTTP 401.
+- Protected Claude status endpoint.
+- Protected Claude smoke-test endpoint.
+- Claude backend compatibility package check.
+
+## Changed
+
+- Claude client no longer sends raw env value directly as `x-api-key`.
+- Health/version metadata updated to v0.8.5.
+
+## Safety
+
+- Diagnostics do not expose API keys.
+- No database migration.
+- No external write connectors enabled.
+- No executor behavior changed.
+- No auto-run added.

@@ -1,0 +1,89 @@
+{
+  "success": true,
+  "data": {
+    "version": "0.6.0",
+    "phase": "v0.6.0 Phase 3.3 Action Detail API",
+    "workspaceId": "workspace-uuid",
+    "userRole": "owner",
+    "action": {
+      "id": "action-uuid",
+      "workspaceId": "workspace-uuid",
+      "createdByUserId": "user-uuid",
+      "actionType": "content_publish",
+      "title": "Fixture: Proposed Instagram post",
+      "description": "Safe local-only fixture. No real post will be published.",
+      "status": "proposed",
+      "riskLevel": "low",
+      "approvalRequired": true,
+      "policyDecision": "ask",
+      "idempotencyKey": "local-fixture-content-publish-instagram-v1",
+      "actionHash": "example-hash",
+      "createdAt": "2026-06-29T00:00:00.000Z",
+      "updatedAt": "2026-06-29T00:00:00.000Z",
+      "approvedAt": null,
+      "executedAt": null,
+      "hasPayload": true
+    },
+    "payloadPreview": {
+      "schemaVersion": "action-payload/v0.6.0",
+      "actionType": "content_publish",
+      "source": "system",
+      "intentSummary": "Proposed Instagram post fixture for approval queue testing only.",
+      "dataKeys": [
+        "approval_notes",
+        "caption",
+        "hashtags",
+        "media_url",
+        "platform",
+        "post_type",
+        "scheduled_time"
+      ],
+      "preview": {
+        "platform": "instagram",
+        "captionPreview": "A calm founder check-in...",
+        "postType": "image",
+        "mediaUrlPresent": true,
+        "mediaAssetIdPresent": false,
+        "hashtags": ["ecommerce", "founderops", "lifesaver"],
+        "scheduledTime": null,
+        "callToActionUrlPresent": false,
+        "approvalNotesPreview": "Fixture only. This must never publish to Instagram."
+      },
+      "redactedFields": [],
+      "includesFullPayloadJson": false,
+      "note": "This is a safe payload preview only. Full raw payload_json is intentionally not returned by this Phase 3.3 endpoint."
+    },
+    "risk": {
+      "level": "low",
+      "approvalRequired": true,
+      "canCurrentRoleApproveInFuture": true,
+      "note": "This role is expected to be approval-capable for this risk level in a future approval endpoint. Phase 3.3 still does not approve or execute anything."
+    },
+    "policy": {
+      "decision": "ask",
+      "note": "Policy decision is shown for review only. Policy execution and auto-run remain disabled until later approved V2 phases."
+    },
+    "statusHistory": [
+      {
+        "id": "event-uuid",
+        "eventType": "action_created",
+        "fromStatus": null,
+        "toStatus": "proposed",
+        "actorUserId": null,
+        "message": "Local fixture action created for testing.",
+        "metadataPreview": {
+          "fixture": true
+        },
+        "createdAt": "2026-06-29T00:00:00.000Z"
+      }
+    ],
+    "resultSummary": [],
+    "safety": {
+      "detailIncludesFullPayloadJson": false,
+      "canApproveFromThisEndpoint": false,
+      "canExecuteFromThisEndpoint": false,
+      "externalWritesEnabled": false,
+      "note": "This endpoint is read-only. It returns safe review information, status history, and result summaries only. It cannot publish, send, spend, pause, refund, or write to external platforms."
+    }
+  }
+}

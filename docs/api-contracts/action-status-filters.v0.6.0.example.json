@@ -1,0 +1,25 @@
+{
+  "version": "0.6.0",
+  "phase": "V2 Phase 4.4 Status Filters",
+  "page": "actions.html",
+  "primaryFilters": [
+    { "label": "All", "status": null, "query": "/api/v1/actions?limit=12&offset=0" },
+    { "label": "Proposed", "status": "proposed", "query": "/api/v1/actions?status=proposed&limit=12&offset=0" },
+    { "label": "Approved", "status": "approved", "query": "/api/v1/actions?status=approved&limit=12&offset=0" },
+    { "label": "Rejected", "status": "rejected", "query": "/api/v1/actions?status=rejected&limit=12&offset=0" },
+    { "label": "Executed", "status": "executed", "query": "/api/v1/actions?status=executed&limit=12&offset=0" },
+    { "label": "Failed", "status": "failed", "query": "/api/v1/actions?status=failed&limit=12&offset=0" },
+    { "label": "Cancelled", "status": "cancelled", "query": "/api/v1/actions?status=cancelled&limit=12&offset=0" },
+    { "label": "Rolled Back", "status": "rolled_back", "query": "/api/v1/actions?status=rolled_back&limit=12&offset=0" }
+  ],
+  "safety": {
+    "readOnly": true,
+    "usesWorkspaceScopedListEndpoint": true,
+    "returnsPayloadJson": false,
+    "canApprove": false,
+    "canReject": false,
+    "canCancel": false,
+    "canExecute": false,
+    "externalWritesEnabled": false
+  }
+}

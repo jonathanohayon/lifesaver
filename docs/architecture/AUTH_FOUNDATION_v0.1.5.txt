@@ -1,0 +1,36 @@
+LIFE.SAVER v0.1.5 — Founder Authentication Foundation
+
+Purpose:
+This version adds the first login layer for LIFE.SAVER so the Super Admin area is no longer an open development endpoint.
+
+What was added:
+- POST /api/v1/auth/login
+- GET /api/v1/auth/me
+- POST /api/v1/auth/logout
+- Server-signed auth token foundation
+- Password hashing using Node crypto scrypt
+- Protected /api/v1/admin/overview route
+- Browser login page at /login.html
+- Admin page token storage and logout button
+- Default development founder login seeded by db:seed
+
+Default development login:
+Email: founder@lifesaver.local
+Password: LifeSaverDev123!
+
+Security note:
+This default password is for local development only. Before production or client handoff, create a real founder password, rotate AUTH_TOKEN_SECRET, remove secrets from committed files, and use protected deployment environment variables.
+
+Current protection level:
+- /api/v1/admin/overview requires a Bearer token.
+- The founder dashboard remains development-open in v0.1.5 so we can keep testing metrics, chat, brief, and weekly panels without blocking the workflow.
+- Later versions will protect dashboard data routes using workspace-aware auth.
+
+Future hardening:
+- HTTP-only secure cookies or managed session storage.
+- Password reset/change screen.
+- Invite user flow.
+- Workspace role checks for owner/admin/member.
+- Audit log for login failures.
+- Rate limit login endpoint.
+- Production secret rotation.

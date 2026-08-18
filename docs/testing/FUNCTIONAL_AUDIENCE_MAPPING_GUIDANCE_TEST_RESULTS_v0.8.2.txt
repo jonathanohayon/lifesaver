@@ -1,0 +1,20 @@
+LIFE.SAVER v0.8.2 — Audience Mapping Guidance Test Results
+===========================================================
+
+Commands run in packaging workspace:
+
+npm run phase-functional:0-8-2:test
+node --check apps/web/src/assets/js/audience-reach.js
+node --check apps/web/src/assets/js/main.js
+node --check apps/api/dist/modules/audience-reach/audience-reach.model.js
+node --check apps/api/dist/modules/audience-reach/audience-reach-tests.js
+node scripts/build-web-static.mjs
+
+Results:
+
+audience-mapping-guidance-check — 36 passed, 0 failed
+audience-reach-tests — 44 passed, 0 failed
+Static web build completed
+ZIP integrity check passed
+
+Full npm run build should be run locally after npm.cmd install because the packaging workspace may not have API/worker TypeScript dependencies installed.

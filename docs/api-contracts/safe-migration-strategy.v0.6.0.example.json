@@ -1,0 +1,43 @@
+{
+  "version": "0.6.0",
+  "phase": "2.9",
+  "name": "Safe Migration Strategy",
+  "deliverable": "Safe migration plan",
+  "databaseChange": "none",
+  "requiresMigration": false,
+  "nextMigrationNumber": "013",
+  "rules": {
+    "defaultStrategy": "additive_only",
+    "backupBeforeProduction": true,
+    "allow": [
+      "CREATE TABLE IF NOT EXISTS",
+      "ADD COLUMN IF NOT EXISTS",
+      "CREATE INDEX IF NOT EXISTS",
+      "nullable columns first",
+      "workspace_id on customer/business tables"
+    ],
+    "forbidWithoutExplicitApproval": [
+      "DROP TABLE",
+      "DROP COLUMN",
+      "RENAME TABLE",
+      "RENAME COLUMN",
+      "DELETE production data",
+      "TRUNCATE production tables",
+      "ALTER COLUMN TYPE on production data",
+      "casual APP_ENCRYPTION_KEY rotation"
+    ]
+  },
+  "requiredChecksBeforeProductionMigration": [
+    "confirm production Supabase project",
+    "backup database",
+    "save Render environment snapshot",
+    "run migration locally first",
+    "run build",
+    "run db:status",
+    "run db:migrate twice to confirm idempotency",
+    "run client:test-checklist",
+    "run security:check",
+    "run env:check"
+  ],
+  "safetyStatement": "Phase 2.9 adds safe migration planning only. It does not alter the database and does not enable approval APIs, executors, or external write actions."
+}

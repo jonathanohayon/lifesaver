@@ -1,0 +1,10 @@
+{
+  "success": true,
+  "data": {
+    "type": "daily",
+    "content": "Good morning. Demo ecommerce metrics show $9,068 revenue, 142 orders, $3,210 ad spend, and 3.40x ROAS. Triple Whale live sync will replace this mock data once connected.",
+    "source": "mock",
+    "sourceSnapshotId": null,
+    "generatedAt": "2026-06-07T00:00:00.000Z"
+  }
+}

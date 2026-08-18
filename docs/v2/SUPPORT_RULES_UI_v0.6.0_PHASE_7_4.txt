@@ -1,0 +1,27 @@
+LIFE.SAVER V2 — PHASE 7.4 SUPPORT RULES UI
+
+Purpose:
+Let the founder safely preview support autonomy rules without enabling support sending.
+
+Deliverable:
+Support rules form.
+
+Location:
+/rules.html
+
+Fields implemented:
+- Ticket category.
+- Confidence threshold.
+- Auto-reply allowed.
+- Escalation categories.
+- Max replies/day.
+- Sensitive-ticket exclusions.
+
+Preview behaviour:
+The form builds a local JSON preview for a future support_reply_send policy. It maps max replies/day to max_support_auto_replies_per_day and includes escalation/sensitive exclusion metadata.
+
+Safety boundary:
+This phase does not create database policies, call /api/v1/policies, connect to Gmail/helpdesk, send replies, or run executors.
+
+Next phase:
+Phase 7.5 — Ads Rules UI.

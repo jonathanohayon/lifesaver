@@ -1,0 +1,39 @@
+LIFE.SAVER V2 Phase 8.3 — Sandbox Content Executor
+====================================================
+
+Purpose:
+Test a content_publish executor shape without touching external social platforms.
+
+Implemented executor:
+sandboxContentExecutor
+
+Action type:
+content_publish
+
+Required executor methods:
+- validate(context)
+- execute(context)
+- rollback(context, result)
+- summarizeResult(result)
+
+execute() returns sandbox-only fake data:
+- fake_external_post_id
+- fake_permalink
+- sandbox_success
+
+Safety boundary:
+This executor is sandbox-only. It does not publish to Instagram, Meta, TikTok, LinkedIn, Shopify, email, ads, or any external API.
+
+The fake permalink uses:
+https://sandbox.lifesaveragent.com/...
+
+This is a simulated permalink only, not proof of a published post.
+
+Action-flow status:
+- Not wired to auto-run.
+- Not wired to approval queue execution endpoint.
+- Not connected to external tokens.
+- Not connected to social APIs.
+- Not a real publishing path.
+
+Future phases may connect sandbox handlers to a controlled action runner. Real executors must not be added until the roadmap explicitly reaches the relevant phase and all approval, pause, policy, caps, idempotency, audit, and rollback checks are enforced.

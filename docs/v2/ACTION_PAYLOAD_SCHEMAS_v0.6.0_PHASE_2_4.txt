@@ -1,0 +1,616 @@
+LIFE.SAVER V2 — ACTION PAYLOAD SCHEMAS
+Version: v0.6.0 Phase 2.4
+Deliverable: Payload schema definitions
+Status: Documentation + shared TypeScript reference only
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 2.4 defines predictable JSON payloads for the actions.payload_json column created
+in Phase 2.3.
+
+This phase does not execute actions. It only defines the shape of the intent that future
+approval queues, policy evaluation, sandbox executors, and real executors will read.
+
+Plain English:
+- action_type tells LIFE.SAVER what kind of action this is.
+- status tells where the action is in the lifecycle.
+- payload_json tells exactly what the action intends to do.
+
+V1 remains READ + ADVISE + DRAFT ONLY.
+
+================================================================================
+NON-NEGOTIABLE SAFETY RULES
+================================================================================
+
+1. Payloads describe intent only.
+2. Payloads do not mean approval.
+3. Payloads do not mean execution.
+4. An action cannot be called executed until an executor returns confirmed success.
+5. Payloads must not contain secrets.
+6. Payload previews in browser/admin must redact sensitive customer data.
+7. External identifiers may be stored, but raw credentials must never be stored in payload_json.
+8. Real connector credentials must live in encrypted connected_accounts or hosting secrets, never in actions.payload_json.
+9. Every future executor must validate the payload again before execution.
+10. Default V2 behavior remains ask unless a clear policy explicitly allows auto-run.
+
+Forbidden inside payload_json:
+- Raw API keys
+- OAuth access tokens
+- OAuth refresh tokens
+- Session cookies
+- Passwords
+- Full .env values
+- Database URLs
+- Claude API key
+- Triple Whale API key
+- Payment card data
+- Unredacted highly sensitive customer data
+- Private keys / certificates
+
+================================================================================
+COMMON PAYLOAD ENVELOPE
+================================================================================
+
+Every payload should follow this common envelope:
+
+{
+  "schema_version": "action-payload/v0.6.0",
+  "action_type": "content_publish",
+  "source": "chat",
+  "intent_summary": "Publish an Instagram post announcing the weekend sale.",
+  "created_reason": "Founder asked LIFE.SAVER to draft a post for approval.",
+  "risk_notes": ["Public-facing content", "Requires brand review"],
+  "idempotency_hint": "optional-human-readable-dedupe-hint",
+  "data": {}
+}
+
+Common fields:
+
+schema_version
+- Required.
+- Current value: action-payload/v0.6.0.
+- Helps future migrations understand old payloads.
+
+action_type
+- Required.
+- Must match the actions.action_type column.
+
+source
+- Required.
+- Allowed values:
+  - chat
+  - draft
+  - worker
+  - admin
+  - policy
+  - system
+  - import
+
+intent_summary
+- Required.
+- Short human-readable explanation shown in UI.
+
+created_reason
+- Optional but recommended.
+- Explains why LIFE.SAVER created the action.
+
+risk_notes
+- Optional array of strings.
+- Helps approval UI and audit logs explain risk.
+
+idempotency_hint
+- Optional in Phase 2.4.
+- Phase 2.7 will formalize idempotency_key and action_hash.
+
+data
+- Required object.
+- Shape depends on action_type.
+
+================================================================================
+ACTION TYPE: content_publish
+================================================================================
+
+Purpose:
+Create an action representing a future public content publish.
+
+Default approval:
+Required.
+
+Future auto-run eligibility:
+Only after policy engine, master pause, caps, content risk scoring, and sandbox executor pass.
+
+Required data fields:
+- platform
+- caption
+
+Recommended data fields:
+- media_url
+- media_asset_id
+- hashtags
+- scheduled_time
+- account_id_hint
+- post_type
+- call_to_action_url
+- approval_notes
+- brand_voice_profile_id
+
+Example:
+
+{
+  "schema_version": "action-payload/v0.6.0",
+  "action_type": "content_publish",
+  "source": "draft",
+  "intent_summary": "Publish a reviewed Instagram caption.",
+  "created_reason": "Content draft was converted into a proposed publish action.",
+  "risk_notes": ["Public post", "Check compliance and offer wording"],
+  "data": {
+    "platform": "instagram",
+    "post_type": "feed_post",
+    "caption": "Your approved caption goes here.",
+    "media_url": "https://example.com/safe-preview-image.jpg",
+    "media_asset_id": null,
+    "hashtags": ["#brand", "#ecommerce"],
+    "scheduled_time": "2026-07-01T15:00:00Z",
+    "account_id_hint": "ig_account_ending_1234",
+    "call_to_action_url": "https://example.com/products",
+    "approval_notes": "Founder should review claims and timing before publishing."
+  }
+}
+
+Validation notes:
+- caption must be a string.
+- hashtags must be an array of strings.
+- scheduled_time should be ISO-8601 when present.
+- media_url must not be a private signed URL that leaks secrets.
+- platform token must not be present.
+
+================================================================================
+ACTION TYPE: support_reply_send
+================================================================================
+
+Purpose:
+Create an action representing a future support reply send.
+
+Default approval:
+Required.
+
+Future auto-run eligibility:
+Only for low-risk FAQ replies after support connector, policy engine, caps, quiet hours,
+confidence thresholds, and sensitive-ticket guards are working.
+
+Required data fields:
+- ticket_id
+- thread_id
+- reply_body
+
+Recommended data fields:
+- support_provider
+- customer_email
+- customer_name
+- subject
+- category
+- confidence_score
+- sensitive_flag
+- escalation_required
+- approval_notes
+
+Example:
+
+{
+  "schema_version": "action-payload/v0.6.0",
+  "action_type": "support_reply_send",
+  "source": "draft",
+  "intent_summary": "Send a drafted support reply to a shipping question.",
+  "created_reason": "Support reply draft was converted into a proposed send action.",
+  "risk_notes": ["Customer-facing reply", "Confirm ticket category before sending"],
+  "data": {
+    "support_provider": "gmail",
+    "ticket_id": "ticket_12345",
+    "thread_id": "thread_abc123",
+    "customer_email": "customer@example.com",
+    "customer_name": "Customer",
+    "subject": "Shipping question",
+    "reply_body": "Certainly — here is the suggested reply body.",
+    "category": "shipping",
+    "confidence_score": 0.91,
+    "sensitive_flag": false,
+    "escalation_required": false,
+    "approval_notes": "Manual approval required until support executor phases are complete."
+  }
+}
+
+Validation notes:
+- reply_body must be a string.
+- customer_email may be stored only if required for the future connector; browser/admin previews should redact it.
+- sensitive_flag true should always require manual approval.
+- refund, chargeback, legal, medical, payment, angry complaint, and uncertain replies must not auto-run in early V2.
+
+================================================================================
+ACTION TYPE: ad_budget_adjust
+================================================================================
+
+Purpose:
+Create an action representing a future ad budget change.
+
+Default approval:
+Required.
+
+Future auto-run eligibility:
+Only after ads connector, hard caps, policy engine, master pause, before/after snapshots,
+and rollback support are working. Ads are money-moving and must remain highly restricted.
+
+Required data fields:
+- platform
+- campaign_id
+- current_budget
+- proposed_budget
+- change_amount
+- currency
+
+Recommended data fields:
+- account_id_hint
+- adset_id
+- current_budget_period
+- proposed_budget_period
+- change_percent
+- reason
+- metric_window
+- performance_snapshot
+- rollback_budget
+- approval_notes
+
+Example:
+
+{
+  "schema_version": "action-payload/v0.6.0",
+  "action_type": "ad_budget_adjust",
+  "source": "chat",
+  "intent_summary": "Increase campaign daily budget after strong ROAS.",
+  "created_reason": "Founder asked for an optimization suggestion based on metrics.",
+  "risk_notes": ["Money-moving action", "Requires hard cap check", "Manual approval required"],
+  "data": {
+    "platform": "meta",
+    "account_id_hint": "ad_account_ending_7890",
+    "campaign_id": "campaign_123",
+    "adset_id": "adset_456",
+    "current_budget": 100.00,
+    "proposed_budget": 120.00,
+    "currency": "USD",
+    "current_budget_period": "daily",
+    "proposed_budget_period": "daily",
+    "change_amount": 20.00,
+    "change_percent": 20,
+    "reason": "ROAS improved above the configured threshold.",
+    "metric_window": "last_24_hours",
+    "performance_snapshot": {
+      "revenue": 342.54,
+      "orders": 6,
+      "roas": 1.55,
+      "ad_spend": 220.95
+    },
+    "rollback_budget": 100.00,
+    "approval_notes": "Do not execute until ads executor and hard caps are implemented."
+  }
+}
+
+Validation notes:
+- currency should be ISO-4217, for example USD, GBP, EUR.
+- current_budget, proposed_budget, and change_amount must be numbers.
+- The system must recalculate change_amount/change_percent before real execution.
+- Never rely only on stale payload values for real ad changes.
+
+================================================================================
+ACTION TYPE: ad_pause
+================================================================================
+
+Purpose:
+Create an action representing a future campaign/ad set/ad pause.
+
+Default approval:
+Required.
+
+Future auto-run eligibility:
+Only after ads connector, hard caps, policy engine, anomaly checks, and rollback support.
+
+Required data fields:
+- platform
+- target_level
+- target_id
+- current_status
+- proposed_status
+- reason
+
+Recommended data fields:
+- account_id_hint
+- campaign_id
+- adset_id
+- ad_id
+- metric_window
+- performance_snapshot
+- rollback_status
+- approval_notes
+
+Example:
+
+{
+  "schema_version": "action-payload/v0.6.0",
+  "action_type": "ad_pause",
+  "source": "worker",
+  "intent_summary": "Pause an underperforming ad set.",
+  "created_reason": "ROAS dropped below configured threshold during scheduled review.",
+  "risk_notes": ["Money-affecting action", "Could reduce traffic", "Manual approval required"],
+  "data": {
+    "platform": "meta",
+    "target_level": "adset",
+    "target_id": "adset_456",
+    "campaign_id": "campaign_123",
+    "adset_id": "adset_456",
+    "ad_id": null,
+    "current_status": "active",
+    "proposed_status": "paused",
+    "reason": "Spend increased while ROAS stayed below acceptable threshold.",
+    "metric_window": "last_24_hours",
+    "performance_snapshot": {
+      "roas": 0.72,
+      "ad_spend": 150.00,
+      "revenue": 108.00
+    },
+    "rollback_status": "active",
+    "approval_notes": "Pause action requires explicit approval in early V2."
+  }
+}
+
+================================================================================
+ACTION TYPE: research_task
+================================================================================
+
+Purpose:
+Create an internal research task. This is not an external write action.
+
+Default approval:
+Usually not required for internal-only tasks, but policy may still ask.
+
+Required data fields:
+- question
+- objective
+
+Recommended data fields:
+- allowed_sources
+- blocked_sources
+- output_format
+- due_at
+- confidence_required
+- deliverable_notes
+
+Example:
+
+{
+  "schema_version": "action-payload/v0.6.0",
+  "action_type": "research_task",
+  "source": "chat",
+  "intent_summary": "Research why ROAS softened this week.",
+  "created_reason": "Founder asked for a deeper investigation.",
+  "risk_notes": ["Internal research only"],
+  "data": {
+    "question": "Why did blended ROAS soften this week?",
+    "objective": "Prepare a concise founder-facing diagnosis with likely causes and next checks.",
+    "allowed_sources": ["stored_metrics", "brief_history", "snapshot_history"],
+    "blocked_sources": ["external_write_apis"],
+    "output_format": "brief",
+    "due_at": null,
+    "confidence_required": 0.75,
+    "deliverable_notes": "Use verified stored metrics only. Do not invent numbers."
+  }
+}
+
+================================================================================
+ACTION TYPE: dev_task
+================================================================================
+
+Purpose:
+Create an internal development task for a human developer or future dev specialist.
+
+Default approval:
+Required before code is changed, deployed, or commands are run automatically.
+
+Required data fields:
+- task_summary
+- area
+
+Recommended data fields:
+- files_expected
+- acceptance_criteria
+- test_commands
+- deployment_required
+- rollback_notes
+- risk_notes
+
+Example:
+
+{
+  "schema_version": "action-payload/v0.6.0",
+  "action_type": "dev_task",
+  "source": "admin",
+  "intent_summary": "Add validation for action payloads before creating actions.",
+  "created_reason": "Phase 2.4 defined payload schemas and future API creation will need validation.",
+  "risk_notes": ["Code change", "Requires developer review"],
+  "data": {
+    "area": "backend",
+    "task_summary": "Add Zod validation for actions.payload_json in createProposedAction.",
+    "files_expected": ["apps/api/src/modules/actions/actions.validation.ts"],
+    "acceptance_criteria": [
+      "Invalid payloads are rejected safely.",
+      "No secrets are accepted inside payload_json.",
+      "Existing V1 flows still pass."
+    ],
+    "test_commands": ["npm.cmd run build", "npm.cmd run client:test-checklist"],
+    "deployment_required": false,
+    "rollback_notes": "Remove validation module only if it blocks valid payloads during QA."
+  }
+}
+
+================================================================================
+ACTION TYPE: notification_send
+================================================================================
+
+Purpose:
+Create an action representing a future notification delivery.
+
+Default approval:
+Required until notification preferences, quiet hours, delivery logs, and secure deep links are implemented.
+
+Required data fields:
+- channel
+- recipient_user_id
+- message
+
+Recommended data fields:
+- template_key
+- subject
+- deep_link_action_id
+- quiet_hours_policy
+- urgency
+- expires_at
+
+Example:
+
+{
+  "schema_version": "action-payload/v0.6.0",
+  "action_type": "notification_send",
+  "source": "system",
+  "intent_summary": "Notify founder that an action needs approval.",
+  "created_reason": "A high-risk ad action is waiting for review.",
+  "risk_notes": ["Notification only", "Must require login before approval"],
+  "data": {
+    "channel": "email",
+    "recipient_user_id": "user_uuid_here",
+    "template_key": "approval_required",
+    "subject": "LIFE.SAVER action needs approval",
+    "message": "A proposed ad budget change is waiting for review.",
+    "deep_link_action_id": "action_uuid_here",
+    "quiet_hours_policy": "respect_unless_critical",
+    "urgency": "medium",
+    "expires_at": null
+  }
+}
+
+Security note:
+A notification link must open the app and require login. It must never approve directly from email.
+
+================================================================================
+ACTION TYPE: rollback_action
+================================================================================
+
+Purpose:
+Create an action representing a future rollback or corrective follow-up for a previously executed action.
+
+Default approval:
+Required.
+
+Required data fields:
+- original_action_id
+- rollback_type
+- reason
+
+Recommended data fields:
+- rollback_payload
+- rollback_supported
+- expected_result
+- manual_followup_required
+
+Example:
+
+{
+  "schema_version": "action-payload/v0.6.0",
+  "action_type": "rollback_action",
+  "source": "admin",
+  "intent_summary": "Restore previous ad budget after a failed change.",
+  "created_reason": "The previous ad budget action produced an unexpected result.",
+  "risk_notes": ["Rollback touches a real platform in later phases", "Manual approval required"],
+  "data": {
+    "original_action_id": "action_uuid_here",
+    "rollback_type": "restore_ad_budget",
+    "reason": "Return campaign to previous daily budget.",
+    "rollback_supported": true,
+    "rollback_payload": {
+      "platform": "meta",
+      "campaign_id": "campaign_123",
+      "target_budget": 100.00,
+      "currency": "USD"
+    },
+    "expected_result": "Campaign daily budget restored to the prior known value.",
+    "manual_followup_required": false
+  }
+}
+
+================================================================================
+UI PREVIEW AND REDACTION RULES
+================================================================================
+
+Approval UI may show:
+- action title
+- action type
+- status
+- risk level
+- intent_summary
+- created_reason
+- safe payload preview
+- platform name
+- non-secret external IDs
+- redacted customer email
+- redacted account hints
+
+Approval UI must not show:
+- API keys
+- OAuth tokens
+- database URLs
+- raw connector secrets
+- full .env values
+- private authorization headers
+- hidden system prompts
+- unredacted sensitive support data
+
+Recommended customer email preview:
+- customer@example.com -> c******r@example.com
+
+Recommended account hint preview:
+- Store only account_id_hint, not the credential.
+
+================================================================================
+VALIDATION GUIDANCE FOR FUTURE PHASES
+================================================================================
+
+Phase 2.4 is definitions only. In future backend implementation:
+
+1. actions.validation.ts should validate payloads before insert.
+2. createProposedAction should reject unknown action_type values.
+3. createProposedAction should reject payload_json containing forbidden secret-like keys.
+4. Policy engine should evaluate action_type + payload data.
+5. Approval queue UI should render safe previews by action_type.
+6. Sandbox executor should validate payload again before fake execution.
+7. Real executors should validate payload again immediately before platform calls.
+8. Every execution result should link back to the action and payload schema version.
+
+================================================================================
+PHASE 2.4 COMPLETION CHECKLIST
+================================================================================
+
+[x] content_publish payload defined
+[x] support_reply_send payload defined
+[x] ad_budget_adjust payload defined
+[x] ad_pause payload defined
+[x] research_task payload defined
+[x] dev_task payload defined
+[x] notification_send payload defined
+[x] rollback_action payload defined
+[x] forbidden data rules defined
+[x] UI redaction rules defined
+[x] shared TypeScript reference added
+[x] no executor added
+[x] no external write action enabled
+
+================================================================================
+END OF ACTION PAYLOAD SCHEMAS
+================================================================================

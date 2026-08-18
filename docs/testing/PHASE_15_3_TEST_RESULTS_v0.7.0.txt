@@ -1,0 +1,45 @@
+================================================================================
+LIFE.SAVER v0.7.0 — PHASE 15.3 TEST RESULTS
+================================================================================
+
+Test command:
+- npm run phase15:tool-routing:test
+
+Regression commands:
+- npm run phase15:specialist-prompts:test
+- npm run phase15:request-classifier:test
+- npm run phase14:ads-safety-qa:test
+- npm run phase14:ads-restricted-auto-run-policy:test
+- npm run phase14:ads-rollback-executor:test
+- npm run phase14:ads-before-after-snapshot:test
+- npm run phase14:ads-manual-approval:test
+- npm run phase13:support-send-qa:test
+- npm run build
+
+Expected Phase 15.3 test coverage:
+- Constants identify Phase 15.3 package and health mode.
+- Safety report confirms routing-plan-only behavior.
+- Route map includes every classifier route.
+- Content route selects content specialist and draft_content as a non-invoked candidate.
+- Ads route selects ads specialist and blocks ads mutation.
+- Support route selects support specialist and blocks sending.
+- Research and dev routes resolve to their specialist toolsets.
+- Metrics route uses read-only front-voice toolset, not a specialist prompt pack.
+- General advisor fallback uses the LIFE.SAVER front voice.
+- Preferred route override is preview-only and cannot enable action creation.
+- force=true is ignored and cannot enable tools, connectors, actions, execution, or auto-run.
+- Example inputs cover every route.
+- Report includes route map, example previews, safety, and next step.
+- Status/report outputs avoid secret-like fragments.
+
+Safety result:
+- No Claude call was made by the router.
+- No specialist prompt was executed.
+- No tool was invoked.
+- No external connector was called.
+- No real-world action was created.
+- No action was approved or executed.
+- No auto-run was enabled.
+- No content/support/ads write happened.
+- No migration was required.
+================================================================================

@@ -1,0 +1,79 @@
+{
+  "status": {
+    "method": "GET",
+    "path": "/api/v1/support/send-executor/status",
+    "response": {
+      "phase": "V2 Phase 13.2 — Send Reply Executor",
+      "healthMode": "v2-phase-13-2-send-reply-executor",
+      "deliverable": "manual_approved_support_executor",
+      "selectedConnector": "gmail",
+      "executorName": "gmailManualApprovedSupportReplyExecutor",
+      "actionType": "support_reply_send",
+      "requiredScope": "https://www.googleapis.com/auth/gmail.send",
+      "manualApprovalRequired": true,
+      "supportPauseRespected": true,
+      "masterPauseRespected": true,
+      "emergencySafeModeRespected": true,
+      "featureFlagDefaultOff": true,
+      "autoReplyEnabled": false,
+      "emailSendExecutorAdded": true,
+      "safeThreadedReplyMode": true,
+      "attachmentsSupportedInThisPhase": false,
+      "ccBccSupportedInThisPhase": false,
+      "rawMimeReturnedToBrowser": false,
+      "rawTokenReturnedToBrowser": false
+    }
+  },
+  "preview": {
+    "method": "POST",
+    "path": "/api/v1/support/send-executor/preview",
+    "body": {
+      "action_type": "support_reply_send",
+      "schema_version": "support_reply_send.v1",
+      "source": "support_draft_to_action",
+      "intent_summary": "Review and approve a drafted shipping support reply.",
+      "idempotency_hint": "support-reply:ticket_123:example",
+      "data": {
+        "support_provider": "gmail",
+        "ticket_id": "ticket_123",
+        "thread_id": "gmail_thread_123",
+        "customer_email": "customer@example.com",
+        "subject": "Where is my order?",
+        "reply_body": "Hello, thank you for reaching out. I checked the tracking details and your order is moving normally.",
+        "category": "shipping",
+        "confidence_score": 0.87,
+        "sensitive_flag": false,
+        "escalation_required": false,
+        "send_email_enabled": false,
+        "external_api_called": false,
+        "auto_reply_enabled": false
+      }
+    },
+    "responseSafety": {
+      "previewOnly": true,
+      "gmailApiCalled": false,
+      "emailSent": false,
+      "rawMimeReturned": false,
+      "rawBase64Returned": false,
+      "rawTokenReturned": false
+    }
+  },
+  "execute": {
+    "method": "POST",
+    "path": "/api/v1/actions/:id/execute-support-reply-send",
+    "body": {
+      "force": false
+    },
+    "successStatusPath": ["approved", "executing", "executed"],
+    "failedStatusPath": ["approved", "executing", "failed"],
+    "requires": [
+      "approved support_reply_send action",
+      "manual approval event",
+      "support pause off",
+      "master pause off",
+      "emergency safe mode off",
+      "valid Gmail send token",
+      "https://www.googleapis.com/auth/gmail.send scope"
+    ]
+  }
+}

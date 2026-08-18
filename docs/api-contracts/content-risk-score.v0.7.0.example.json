@@ -1,0 +1,52 @@
+{
+  "statusEndpoint": "GET /api/v1/content-auto-run/risk-score/status",
+  "previewEndpoint": "GET /api/v1/content-auto-run/risk-score/preview?caption=...&hashtags=%23ecommerce,%23founders",
+  "response": {
+    "ok": true,
+    "data": {
+      "phase": "phase_11_2_content_risk_scoring",
+      "healthMode": "v2-phase-11-2-content-risk-scoring",
+      "deliverable": "content_risk_score_function",
+      "platform": "linkedin",
+      "totalScore": 0,
+      "riskLevel": "low",
+      "decision": "eligible_for_future_auto_run_review",
+      "autoRunEligibleNow": false,
+      "categoryScores": [
+        {
+          "category": "sensitive_terms",
+          "score": 0,
+          "maxScore": 25,
+          "findings": []
+        }
+      ],
+      "findings": [],
+      "safeSummary": {
+        "captionCharacters": 142,
+        "hashtagCount": 2,
+        "mediaType": "none",
+        "hasDiscountClaim": false,
+        "hasSensitiveTerms": false,
+        "hasComplianceConcern": false,
+        "approvedBrandStyleMatched": true
+      },
+      "thresholds": {
+        "lowMax": 19,
+        "mediumMax": 39,
+        "highMax": 69,
+        "criticalMin": 70,
+        "futureAutoRunMaxAllowed": 10
+      },
+      "safety": {
+        "scoringOnly": true,
+        "autoRunEnabled": false,
+        "autoApprovalEnabled": false,
+        "doesNotPublish": true,
+        "externalApiCalled": false,
+        "manualApprovalStillRequired": true,
+        "noDatabaseWrites": true,
+        "futureAutoRunRequiresAdditionalGates": true
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+================================================================================
+PHASE 14.5 — ADS HARD CAPS STORAGE
+================================================================================
+
+Purpose:
+Store the ads hard caps required before LIFE.SAVER can ever control real ad spend.
+
+Storage:
+- database/migrations/022_create_ads_hard_caps.sql
+- table: ads_hard_caps
+
+Caps:
+- max_daily_budget_change
+- max_percentage_change
+- max_changes_per_day
+- always_ask_above_threshold
+- emergency_never_exceed_limit
+
+Runtime boundary:
+This phase adds storage/schema/preview only. It does not add real ad platform execution.
+
+Required future gates before live ads executor:
+- founder/admin manual approval
+- master pause check
+- ads category pause check
+- emergency safe mode check
+- hard cap evaluation
+- before/after snapshot
+- idempotency
+- result log
+- rollback/restore planning
+
+Safety:
+Triple Whale remains read-only. Meta/Google write APIs are still not connected in this phase.
+================================================================================

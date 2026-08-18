@@ -1,0 +1,69 @@
+LIFE.SAVER Super Admin Panel Plan
+=================================
+
+Purpose
+-------
+The Super Admin Panel is the future control center for the LIFE.SAVER product owner/team.
+
+Initial Panels
+--------------
+1. System Status
+   - API health
+   - Worker health
+   - App version
+   - Environment
+   - Last deployment
+
+2. Users
+   - List registered users
+   - Invite founder/admin users
+   - Disable accounts
+   - Reset access when needed
+
+3. Workspaces
+   - Each customer business/dashboard
+   - Workspace owner
+   - Workspace plan
+   - Workspace status
+
+4. Connected Accounts
+   - Triple Whale connected/disconnected
+   - Last sync time
+   - Connection error state
+   - Key hint only, never raw API key
+
+5. Metrics Snapshots
+   - Latest sync status
+   - Date ranges synced
+   - Raw payload stored?
+   - Normalized metrics stored?
+
+6. Briefs
+   - Latest Daily Brief
+   - Latest Weekly Summary
+   - Source snapshot ID
+   - Generated time
+
+7. Drafts
+   - Content drafts
+   - Support reply drafts
+   - Draft status: draft/approved/rejected
+   - No automatic sending/posting in v1
+
+8. AI Usage & Cost
+   - Claude requests
+   - Token usage
+   - Estimated cost
+   - Rate limits
+   - Cost caps
+
+9. Billing / Subscriptions
+   - Future only
+   - Plan name
+   - Active/inactive
+   - Usage limits
+   - Payment status
+
+Production Rule
+---------------
+Before production, every admin route must require authentication and authorization. No public admin routes should exist on a live deployment.

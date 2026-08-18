@@ -1,0 +1,37 @@
+{
+  "phase": "V2 Phase 12.2 — Read-Only Support Connector First",
+  "healthMode": "v2-phase-12-2-read-only-support-connector-first",
+  "endpoints": {
+    "status": "GET /api/v1/support/read-only-import/status",
+    "preview": "POST /api/v1/support/read-only-import/preview",
+    "import": "POST /api/v1/support/read-only-import/import",
+    "listTickets": "GET /api/v1/support/tickets"
+  },
+  "previewRequestExample": {
+    "messages": [
+      {
+        "provider": "gmail",
+        "externalMessageId": "msg_123",
+        "externalThreadId": "thread_123",
+        "fromEmail": "customer@example.com",
+        "fromName": "Jane Customer",
+        "subject": "Where is my order?",
+        "snippet": "Hello, can you please share shipping tracking for order #1001?",
+        "receivedAt": "2026-07-07T10:00:00.000Z",
+        "labelIds": ["INBOX", "support"],
+        "rawProviderPayload": {
+          "id": "msg_123",
+          "threadId": "thread_123",
+          "internalDate": "1783428000000"
+        }
+      }
+    ]
+  },
+  "safeResponseGuarantees": {
+    "externalApiCalled": false,
+    "emailSent": false,
+    "browserReceivesRawProviderPayload": false,
+    "browserReceivesOauthTokens": false,
+    "gmailSendOrModifyScopeUsed": false
+  }
+}

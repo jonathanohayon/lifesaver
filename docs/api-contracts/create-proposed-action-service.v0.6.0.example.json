@@ -1,0 +1,82 @@
+{
+  "version": "0.6.0",
+  "phase": "v0.6.0 Phase 3.4 Create Proposed Action Service",
+  "service": "createProposedAction",
+  "publicEndpointAdded": false,
+  "exampleInput": {
+    "workspaceId": "00000000-0000-0000-0000-000000000001",
+    "createdByUserId": "00000000-0000-0000-0000-000000000002",
+    "actionType": "content_publish",
+    "title": "Proposed Instagram post from draft",
+    "description": "Internal proposed content action created from draft_content.",
+    "riskLevel": "low",
+    "approvalRequired": true,
+    "policyDecision": "ask",
+    "source": "draft_content",
+    "reason": "Created from a content draft for founder review. No external publish attempted.",
+    "payloadJson": {
+      "schema_version": "action-payload/v0.6.0",
+      "action_type": "content_publish",
+      "source": "draft",
+      "intent_summary": "Prepare an Instagram caption for review.",
+      "idempotency_hint": "draft-123-to-content-publish",
+      "data": {
+        "platform": "instagram",
+        "caption": "A calm founder update for today.",
+        "post_type": "image",
+        "media_url": "https://example.test/preview.png",
+        "hashtags": ["ecommerce", "founderops"],
+        "scheduled_time": null
+      }
+    }
+  },
+  "exampleCreatedResult": {
+    "success": true,
+    "data": {
+      "version": "0.6.0",
+      "phase": "v0.6.0 Phase 3.4 Create Proposed Action Service",
+      "created": true,
+      "duplicateDetected": false,
+      "duplicateReason": "none",
+      "action": {
+        "id": "11111111-1111-1111-1111-111111111111",
+        "workspaceId": "00000000-0000-0000-0000-000000000001",
+        "createdByUserId": "00000000-0000-0000-0000-000000000002",
+        "actionType": "content_publish",
+        "title": "Proposed Instagram post from draft",
+        "description": "Internal proposed content action created from draft_content.",
+        "status": "proposed",
+        "riskLevel": "low",
+        "approvalRequired": true,
+        "policyDecision": "ask",
+        "idempotencyKey": "generated:workspace:content_publish:hash",
+        "actionHash": "sha256hash",
+        "createdAt": "2026-06-29T00:00:00.000Z",
+        "updatedAt": "2026-06-29T00:00:00.000Z",
+        "approvedAt": null,
+        "executedAt": null,
+        "hasPayload": false
+      },
+      "safety": {
+        "status": "proposed",
+        "approvalRequired": true,
+        "policyDecision": "ask",
+        "canExecuteFromThisService": false,
+        "externalWritesEnabled": false,
+        "note": "createProposedAction creates an internal proposed action record and action_created audit event only."
+      }
+    }
+  },
+  "exampleDuplicateResult": {
+    "created": false,
+    "duplicateDetected": true,
+    "duplicateReason": "idempotency_key"
+  },
+  "safety": {
+    "addsPublicEndpoint": false,
+    "approvesActions": false,
+    "executesActions": false,
+    "externalWritesEnabled": false,
+    "storesRawSecrets": false
+  }
+}

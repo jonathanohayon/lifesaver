@@ -1,0 +1,18 @@
+LIFE.SAVER v0.2.8 — Triple Whale Ad Spend Fix
+
+Problem found in v0.2.5:
+- The metrics-array mapper correctly detected payload.metrics[] and mapped revenue, orders, AOV, and ROAS.
+- Ad Spend was incorrectly mapped to totalInventoryCost / Cost because the old alias list included the generic word "cost".
+- That was unsafe because inventory cost, COGS, CPA, CPC, CPM, and other cost-like fields are not ad spend.
+
+Fix in v0.2.8:
+- Removed generic "cost" from ad spend aliases.
+- Added paid-media spend detection using provider-specific spend metrics only.
+- Ad spend is now built from confirmed paid-media channel components.
+- The mapper stores mapping.fields.adSpend.components so every included channel can be reviewed.
+- If a total ad spend field is not found but Revenue and ROAS are present, LIFE.SAVER can calculate ad spend from Revenue / ROAS and marks the sourceKind accordingly.
+- Channel spend is now stored separately from attribution to avoid presenting ad spend as revenue attribution.
+- API-key validation previews are redacted before returning to the browser.
+
+Production rule:
+- Do not set productionReady=true until one v0.2.8 Preview Metric Mapping result confirms adSpend is no longer mapped to Cost / totalInventoryCost.

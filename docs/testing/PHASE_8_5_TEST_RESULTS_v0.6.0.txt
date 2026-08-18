@@ -1,0 +1,23 @@
+# Phase 8.5 Test Results — Sandbox Ads Executor
+
+Commands expected for this package:
+
+npm run build
+npm run executor:sandbox-ads:test
+npm run executor:sandbox-support:test
+npm run executor:sandbox-content:test
+npm run executor:registry:test
+npm run executor:interface:test
+npm run executor:pause:test
+npm run policy:tests:test
+npm run rules:permission:test
+npm run actions:test:backend
+npm run client:test-checklist
+npm run security:check
+npm run env:check
+
+Expected key result:
+
+executor:sandbox-ads:test — 23 passed, 0 failed
+
+Security/env checks may show expected local warnings when real .env, DATABASE_URL, and production secrets are not present.

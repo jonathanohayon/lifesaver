@@ -1,0 +1,33 @@
+{
+  "schema_version": "content_media_asset.v0.7.0.phase_9_5",
+  "platform": "linkedin",
+  "asset_kind": "image",
+  "original_file_name": "founder-performance-preview.png",
+  "mime_type": "image/png",
+  "size_bytes": 1200000,
+  "checksum_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "image": {
+    "width_pixels": 1200,
+    "height_pixels": 628,
+    "gif_frame_count": null,
+    "alt_text": "LIFE.SAVER founder performance preview chart."
+  },
+  "video": null,
+  "storage": {
+    "provider": "supabase_storage",
+    "bucket": "content-media-assets",
+    "visibility": "private",
+    "object_key": "workspace/{workspace_id}/content-media/{asset_id}/founder-performance-preview.png"
+  },
+  "preview": {
+    "signed_preview_url_ttl_seconds": 300,
+    "public_preview_url_allowed": false
+  },
+  "safety": {
+    "manual_approval_required": true,
+    "media_upload_to_linkedin_allowed_by_payload": false,
+    "real_publish_allowed_by_payload": false,
+    "auto_run_allowed_by_payload": false,
+    "external_api_call_allowed_by_payload": false
+  }
+}

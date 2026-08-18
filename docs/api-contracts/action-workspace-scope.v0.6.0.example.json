@@ -1,0 +1,70 @@
+{
+  "version": "0.6.0",
+  "phase": "2.8",
+  "name": "Workspace + User Scoping",
+  "safetyMode": "read_advise_draft_only",
+  "repositoryOnly": true,
+  "externalWritesEnabled": false,
+  "customerFacingQueryRule": {
+    "mustFilterByWorkspaceId": true,
+    "mustRequireActiveWorkspaceMembership": true,
+    "mustNotReturnOtherWorkspaceRows": true,
+    "mustNotExecuteActions": true
+  },
+  "workspaceRoles": {
+    "owner": {
+      "canViewActions": true,
+      "canCreateProposedActionsLater": true,
+      "canApproveNormalActionsLater": true,
+      "canApproveCriticalActionsLater": true
+    },
+    "admin": {
+      "canViewActions": true,
+      "canCreateProposedActionsLater": true,
+      "canApproveNormalActionsLater": true,
+      "canApproveCriticalActionsByDefault": false
+    },
+    "member": {
+      "canViewActions": true,
+      "canCreateProposedDraftActionsLater": true,
+      "canApproveActions": false
+    },
+    "viewer": {
+      "canViewActions": true,
+      "canCreateProposedActions": false,
+      "canApproveActions": false
+    }
+  },
+  "riskApprovalDefaults": {
+    "low": ["owner", "admin"],
+    "medium": ["owner", "admin"],
+    "high": ["owner", "admin"],
+    "critical": ["owner"]
+  },
+  "repositoryFunctions": [
+    "getActiveActionWorkspaceMembership",
+    "listWorkspaceActionsForUser",
+    "getWorkspaceActionForUser",
+    "listWorkspaceActionEventsForUser",
+    "listWorkspaceActionResultsForUser",
+    "listInternalAdminActionMonitorRows"
+  ],
+  "adminMonitoring": {
+    "allowedForPlatformRole": "super_admin",
+    "redactedSummaryOnly": true,
+    "payloadJsonReturned": false,
+    "metadataJsonReturned": false,
+    "rollbackPayloadReturned": false,
+    "rawSecretsReturned": false
+  },
+  "forbiddenReturnedOrStoredSecrets": [
+    "raw Triple Whale API key",
+    "Claude API key",
+    "OAuth access token",
+    "OAuth refresh token",
+    "APP_ENCRYPTION_KEY",
+    "WORKER_SHARED_SECRET",
+    "DATABASE_URL",
+    "raw .env values"
+  ]
+}

@@ -1,0 +1,44 @@
+PHASE 13.1 — WRITE SCOPE SETUP
+==============================
+
+Purpose
+-------
+Phase 13 begins the support send executor track. Phase 13.1 does not send email. It creates the write-scope checklist and gate preview for a future approved-only Gmail support send executor.
+
+Why Gmail send scope is separate
+--------------------------------
+Phase 12 selected Gmail and kept the connector read-only. The future send executor needs explicit founder re-consent and a minimum send-only scope. This avoids silently upgrading the read-only connector into a write-capable connector.
+
+Recommended future scope
+------------------------
+https://www.googleapis.com/auth/gmail.send
+
+Scopes intentionally not requested in this phase
+-----------------------------------------------
+https://www.googleapis.com/auth/gmail.send
+https://www.googleapis.com/auth/gmail.compose
+https://www.googleapis.com/auth/gmail.modify
+https://mail.google.com/
+
+The broad mail.google.com scope is blocked for the first support send lane.
+
+Executor design direction
+-------------------------
+The first support send executor should:
+- Accept only approved support_reply_send actions.
+- Re-check ticket, draft, privacy, escalation, pause, and permission gates immediately before send.
+- Send through Gmail users.messages.send with userId=me.
+- Use an RFC 2822 MIME message encoded as base64URL only inside the server-side executor.
+- Avoid attachments, CC, and BCC initially.
+- Never return raw MIME or provider token values to browser responses.
+- Never auto-send FAQ replies until later phases explicitly add safe auto-send rules and QA.
+
+New endpoints
+-------------
+GET /api/v1/support/write-scope/status
+GET /api/v1/support/write-scope/checklist
+POST /api/v1/support/write-scope/preview
+
+Safety statement
+----------------
+Phase 13.1 is checklist-only. It adds no OAuth route, no Gmail API client, no token storage change, no send scope request, no executor, no email sending, no auto-reply, no external API call, and no database migration.

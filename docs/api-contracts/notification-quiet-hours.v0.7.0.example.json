@@ -1,0 +1,100 @@
+{
+  "version": "0.7.0",
+  "phase": "phase_10_7_quiet_hours_enforcement",
+  "workspaceId": "workspace_123",
+  "generatedAt": "2026-07-06T23:00:00.000Z",
+  "counts": {
+    "candidatesEvaluated": 1,
+    "delayedByQuietHours": 1,
+    "criticalOverrides": 0,
+    "allowedNow": 0
+  },
+  "decisions": [
+    {
+      "version": "0.7.0",
+      "phase": "phase_10_7_quiet_hours_enforcement",
+      "actionId": "action_123",
+      "workspaceId": "workspace_123",
+      "title": "Approve LinkedIn founder update",
+      "actionType": "content_publish",
+      "riskLevel": "medium",
+      "priority": "normal",
+      "triggerType": "action_proposed",
+      "generatedAt": "2026-07-06T23:00:00.000Z",
+      "quietHours": {
+        "enabled": true,
+        "activeNow": true,
+        "timezone": "UTC",
+        "start": "22:00",
+        "end": "08:00",
+        "crossesMidnight": true,
+        "localTime": "23:00",
+        "nextOpenAt": "2026-07-07T08:00:00.000Z"
+      },
+      "critical": {
+        "isCritical": false,
+        "reason": "Notification is not critical and may be delayed during quiet hours."
+      },
+      "channels": {
+        "inApp": {
+          "channel": "in_app",
+          "candidate": true,
+          "allowedNow": false,
+          "delayed": true,
+          "delayedUntil": "2026-07-07T08:00:00.000Z",
+          "criticalOverride": false,
+          "reason": "Quiet hours are active, so non-critical notification delivery should be delayed."
+        },
+        "email": {
+          "channel": "email",
+          "candidate": true,
+          "allowedNow": false,
+          "delayed": true,
+          "delayedUntil": "2026-07-07T08:00:00.000Z",
+          "criticalOverride": false,
+          "reason": "Quiet hours are active, so non-critical notification delivery should be delayed."
+        },
+        "slack": {
+          "channel": "slack",
+          "candidate": false,
+          "allowedNow": false,
+          "delayed": false,
+          "delayedUntil": null,
+          "criticalOverride": false,
+          "reason": "slack is not enabled or not a candidate channel."
+        }
+      },
+      "safety": {
+        "quietHoursEnforcementOnly": true,
+        "sendsEmailInThisPhase": false,
+        "sendsSlackInThisPhase": false,
+        "createsNotificationRowsInThisPhase": false,
+        "callsExternalServices": false,
+        "canApproveAction": false,
+        "canExecuteAction": false,
+        "exposesTokensOrSecrets": false,
+        "exposesActionPayloadJson": false
+      }
+    }
+  ],
+  "preferencesSnapshot": {
+    "inAppEnabled": true,
+    "emailEnabled": true,
+    "slackEnabled": false,
+    "quietHoursEnabled": true,
+    "quietHoursStart": "22:00",
+    "quietHoursEnd": "08:00",
+    "quietHoursTimezone": "UTC"
+  },
+  "safety": {
+    "quietHoursEnforcementOnly": true,
+    "sendsEmailInThisPhase": false,
+    "sendsSlackInThisPhase": false,
+    "createsNotificationRowsInThisPhase": false,
+    "callsExternalServices": false,
+    "autoApprovalEnabled": false,
+    "autoExecutionEnabled": false,
+    "exposesTokensOrSecrets": false,
+    "exposesActionPayloadJson": false
+  }
+}

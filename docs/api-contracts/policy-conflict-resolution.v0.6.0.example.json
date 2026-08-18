@@ -1,0 +1,20 @@
+{
+  "version": "0.6.0",
+  "phase": "V2 Phase 6.7 Policy Conflict Resolution",
+  "functionName": "resolvePolicyConflicts",
+  "priorityOrder": [
+    "master_pause",
+    "block_rule",
+    "hard_cap_exceeded",
+    "ask_rule",
+    "auto_approve_rule"
+  ],
+  "sampleResult": {
+    "decision": "block",
+    "reasonCode": "block_rule_wins",
+    "matched_policy_id": "policy_block_sensitive_support",
+    "cap_status": "no_caps_defined"
+  },
+  "executorEnabled": false,
+  "externalWritesEnabled": false
+}

@@ -1,0 +1,52 @@
+LIFE.SAVER V2 — Phase 4.8 Live Refresh / Polling
+
+Version: v0.6.0
+Phase: 4.8
+Deliverable: Refresh behavior for the approval queue UI
+
+Purpose
+- Allow new proposed actions to appear on actions.html without requiring the founder to reload the browser page.
+- Keep refresh behavior safe, visible, and read-only.
+
+Implemented behavior
+- Manual Refresh Actions button remains available.
+- Auto refresh is enabled by default.
+- The founder can pause/resume auto refresh.
+- The founder can choose a safe interval of 30, 45, or 60 seconds.
+- Default interval is 60 seconds.
+- Polling calls only GET /api/v1/actions with the current filters.
+- Detail previews are still loaded through the existing safe GET /api/v1/actions/:id endpoint.
+- Polling pauses when the tab is hidden.
+- Polling pauses while detail, approve, or reject modals are open.
+
+Safety boundary
+- Polling is read-only.
+- It does not approve actions.
+- It does not reject actions.
+- It does not cancel actions.
+- It does not queue actions.
+- It does not execute actions.
+- It does not publish content.
+- It does not send support replies.
+- It does not change ad spend.
+- It does not pause campaigns.
+- It does not refund orders.
+- It does not edit products.
+- It does not rollback anything.
+- It does not write to Triple Whale or any external platform.
+
+Why not WebSocket/SSE yet?
+- Simple polling is safer and easier to QA at this stage.
+- WebSocket/SSE can come later after the approval queue and executor lifecycle are stable.
+
+QA checklist
+1. Open /actions.html while logged in.
+2. Confirm Live Refresh panel is visible.
+3. Confirm default interval is 60 seconds.
+4. Click Refresh Actions and confirm the list reloads.
+5. Change interval to 30 or 45 seconds and confirm the UI updates.
+6. Pause auto refresh and confirm the status says paused.
+7. Resume auto refresh and confirm the status says polling on.
+8. Open detail/approve/reject modal and confirm polling pauses safely.
+9. Confirm approve/reject still require modals.
+10. Confirm no external write happens.

@@ -1,0 +1,233 @@
+================================================================================
+LIFE.SAVER v0.7.0 — Phase 9.2 LinkedIn Write-Scope Checklist
+================================================================================
+
+Purpose
+-------
+Identify the exact LinkedIn write permissions and platform constraints needed before adding a real content publishing executor.
+
+This document is intentionally planning-only.
+No OAuth route, token storage, API call, publishing endpoint, or real executor is added in Phase 9.2.
+
+================================================================================
+1. SELECTED PLATFORM
+================================================================================
+
+Selected platform:
+LinkedIn
+
+Selected first author type:
+Authenticated LinkedIn member
+
+Selected first publishing lane:
+Text/link post only
+
+Why this lane:
+It is the smallest practical write path for proving the manual-approved executor pattern.
+It avoids image, video, document, multi-image, carousel, sponsored content, and organization/page complexity.
+
+================================================================================
+2. REQUIRED OAUTH FLOW
+================================================================================
+
+Future OAuth flow:
+LinkedIn 3-legged OAuth authorization code flow.
+
+Future local callback shape:
+`http://localhost:4000/api/v1/connect/linkedin/callback`
+
+Future production callback shape:
+`https://lifesaveragent.com/api/v1/connect/linkedin/callback`
+
+Future OAuth state requirement:
+Use a signed, short-lived `state` value to prevent CSRF and bind the callback to the current workspace/user.
+
+Future OAuth code exchange:
+The backend only should exchange authorization code for token.
+The browser must never receive LinkedIn access tokens.
+
+Phase 9.2 status:
+Planning only. OAuth routes are not added in this package.
+
+================================================================================
+3. REQUIRED PRODUCT / PERMISSION
+================================================================================
+
+Minimum required LinkedIn product/permission for first future executor:
+
+- Product: Share on LinkedIn
+- Permission/scope: `w_member_social`
+
+Use case:
+Post on behalf of the authenticated member after manual founder approval.
+
+Optional identity scopes later:
+- `openid`
+- `profile`
+- `email`
+
+Reason optional identity scopes may be needed:
+They can help show a safe account hint and identify the authenticated member. They are not a permission to publish by themselves.
+
+Least-privilege rule:
+Do not request organization, ads, read social, compliance, or marketing permissions for the first executor.
+
+================================================================================
+4. APP REVIEW / DEVELOPER PORTAL CHECKLIST
+================================================================================
+
+Before Phase 9.3 or 9.6, confirm inside LinkedIn Developer Portal:
+
+[ ] LinkedIn app exists.
+[ ] App is associated with the correct developer account.
+[ ] Redirect URLs are configured exactly.
+[ ] Share on LinkedIn product is enabled.
+[ ] `w_member_social` appears as available/assigned to the app.
+[ ] Local callback is added only for development.
+[ ] Production callback uses `https://lifesaveragent.com`.
+[ ] Client ID and client secret are stored only in backend/Render env variables.
+[ ] No client secret is committed to GitHub.
+[ ] No raw token is shown in browser/admin/logs.
+
+Current interpretation:
+For authenticated member posting, `w_member_social` is part of the Share on LinkedIn product. Marketing/Ads APIs require stricter approval and are not part of Phase 9.
+
+================================================================================
+5. TOKEN EXPIRY / REFRESH CHECKLIST
+================================================================================
+
+Future token records must store:
+
+[ ] encrypted access token.
+[ ] granted scope string/list.
+[ ] access token expiry timestamp from `expires_in`.
+[ ] token issued timestamp.
+[ ] account/member hint only, never raw token.
+[ ] connection status.
+[ ] last validation/check timestamp.
+[ ] disconnect/revoke state.
+
+Do not assume long-lived tokens.
+
+Do not assume programmatic refresh tokens are available for this app.
+
+If programmatic refresh tokens become available later, they must be encrypted and treated as more sensitive than access tokens.
+
+If refresh is not available or token expires:
+Require the user/founder to reconnect LinkedIn.
+
+================================================================================
+6. PUBLISHING PERMISSIONS CHECKLIST
+================================================================================
+
+First future executor may only target:
+
+[ ] LinkedIn authenticated member.
+[ ] `content_publish` action type.
+[ ] text/link content.
+[ ] manual-approved action only.
+[ ] lifecycle after approval only.
+[ ] master pause off.
+[ ] content category pause off.
+[ ] emergency safe mode off.
+[ ] policy does not block.
+[ ] caps not exceeded.
+[ ] idempotency key not previously executed.
+[ ] result log written after attempt.
+
+Do not support yet:
+
+[ ] organization/company page posting.
+[ ] sponsored content.
+[ ] ads.
+[ ] comments/likes automation.
+[ ] bulk publishing.
+[ ] scheduled publishing jobs.
+[ ] auto-run publishing.
+[ ] support sending.
+[ ] ad changes.
+
+================================================================================
+7. MEDIA UPLOAD LIMITATIONS
+================================================================================
+
+Phase 9.2 documents media constraints only.
+No media upload is implemented here.
+
+LinkedIn image publishing later requires:
+
+[ ] upload/initialize image asset first.
+[ ] wait/check media asset availability.
+[ ] store only safe asset metadata.
+[ ] validate MIME type.
+[ ] validate file size/pixel limits.
+[ ] validate ownership/author matches token.
+[ ] show preview before approval.
+[ ] reject unsupported media before executor call.
+
+Known image constraints to account for later:
+
+- Images API supports images with less than 36,152,320 pixels.
+- Supported formats include JPG, GIF, and PNG.
+- GIF supports up to 250 frames.
+- `w_member_social` can be enough for member-owned image upload, but it is write-only for some versioned image retrieval calls.
+
+LinkedIn post/media complexity to postpone:
+
+- Video requires a separate video upload flow.
+- Documents require a separate document upload flow.
+- Multi-image organic posts use a separate multi-image flow.
+- Organic carousel is not the same as sponsored carousel; sponsored carousel is ads territory and out of scope.
+
+Phase 9.6 first real executor should remain text/link only unless Phase 9.5 explicitly completes media handling first.
+
+================================================================================
+8. API HEADER / VERSIONING CHECKLIST
+================================================================================
+
+Future LinkedIn REST calls should plan for:
+
+[ ] Authorization Bearer token header.
+[ ] `X-Restli-Protocol-Version: 2.0.0` header where required.
+[ ] `Linkedin-Version` header for versioned REST APIs where required.
+[ ] safe API version configuration via backend env, not browser.
+[ ] safe logging that redacts Authorization headers.
+
+================================================================================
+9. RESULT LOGGING REQUIREMENTS FOR LATER
+================================================================================
+
+When real publishing is eventually added, action result logs should store:
+
+[ ] platform = linkedin.
+[ ] author type = member.
+[ ] safe account hint.
+[ ] platform post URN/ID.
+[ ] permalink if returned/derived safely.
+[ ] published timestamp.
+[ ] request id/correlation id.
+[ ] sanitized platform response summary.
+[ ] failure status and safe failure reason if failed.
+
+Never store/show:
+
+[ ] raw access token.
+[ ] raw refresh token.
+[ ] full Authorization header.
+[ ] LinkedIn client secret.
+[ ] sensitive OAuth callback params beyond what is needed for audit.
+
+================================================================================
+10. FINAL PHASE 9.2 DECISION
+================================================================================
+
+Approved planning decision:
+Use LinkedIn `w_member_social` as the required write scope for the first future manual-approved member post executor.
+
+Do not add organization posting yet.
+Do not add media upload yet.
+Do not add auto-run.
+Do not add real publishing in Phase 9.2.
+
+Next phase:
+Phase 9.3 — Connector Credential Model.

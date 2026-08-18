@@ -1,0 +1,117 @@
+LIFE.SAVER v0.7.0 — Phase 9.8 Rate/Post Caps
+=============================================
+
+Purpose
+-------
+Prevent too many real LinkedIn posts from being published through the manual-approved content executor.
+
+Scope
+-----
+This phase enforces content posting limits. It does not add auto-run, scheduler execution, media publishing, organization posting, support sending, ad changes, or rollback/unpublish.
+
+Cap Model
+---------
+LIFE.SAVER enforces these rolling-window caps:
+
+1. Workspace hourly cap.
+2. LinkedIn platform hourly cap.
+3. LinkedIn account hourly cap.
+4. Workspace daily cap.
+5. LinkedIn platform daily cap.
+6. LinkedIn account daily cap.
+
+Defaults
+--------
+CONTENT_PUBLISH_MAX_POSTS_PER_DAY=3
+CONTENT_PUBLISH_MAX_POSTS_PER_HOUR=1
+CONTENT_PUBLISH_ACCOUNT_MAX_POSTS_PER_DAY=3
+CONTENT_PUBLISH_ACCOUNT_MAX_POSTS_PER_HOUR=1
+LINKEDIN_PUBLISH_MAX_POSTS_PER_DAY=3
+LINKEDIN_PUBLISH_MAX_POSTS_PER_HOUR=1
+
+These are conservative internal LIFE.SAVER product caps. They are not a claim about LinkedIn's unpublished numeric API limits.
+
+LinkedIn Platform-Specific Limit Handling
+-----------------------------------------
+LinkedIn's public documentation says standard rate limits are not published and should be checked from the Developer Portal Analytics tab for the app/endpoint after requests have been made that day.
+
+Therefore:
+- LIFE.SAVER does not hardcode a claimed official LinkedIn numeric cap.
+- LIFE.SAVER uses configurable internal caps before the LinkedIn API call.
+- If LinkedIn returns 429 TOO_MANY_REQUESTS, the executor treats it as a failed result and does not claim the post executed.
+
+Where Cap Usage Comes From
+--------------------------
+The cap checker counts confirmed successful publish result rows from:
+
+Table: action_results
+Result status: success
+Executor: linkedinManualApprovedContentExecutor
+Window: rolling 60 minutes and rolling 24 hours
+
+Why count successes only?
+-------------------------
+The cap is designed to prevent too many actually published posts. Failed/blocked attempts are still logged separately, but they do not count as published posts.
+
+Execution Order
+---------------
+Before a LinkedIn post can be attempted, Phase 9.8 now checks:
+
+1. Feature flag enabled.
+2. Action exists.
+3. Action type is content_publish.
+4. Status is approved.
+5. Manual approval event exists.
+6. Master pause is off.
+7. Content pause is off.
+8. Emergency safe mode is off.
+9. Existing policy/global caps pass.
+10. Payload validates.
+11. Phase 9.8 content post caps pass.
+12. LinkedIn credential exists and token is valid.
+13. Required scope w_member_social is present.
+14. LinkedIn API call is attempted.
+
+Security Notes
+--------------
+- Cap checks do not call LinkedIn.
+- Cap checks do not decrypt LinkedIn tokens.
+- Cap checks do not return raw tokens.
+- Cap status endpoint is read-only.
+- Account IDs are safely hinted, not fully exposed in public summaries.
+- Result metadata stores safe cap evaluation only.
+
+Files Added
+-----------
+- apps/api/src/modules/content-publishing/content-publish-caps.ts
+- apps/api/src/modules/content-publishing/content-publish-caps-tests.ts
+- docs/v2/PHASE_9_8_RATE_POST_CAPS_v0.7.0.txt
+- docs/api-contracts/content-publish-caps.v0.7.0.example.json
+- docs/testing/PHASE_9_8_TEST_RESULTS_v0.7.0.txt
+- START_HERE_v0.7.0_PHASE_9_8_RATE_POST_CAPS.txt
+
+Files Updated
+-------------
+- apps/api/src/config/env.ts
+- apps/api/src/modules/content-publishing/content-real-publish.executor.ts
+- apps/api/src/modules/content-publishing/content-real-publish.controller.ts
+- apps/api/src/modules/actions/actions.controller.ts
+- apps/api/src/modules/actions/actions.routes.ts
+- apps/api/src/modules/health/health.controller.ts
+- package.json
+- apps/api/package.json
+- README.txt
+- CHANGELOG.txt
+
+Testing
+-------
+Run:
+
+npm.cmd run phase9:content-caps:test
+npm.cmd run phase9:real-publish:test
+npm.cmd run phase9:result-tracking:test
+npm.cmd run build
+
+Safety Status
+-------------
+Real LinkedIn publishing is still default-off and manual-approved only.

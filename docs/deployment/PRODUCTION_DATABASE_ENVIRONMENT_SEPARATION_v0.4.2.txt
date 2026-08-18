@@ -1,0 +1,68 @@
+LIFE.SAVER v0.4.3 — Production Database + Environment Separation
+
+Goal:
+Prevent local testing, staging testing, and production traffic from accidentally sharing the same database or secrets.
+
+Recommended environments:
+1. local/development
+   - Runs on developer machine.
+   - Can use current Supabase dev project.
+   - NODE_ENV=development
+   - APP_ENVIRONMENT=development
+   - DATABASE_ENVIRONMENT=development
+   - ENVIRONMENT_LOCK=development:development
+
+2. staging
+   - Optional, but recommended before live client deployment.
+   - Uses a staging Supabase project or staging database.
+   - NODE_ENV=production
+   - APP_ENVIRONMENT=staging
+   - DATABASE_ENVIRONMENT=staging
+   - ENVIRONMENT_LOCK=staging:staging
+
+3. production
+   - Real client/live traffic.
+   - Uses a separate production Supabase project.
+   - NODE_ENV=production
+   - APP_ENVIRONMENT=production
+   - DATABASE_ENVIRONMENT=production
+   - ENVIRONMENT_LOCK=production:production
+
+Why separate databases matter:
+- A development migration or test should never affect real production data.
+- A developer password should never be used in production.
+- API keys encrypted in one environment depend on that environment's APP_ENCRYPTION_KEY.
+- Production backups, retention, access, and monitoring should be separate from local testing.
+
+New variables:
+APP_ENVIRONMENT
+- Human/product label: development, staging, or production.
+
+DATABASE_ENVIRONMENT
+- Database label: development, staging, or production.
+
+ENVIRONMENT_LOCK
+- Must match APP_ENVIRONMENT:DATABASE_ENVIRONMENT.
+- Examples:
+  development:development
+  staging:staging
+  production:production
+
+PRODUCTION_DATABASE_URL
+- Required for live production planning.
+- Should point only to the separate production Supabase database.
+- Do not use the development Supabase project as production.
+
+Commands:
+npm.cmd run env:check
+- Shows environment separation status.
+
+npm.cmd run security:check
+- Shows security hardening status.
+
+Admin UI:
+Open /admin.html and click Load Security Status.
+The response now includes an Environment Separation section.
+
+Important APP_ENCRYPTION_KEY rule:
+Once a workspace has encrypted provider API keys stored, do not change APP_ENCRYPTION_KEY for that environment unless you intentionally re-encrypt the connected_accounts table. If it changes, old encrypted Triple Whale keys cannot be decrypted.

@@ -1,0 +1,40 @@
+WordPress Developer Mental Model for LIFE.SAVER
+==============================================
+
+WordPress gives you a ready platform. LIFE.SAVER is our own platform.
+
+WordPress Concept                 LIFE.SAVER Equivalent
+-----------------                 ---------------------
+WP Admin                          LIFE.SAVER Super Admin
+Plugin folder                     Feature module
+Plugin settings page              Admin settings panel
+WP AJAX / REST route              Express API route
+functions.php / plugin bootstrap  server.ts / app.ts
+Custom DB tables                  PostgreSQL tables
+wp_cron                           Worker scheduled jobs
+User roles                        users + workspace_members roles
+Plugin update                     App deployment + migration
+wp-config.php                     .env / secret manager
+MySQL                             PostgreSQL
+
+Why it feels different
+----------------------
+In WordPress, the environment already exists. In LIFE.SAVER, we create the environment: login, users, admin, database structure, API routes, workers, security, deployment, and updates.
+
+Why this is better for this project
+-----------------------------------
+LIFE.SAVER needs secure server-side Claude, encrypted Triple Whale keys, scheduled metric syncs, background jobs, future SaaS workspaces, and strict data isolation. A standalone app is cleaner for that than forcing everything into WordPress.
+
+How you will control it later
+-----------------------------
+You will not manage production by opening random files daily. You will use:
+- Customer dashboard for founders.
+- Super admin panel for you/team.
+- GitHub/versioning for code updates.
+- PostgreSQL/Supabase dashboard for emergency database inspection.
+- Deployment platform dashboard for server health.
+
+Safe update idea
+----------------
+Code updates should be like plugin updates: improve files, keep data safe.
+Data stays in PostgreSQL. Code changes are deployed as versions. Migrations are used when database structure must change.

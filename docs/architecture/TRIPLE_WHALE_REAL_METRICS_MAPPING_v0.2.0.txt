@@ -1,0 +1,45 @@
+LIFE.SAVER v0.2.0 — Triple Whale Real Metrics Mapping Foundation
+
+Purpose
+-------
+v0.2.0 introduces the first real metrics mapping layer for Triple Whale Summary payloads.
+It does not invent fixed Triple Whale fields. Instead, it keeps the raw payload stored in
+metrics_snapshots.raw_payload and creates normalized dashboard metrics through a conservative
+best-effort mapper with a mapping preview.
+
+What this version adds
+----------------------
+1. normalizeTripleWhaleSummaryPayload() now maps from the actual Summary payload, not from
+   wrapper metadata.
+2. The mapper records mapping confidence, missing fields, candidate count, and field paths.
+3. New endpoint: GET /api/v1/triple-whale/mapping-preview.
+4. Customer Settings and Super Admin include a Preview Metric Mapping button.
+5. /metrics can return database-backed normalized metrics with mapping metadata.
+
+Important safety rule
+---------------------
+The Summary endpoint still requires TRIPLE_WHALE_SUMMARY_BODY_JSON to be configured in .env.
+Only set this after the request body is confirmed from Triple Whale documentation/support or
+a known-good sample.
+
+Current behavior
+----------------
+- If Summary body is not configured, validation and safe skeleton snapshots still work.
+- If Summary body is configured and Triple Whale returns JSON, raw_payload is stored.
+- Normalized metrics are generated from the actual raw payload and marked with confidence.
+- Low confidence results must be reviewed before production use.
+
+Mapping metadata
+----------------
+normalized_metrics.mapping contains:
+- version
+- confidence: high / medium / low
+- missingFields
+- candidateCount
+- field path used for revenue, orders, AOV, ad spend, ROAS, conversion rate, and attribution
+
+Next recommended step
+---------------------
+Run Probe Summary API after TRIPLE_WHALE_SUMMARY_BODY_JSON is configured, then click Preview
+Metric Mapping. Review mapped field paths. If they are correct, move to v0.2.8 to generate
+Daily Briefs from real stored metrics.

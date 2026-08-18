@@ -1,0 +1,53 @@
+{
+  "success": true,
+  "data": {
+    "version": "0.6.0",
+    "phase": "v0.6.0 Phase 3.7 Cancel Action Endpoint",
+    "workspaceId": "00000000-0000-0000-0000-000000000000",
+    "userRole": "owner",
+    "cancelled": true,
+    "alreadyCancelled": false,
+    "action": {
+      "id": "11111111-1111-1111-1111-111111111111",
+      "workspaceId": "00000000-0000-0000-0000-000000000000",
+      "createdByUserId": "22222222-2222-2222-2222-222222222222",
+      "actionType": "content_publish",
+      "title": "Fixture: Proposed Instagram post",
+      "description": "Local fixture only. Does not publish anything.",
+      "status": "cancelled",
+      "riskLevel": "low",
+      "approvalRequired": true,
+      "policyDecision": "ask",
+      "idempotencyKey": "local-fixture-content-publish-instagram-v1",
+      "actionHash": "sha256-example",
+      "createdAt": "2026-06-29T00:00:00.000Z",
+      "updatedAt": "2026-06-29T00:05:00.000Z",
+      "approvedAt": null,
+      "executedAt": null,
+      "hasPayload": false
+    },
+    "transition": {
+      "fromStatus": "proposed",
+      "toStatus": "cancelled"
+    },
+    "cancellation": {
+      "cancelledByUserId": "22222222-2222-2222-2222-222222222222",
+      "cancelledAt": "2026-06-29T00:05:00.000Z",
+      "cancelReason": "No longer needed before execution.",
+      "eventLogged": true
+    },
+    "execution": {
+      "executed": false,
+      "queued": false,
+      "executorEnabled": false,
+      "rollbackRequired": false,
+      "note": "Cancellation is recorded internally only. Executor phases are not enabled yet, so this endpoint does not execute, queue, or rollback anything."
+    },
+    "safety": {
+      "canExecuteFromThisEndpoint": false,
+      "externalWritesEnabled": false,
+      "executedActionsCancellableFromThisEndpoint": false,
+      "note": "POST /api/v1/actions/:id/cancel only changes internal LIFE.SAVER action status and logs a cancelled event. It cannot publish content, send support replies, change ad spend, pause campaigns, refund orders, edit products, write to external platforms, or cancel already executed real-world actions."
+    }
+  }
+}

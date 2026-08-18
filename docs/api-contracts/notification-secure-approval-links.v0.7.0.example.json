@@ -1,0 +1,43 @@
+{
+  "status_endpoint": "GET /api/v1/notifications/secure-approval-links/status",
+  "preview_endpoint": "GET /api/v1/notifications/secure-approval-links/preview?actionId=11111111-1111-4111-8111-111111111111&source=email_notification",
+  "preview_response": {
+    "success": true,
+    "data": {
+      "version": "0.7.0",
+      "phase": "phase_10_9_secure_approval_links",
+      "actionId": "11111111-1111-4111-8111-111111111111",
+      "reviewUrl": "./actions.html?actionId=11111111-1111-4111-8111-111111111111&source=email_notification&linkMode=review_only",
+      "source": "email_notification",
+      "notificationKey": null,
+      "queryParams": {
+        "actionId": "11111111-1111-4111-8111-111111111111",
+        "source": "email_notification",
+        "linkMode": "review_only"
+      },
+      "behavior": {
+        "opensApp": true,
+        "opensExactActionDetail": true,
+        "requiresLogin": true,
+        "unauthenticatedRedirect": "./login.html?returnTo=<encoded secure path>",
+        "allowedScreen": "/actions.html",
+        "allowedMode": "review_only_action_detail",
+        "automaticApprovalFromLink": false,
+        "automaticExecutionFromLink": false
+      },
+      "safety": {
+        "canApproveByClickingEmailLink": false,
+        "canRejectByClickingEmailLink": false,
+        "canExecuteByClickingEmailLink": false,
+        "canPublishByClickingEmailLink": false,
+        "canRollbackByClickingEmailLink": false,
+        "requiresAuthenticatedSession": true,
+        "requiresSeparateButtonClickInsideApp": true,
+        "exposesTokensOrSecrets": false,
+        "exposesPayloadJson": false,
+        "exposesRollbackPayload": false,
+        "allowsApiMutationRoute": false
+      }
+    }
+  }
+}

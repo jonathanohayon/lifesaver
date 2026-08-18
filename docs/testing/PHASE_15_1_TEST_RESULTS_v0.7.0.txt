@@ -1,0 +1,41 @@
+================================================================================
+LIFE.SAVER v0.7.0 — PHASE 15.1 TEST RESULTS
+================================================================================
+
+Test command:
+- npm run phase15:request-classifier:test
+
+Regression commands:
+- npm run phase14:ads-safety-qa:test
+- npm run phase14:ads-restricted-auto-run-policy:test
+- npm run phase14:ads-rollback-executor:test
+- npm run phase14:ads-before-after-snapshot:test
+- npm run phase14:ads-manual-approval:test
+- npm run phase14:ads-hard-caps:test
+- npm run phase13:support-send-qa:test
+- npm run build
+
+Expected test coverage:
+- Constants identify Phase 15.1 package and health mode.
+- Route registry includes content, ads, support, research, dev, metrics, and general_advisor.
+- Route definitions exist for every specialist lane.
+- Classifier-only safety report confirms no specialist execution, no connector calls, no action creation, no auto-run, and no external writes.
+- Content request routes to content.
+- Ads-control request routes to ads.
+- Support-ticket request routes to support.
+- Research request routes to research.
+- Dev request routes to dev.
+- KPI-only request routes to metrics instead of ads.
+- Weak/fallback request routes to general_advisor.
+- force=true is ignored and cannot enable execution.
+- Example inputs cover every route.
+- Status/report outputs avoid secret-like fragments.
+
+Safety result:
+- No external connector was called.
+- No real-world action was created.
+- No action was approved or executed.
+- No auto-run was enabled.
+- No content/support/ads write happened.
+- No migration was required.
+================================================================================

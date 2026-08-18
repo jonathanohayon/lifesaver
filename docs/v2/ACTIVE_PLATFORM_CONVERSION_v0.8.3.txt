@@ -1,0 +1,28 @@
+LIFE.SAVER v0.8.3 — Active Platform Conversion Mapping
+
+Purpose:
+Resolve the dashboard mapping issue by turning confirmed non-zero platform conversion value metrics into a real read-only dashboard value.
+
+Confirmed source rows from the user's scan:
+- Facebook Conversion Value: 4564.139976501465
+- Snapchat Conversion Value: 3869
+- Google Conversion Value: 0
+- TikTok Conversion Value: 0
+
+Business rule:
+Only include platforms with numeric value > 0.
+
+Current result:
+Meta + Snapchat = 8433.139976501465, rounded to 8433.14.
+
+Future behavior:
+If Google/TikTok return values greater than 0 later, they auto-include in the total and source label.
+
+Important naming:
+This is shown as Platform Conv. Value, not full revenue attribution, because these are platform conversion value fields from Triple Whale Summary.
+
+Conversion/reach rule:
+The detected conversion-rate row returns 0, so LIFE.SAVER displays Awaiting GA Data and blocks Reach Est. calculation until conversion/session data is real and non-zero.
+
+Safety:
+Read-only derived mapping only. No external writes, no DB migration, no executor calls, no ad platform mutation, no Claude call, no auto-run.

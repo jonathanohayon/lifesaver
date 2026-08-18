@@ -1,0 +1,35 @@
+{
+  "version": "0.6.0",
+  "phase": "V2 Phase 4.3 Action Detail Drawer/Modal",
+  "page": "actions.html",
+  "usesEndpoint": "GET /api/v1/actions/:id",
+  "drawerSections": [
+    "full_proposed_content",
+    "payload_preview",
+    "expected_result",
+    "policy_decision",
+    "risk_explanation",
+    "related_context",
+    "timeline",
+    "result_summary",
+    "safety_boundary"
+  ],
+  "safeDataOnly": true,
+  "rawPayloadJsonReturned": false,
+  "rollbackPayloadReturned": false,
+  "approvalButtonsEnabled": false,
+  "externalWritesEnabled": false,
+  "forbiddenInThisPhase": [
+    "one_click_approval",
+    "one_click_rejection",
+    "executor_registry",
+    "sandbox_executor",
+    "real_executor",
+    "content_publishing",
+    "support_sending",
+    "ad_budget_change",
+    "campaign_pause",
+    "rollback_execution",
+    "external_platform_write"
+  ]
+}

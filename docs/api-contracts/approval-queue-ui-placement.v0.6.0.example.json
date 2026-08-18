@@ -1,0 +1,30 @@
+{
+  "version": "0.6.0",
+  "phase": "Phase 4.1 Approval Queue UI Placement",
+  "decision": {
+    "primarySurface": "actions.html",
+    "secondarySurface": "dashboard_preview_panel",
+    "adminSurface": "redacted_monitoring_later",
+    "settingsSurface": "rules_and_preferences_later"
+  },
+  "rationale": [
+    "Approval decisions need focused space and context.",
+    "Dashboard should stay metrics-first and show only a preview.",
+    "Settings should manage rules/preferences, not daily approvals.",
+    "Super Admin should monitor safely without exposing secrets."
+  ],
+  "futureUiPieces": [
+    "action_card",
+    "detail_drawer_or_modal",
+    "approve_confirmation_modal",
+    "reject_reason_modal",
+    "status_filters",
+    "mobile_approval_layout"
+  ],
+  "safety": {
+    "externalWritesEnabled": false,
+    "executorEnabled": false,
+    "approvalExecutesAction": false,
+    "notes": "Phase 4.1 is a UI placement decision only. No real-world action is performed."
+  }
+}

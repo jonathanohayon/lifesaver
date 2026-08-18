@@ -1,0 +1,370 @@
+LIFE.SAVER V2 — SAFE MIGRATION STRATEGY
+Version: v0.6.0
+Phase: 2.9 — Safe Migration Strategy
+Status: Documentation / planning foundation only
+Prepared for: LIFE.SAVER V2 Actions Data Model
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 2.9 defines the database migration rules LIFE.SAVER must follow before V2
+approval APIs, policies, executors, and real write connectors are introduced.
+
+The goal is simple:
+
+- Protect the working V1 advisor product.
+- Protect existing customer/workspace data.
+- Avoid destructive schema changes.
+- Make every migration predictable, reviewable, reversible where possible, and safe
+  to run in development before production.
+
+This phase does not create a database migration file.
+This phase does not alter the database.
+This phase does not add approval APIs or executors.
+This phase is the safety plan for how future migrations must be written.
+
+================================================================================
+CURRENT DATABASE CONTEXT
+================================================================================
+
+Existing V1/V2 foundation tables may include:
+
+- users
+- workspaces
+- workspace_members
+- connected_accounts
+- metrics_snapshots
+- chat_history
+- briefs
+- drafts
+- usage_logs
+- system_events
+- actions
+- action_events
+- action_results
+
+Recent V2 Phase 2 migrations:
+
+- 009_create_actions_table.sql
+- 010_create_action_events_table.sql
+- 011_create_action_results_table.sql
+- 012_add_action_duplicate_protection.sql
+
+The next migration number after Phase 2.7 remains:
+
+- 013_...
+
+Phase 2.8 and Phase 2.9 do not require new migrations.
+
+================================================================================
+NON-NEGOTIABLE MIGRATION RULES
+================================================================================
+
+1. Additive migrations only by default
+-------------------------------------
+Allowed:
+
+- CREATE TABLE IF NOT EXISTS
+- ADD COLUMN IF NOT EXISTS
+- CREATE INDEX IF NOT EXISTS
+- CREATE UNIQUE INDEX IF NOT EXISTS where safe
+- ADD CHECK constraints only when existing data is known to pass
+- ADD nullable columns first, then backfill later if needed
+- Add new enum-like CHECK values carefully
+- Add new tables with workspace_id where customer/business data is stored
+
+Not allowed without explicit approval:
+
+- DROP TABLE
+- DROP COLUMN
+- ALTER COLUMN TYPE on production data
+- RENAME TABLE
+- RENAME COLUMN
+- DELETE FROM production tables
+- TRUNCATE production tables
+- Replacing existing customer data
+- Destructive rollback scripts
+
+2. No dropping V1 tables
+------------------------
+V2 must build on top of V1. It must not remove or break V1 advisor mode.
+
+V1 tables such as metrics_snapshots, briefs, drafts, connected_accounts, users,
+workspaces, and workspace_members must remain intact.
+
+3. No renaming production columns without approval
+-------------------------------------------------
+Renaming a column can break:
+
+- backend queries
+- worker jobs
+- dashboard requests
+- admin screens
+- migration history
+- production data access
+
+If a rename is required later, use a staged approach:
+
+Step A: Add the new column.
+Step B: Backfill the new column.
+Step C: Update code to read from both old and new columns.
+Step D: Update code to write to both columns temporarily.
+Step E: Verify production behavior.
+Step F: Stop reading the old column.
+Step G: Only after a dedicated approval, remove the old column in a future major release.
+
+4. Backup before production migration
+-------------------------------------
+Before running any production migration:
+
+- Confirm which Supabase project is production.
+- Confirm DATABASE_URL points to the production database only when intended.
+- Take a Supabase backup / snapshot where available.
+- Save current Render environment variable snapshot.
+- Confirm latest Git commit and package version.
+- Run the migration in development first.
+- Run the migration in staging first if staging exists.
+
+5. Never run db:seed on production unless explicitly approved
+------------------------------------------------------------
+The seed command is for development recovery or local setup.
+It can create demo/founder rows and should not be casually used against production.
+
+6. APP_ENCRYPTION_KEY must remain stable
+----------------------------------------
+Do not rotate APP_ENCRYPTION_KEY during migration work.
+
+Reason:
+connected_accounts.encrypted_api_key depends on this key. Changing it can make
+stored Triple Whale keys undecryptable.
+
+7. Keep raw_payload separate from normalized data
+------------------------------------------------
+Migrations must preserve the existing raw payload vs normalized metrics rule.
+Do not overwrite raw Triple Whale payloads with normalized fields.
+Do not infer attribution or conversion production readiness from validation success.
+
+8. Use workspace_id for customer/business data
+----------------------------------------------
+Every table storing customer/business data must include workspace_id unless there is
+a clear reason not to.
+
+Examples that require workspace_id:
+
+- actions
+- action_events
+- action_results
+- policies
+- autonomy_settings
+- memory
+- notifications
+- support_tickets
+- connector tokens
+
+9. Never store secrets in action payloads or migration docs
+----------------------------------------------------------
+Do not store or document raw:
+
+- Triple Whale API keys
+- Claude API keys
+- OAuth access tokens
+- OAuth refresh tokens
+- DATABASE_URL
+- AUTH_TOKEN_SECRET
+- APP_ENCRYPTION_KEY
+- WORKER_SHARED_SECRET
+- .env contents
+
+10. Migration files must be deterministic
+-----------------------------------------
+A migration must produce the same schema result every time it is run on a valid prior
+schema state.
+
+Avoid migration logic that depends on local machine state, frontend files, random values,
+or external API responses.
+
+================================================================================
+SAFE MIGRATION FILE TEMPLATE
+================================================================================
+
+Recommended migration header:
+
+-- LIFE.SAVER v0.6.0 / Phase X.X
+-- Migration: 013_descriptive_name.sql
+-- Purpose: Explain exactly what this migration adds.
+-- Safety: Additive only. Does not drop, rename, truncate, or delete existing data.
+-- Requires backup before production: yes
+
+Recommended pattern:
+
+BEGIN;
+
+CREATE TABLE IF NOT EXISTS example_table (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  workspace_id uuid NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_example_table_workspace_id
+  ON example_table(workspace_id);
+
+COMMIT;
+
+Important:
+If using CREATE INDEX CONCURRENTLY, do not wrap that statement in a transaction.
+Use it only when the migration runner supports it and the production table size
+requires it.
+
+================================================================================
+PRE-MIGRATION CHECKLIST
+================================================================================
+
+Before creating or running a migration:
+
+[ ] Confirm the phase and deliverable.
+[ ] Confirm the migration is necessary.
+[ ] Confirm it is additive.
+[ ] Confirm no DROP / DELETE / TRUNCATE / RENAME is included.
+[ ] Confirm every customer/business table includes workspace_id.
+[ ] Confirm no secrets are inserted or logged.
+[ ] Confirm APP_ENCRYPTION_KEY is unchanged.
+[ ] Confirm migration number is sequential and unique.
+[ ] Confirm database backup plan exists before production.
+[ ] Confirm local build passes.
+[ ] Confirm local db:migrate succeeds.
+[ ] Confirm second db:migrate run skips already applied migrations.
+
+================================================================================
+LOCAL MIGRATION TEST SEQUENCE
+================================================================================
+
+Run from the project root after copying the working local .env:
+
+npm.cmd install
+npm.cmd run build
+npm.cmd run db:status
+npm.cmd run db:migrate
+npm.cmd run db:status
+npm.cmd run client:test-checklist
+npm.cmd run security:check
+npm.cmd run env:check
+
+Then run db:migrate a second time:
+
+npm.cmd run db:migrate
+
+Expected second-run behavior:
+
+- Already applied migrations should be skipped.
+- No duplicate table/index errors should occur.
+- Database should remain connected.
+
+================================================================================
+PRODUCTION MIGRATION PROCEDURE
+================================================================================
+
+1. Freeze code version
+----------------------
+
+- Commit the final tested code.
+- Tag the release if this is a production deployment.
+- Confirm the package name/version.
+
+2. Confirm environment
+----------------------
+
+- Confirm NODE_ENV=production only on production services.
+- Confirm DATABASE_ENVIRONMENT=production where used.
+- Confirm DATABASE_URL points to the intended production Supabase database.
+- Confirm DATABASE_SSL=true.
+- Confirm ALLOWED_ORIGINS uses the real production domain(s).
+
+3. Backup
+---------
+
+- Take Supabase backup/snapshot where available.
+- Export schema if needed.
+- Save current Render env snapshot.
+- Save current commit hash.
+
+4. Deploy code safely
+---------------------
+
+- Deploy API and worker with WORKER_ENABLED=false if testing schema first.
+- Confirm API health.
+- Run migration intentionally.
+
+5. Verify
+---------
+
+- Run db:status.
+- Test login.
+- Test dashboard metrics.
+- Test Triple Whale status.
+- Test Daily Brief/Weekly Summary.
+- Test draft creation/status.
+- Test admin page.
+- Test launch readiness/security checks.
+
+6. Worker
+---------
+
+- Keep worker scheduling disabled unless intentionally enabled.
+- Run one-off worker checks first.
+- Confirm no external write/action execution exists in current phase.
+
+================================================================================
+ROLLBACK STRATEGY
+================================================================================
+
+Most additive migrations should not need a destructive rollback.
+The preferred rollback is usually:
+
+- Roll back code to the previous Git tag/commit.
+- Leave unused additive columns/tables in place.
+- Disable the feature path using environment flags or UI controls.
+- Restore database from backup only if the migration caused actual data corruption.
+
+Do not drop production tables just to roll back code.
+
+For future executor/policy migrations:
+
+- Store enough audit data to explain what happened.
+- Do not claim execution unless action_results confirms it.
+- Use master pause / emergency safe mode to stop action flow instead of destructive database rollback.
+
+================================================================================
+APPROVAL REQUIREMENTS FOR RISKY MIGRATIONS
+================================================================================
+
+Explicit senior approval is required before any migration that:
+
+- Drops a table.
+- Drops a column.
+- Renames a table.
+- Renames a column.
+- Changes the type of a production column.
+- Deletes or truncates production data.
+- Rewrites encrypted connected account data.
+- Changes key workspace/user relationships.
+- Makes nullable fields NOT NULL on existing populated tables.
+- Adds constraints that may fail existing data.
+- Backfills large tables in production.
+
+================================================================================
+PHASE 2.9 SAFETY STATUS
+================================================================================
+
+This package is safe because it only adds documentation and shared planning references.
+It does not add a new migration.
+It does not modify existing migrations.
+It does not enable approval APIs.
+It does not enable executors.
+It does not create any external write connector.
+
+V1 remains READ + ADVISE + DRAFT ONLY.
+
+================================================================================
+END OF SAFE MIGRATION STRATEGY
+================================================================================

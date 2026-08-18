@@ -1,0 +1,25 @@
+LIFE.SAVER v0.1.6 — Encrypted Triple Whale Connection Foundation
+
+Purpose:
+This milestone creates the safe foundation for connecting a workspace to Triple Whale.
+The founder/super-admin can paste a Triple Whale API key in the protected admin panel.
+The frontend sends it to the backend once. The backend encrypts it and stores only the encrypted value in PostgreSQL.
+
+New protected endpoints:
+GET /api/v1/connect/triplewhale/status
+POST /api/v1/connect/triplewhale
+DELETE /api/v1/connect/triplewhale
+
+Security rules:
+- Triple Whale key is never stored in the browser.
+- Triple Whale key is never returned by the API.
+- Triple Whale key is stored only in connected_accounts.encrypted_api_key.
+- Admin UI only displays key_hint, such as ••••abcd.
+- APP_ENCRYPTION_KEY is required for encryption and must be protected in production.
+
+Status meaning:
+- disconnected: no active encrypted key stored.
+- connected_unverified: encrypted key is stored, but the app has not yet verified it against Triple Whale.
+
+Next phase:
+v0.1.7 should verify the key and start syncing Triple Whale metrics.

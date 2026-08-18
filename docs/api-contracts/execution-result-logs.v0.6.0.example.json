@@ -1,0 +1,34 @@
+{
+  "version": "0.6.0",
+  "phase": "v0.6.0 Phase 8.7 Execution Result Logs",
+  "target_table": "action_results",
+  "record_preview": {
+    "action_id": "00000000-0000-0000-0000-000000008702",
+    "workspace_id": "00000000-0000-0000-0000-000000008701",
+    "executor_name": "sandboxContentExecutor",
+    "external_id": "sandbox-post-example",
+    "external_url": "https://sandbox.lifesaveragent.com/instagram/sandbox-post-example",
+    "result_status": "success",
+    "result_summary": "Sandbox content publish simulated successfully.",
+    "error_message": null,
+    "rollback_supported": true,
+    "rollback_payload": {
+      "sandbox_only": true
+    },
+    "metadata_json": {
+      "sandbox_only": true,
+      "external_writes_attempted": false
+    }
+  },
+  "ui_visibility": {
+    "page": "/actions.html",
+    "detail_section": "Result Summary",
+    "rollback_payload_visible_to_browser": false
+  },
+  "safety": {
+    "sandbox_only": true,
+    "external_writes_enabled": false,
+    "real_executor_enabled": false,
+    "auto_run_enabled": false
+  }
+}

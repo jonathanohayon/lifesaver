@@ -1,0 +1,163 @@
+================================================================================
+PHASE 9.6 — REAL PUBLISH EXECUTOR
+================================================================================
+
+Version: v0.7.0
+Health mode: v2-phase-9-6-real-publish-executor
+Executor: linkedinManualApprovedContentExecutor
+Platform: LinkedIn
+Required scope: w_member_social
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 9.6 adds the first carefully gated real content executor.
+
+It publishes a LinkedIn member text/link post only after manual approval and only after
+all execution gates pass.
+
+This is not auto-run. This is not scheduled execution. This is not media publishing.
+
+================================================================================
+EXECUTION FLOW
+================================================================================
+
+1. Founder/user creates or reviews a content_publish action.
+2. Authorized workspace user manually approves it through the existing approval queue.
+3. The approval endpoint records approved status and an approved action event.
+4. User intentionally calls:
+
+   POST /api/v1/actions/:id/execute-content-publish
+
+5. Executor verifies:
+   - action exists in current workspace,
+   - status is approved,
+   - approved event exists,
+   - master pause off,
+   - content pause off,
+   - emergency safe mode off,
+   - caps not exceeded/unavailable,
+   - LinkedIn token valid,
+   - w_member_social scope present,
+   - payload valid,
+   - media type supported.
+
+6. Executor moves action to executing.
+7. Executor calls LinkedIn Posts API.
+8. On success, action becomes executed and action_results stores a safe success record.
+9. On API failure, action becomes failed and action_results stores a safe failure record.
+10. On blocked gate, action remains safe and action_results stores a blocked record.
+
+================================================================================
+LINKEDIN REQUEST MODEL
+================================================================================
+
+Endpoint:
+POST https://api.linkedin.com/rest/posts
+
+Headers:
+Authorization: Bearer <server-only-token>
+Content-Type: application/json
+LinkedIn-Version: 202606
+X-Restli-Protocol-Version: 2.0.0
+
+Body shape:
+
+{
+  "author": "urn:li:person:...",
+  "commentary": "Caption text + hashtags + optional link",
+  "visibility": "PUBLIC",
+  "distribution": {
+    "feedDistribution": "MAIN_FEED",
+    "targetEntities": [],
+    "thirdPartyDistributionChannels": []
+  },
+  "lifecycleState": "PUBLISHED",
+  "isReshareDisabledByAuthor": false
+}
+
+================================================================================
+SECURITY RULES
+================================================================================
+
+- Raw LinkedIn access token is decrypted server-side only.
+- Raw token is never returned in API response.
+- Raw token is never written into action_results metadata.
+- Authorization header is never logged into metadata.
+- Browser receives connection status/hints only.
+- Executor result stores external ID only when returned safely by LinkedIn.
+- External URL is not invented if LinkedIn does not return a reliable permalink.
+- Media upload URLs are not used in this phase.
+
+================================================================================
+BLOCKING RULES
+================================================================================
+
+The executor blocks before any external call when:
+
+- CONTENT_REAL_PUBLISH_EXECUTOR_ENABLED=false.
+- database is unavailable.
+- action is missing.
+- action type is not content_publish.
+- action is not manually approved.
+- manual approved event is missing.
+- master pause is active.
+- content pause is active.
+- emergency safe mode is active.
+- cap validation fails or is unavailable.
+- token is missing/expired/disconnected.
+- w_member_social is missing.
+- payload is invalid.
+- media type is image/video/document.
+- scheduled time is in the future.
+
+================================================================================
+CURRENT LIMITATIONS
+================================================================================
+
+- Text/link posts only.
+- Immediate manual execution only.
+- No automatic queue.
+- No recurring worker.
+- No image/video/document upload.
+- No organization/page posting.
+- No unpublish rollback.
+- No auto-run rules.
+
+================================================================================
+FILES
+================================================================================
+
+Added:
+- apps/api/src/modules/content-publishing/content-real-publish.executor.ts
+- apps/api/src/modules/content-publishing/content-real-publish.repository.ts
+- apps/api/src/modules/content-publishing/content-real-publish.controller.ts
+- apps/api/src/modules/content-publishing/content-real-publish-tests.ts
+- docs/v2/PHASE_9_6_REAL_PUBLISH_EXECUTOR_v0.7.0.txt
+- docs/api-contracts/content-real-publish-executor.v0.7.0.example.json
+- docs/testing/PHASE_9_6_TEST_RESULTS_v0.7.0.txt
+- START_HERE_v0.7.0_PHASE_9_6_REAL_PUBLISH_EXECUTOR.txt
+
+Updated:
+- package.json
+- apps/api/package.json
+- apps/api/src/config/env.ts
+- apps/api/src/modules/actions/actions.routes.ts
+- apps/api/src/modules/actions/actions.controller.ts
+- apps/api/src/modules/health/health.controller.ts
+- README.txt
+- CHANGELOG.txt
+
+================================================================================
+SAFETY STATUS
+================================================================================
+
+Real executor capable: yes, for LinkedIn text/link posts only.
+Default enabled: no.
+Manual approval required: yes.
+Auto-run enabled: no.
+External write possible: only when explicitly enabled and all checks pass.
+Media upload: no.
+Support sending: no.
+Ad changes: no.

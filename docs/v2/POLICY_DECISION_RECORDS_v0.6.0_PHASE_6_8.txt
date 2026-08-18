@@ -1,0 +1,41 @@
+LIFE.SAVER v0.6.0 — Phase 6.8 Policy Decision Records
+
+Purpose:
+Phase 6.8 persists the policy decision snapshot on the action record so future audit/admin screens can explain why an action required approval, was blocked, or became eligible for auto-approval.
+
+Storage:
+- actions.policy_decision_snapshot_json
+- actions.policy_evaluated_at
+
+Snapshot source:
+- evaluateActionPolicy(action)
+
+Safe snapshot content:
+- decision
+- reason
+- matched_policy_id
+- cap_status
+- checkedPolicyCount
+- matchState
+- defaultAskApplied
+- approvalRequired
+- autoApprovalAllowed
+- pause summary
+- cap summary
+- scope summary
+- condition summary
+- conflict summary
+- evaluatedAt
+- recordedAt
+
+Non-goals:
+- No executor.
+- No queue.
+- No external write connector.
+- No publishing.
+- No support sending.
+- No ad changes.
+- No rollback execution.
+
+Security:
+The snapshot must not store raw API keys, OAuth tokens, passwords, database URLs, .env values, Triple Whale raw keys, Claude API keys, or unnecessary sensitive customer data.

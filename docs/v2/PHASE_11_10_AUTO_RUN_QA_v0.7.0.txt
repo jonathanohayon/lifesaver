@@ -1,0 +1,38 @@
+================================================================================
+LIFE.SAVER v0.7.0 — PHASE 11.10 AUTO-RUN QA
+================================================================================
+
+Goal:
+Test the safe content auto-run lane before any production auto-run is enabled.
+
+Test coverage:
+1. Sandbox auto-run
+   Confirms a safe candidate can pass decision and final validation gates without external calls.
+
+2. Rule match
+   Confirms the content auto-approval decision returns auto_approved only when all gates match.
+
+3. Cap exceeded
+   Confirms max posts/day blocks the lane when the daily cap is exceeded.
+
+4. Pause active
+   Confirms content pause blocks the lane.
+
+5. Controlled real auto-run
+   Confirms one controlled real auto-run may only be considered after exact founder/client approval.
+   The QA endpoint itself never executes that real run.
+
+Safety decisions:
+- The QA report is read-only.
+- No LinkedIn API call is made.
+- No token is decrypted.
+- No action status is changed.
+- No database row is written.
+- No auto-run job is scheduled.
+- No external write is attempted.
+
+Required approval phrase before any later supervised real auto-run attempt:
+I APPROVE ONE CONTROLLED CONTENT AUTO-RUN TEST
+
+Deliverable:
+safe_content_auto_run_qa

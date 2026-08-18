@@ -1,0 +1,78 @@
+LIFE.SAVER v0.7.0 — Phase 15.4 Memory Table
+
+Roadmap goal
+------------
+Store durable memory items for:
+- Brand voice
+- Approved content style
+- Support tone
+- Past decisions
+- Discount policy
+- Banned phrases
+- Founder preferences
+
+Deliverable
+-----------
+Memory schema.
+
+Implementation
+--------------
+Added the memory_items table migration and an orchestrator memory-schema module.
+The module provides schema/report/example/preview endpoints so the schema can be inspected safely before any memory UI or automatic capture exists.
+
+Database migration
+------------------
+- database/migrations/024_create_memory_items.sql
+
+Main table
+----------
+- memory_items
+
+Key columns
+-----------
+- workspace_id
+- memory_type
+- scope
+- title
+- value_text
+- value_json
+- tags
+- status
+- sensitivity
+- source
+- confidence_score
+- approved_by_user_id
+- created_by_user_id
+- updated_by_user_id
+- approved_at
+- disabled_at
+- created_at
+- updated_at
+
+Safety rules
+------------
+- Memory remains workspace-scoped.
+- New memory should be suggested first unless founder/admin explicitly approves it.
+- Disabled/archived memory must not be injected into future prompts.
+- Prompt-injection commands, raw provider payloads, OAuth tokens, API keys, raw MIME/base64, and secrets are forbidden.
+- Phase 15.4 does not add memory UI.
+- Phase 15.4 does not add automatic memory capture.
+- Phase 15.4 does not inject memory into Claude prompts.
+- Phase 15.4 does not invoke tools or create actions.
+- Phase 15.4 does not enable auto-run.
+
+Endpoints
+---------
+- GET  /api/v1/orchestrator/memory-schema/status
+- GET  /api/v1/orchestrator/memory-schema/report
+- GET  /api/v1/orchestrator/memory-schema/schema
+- GET  /api/v1/orchestrator/memory-schema/example
+- POST /api/v1/orchestrator/memory-schema/preview
+
+Health mode
+-----------
+- v2-phase-15-4-memory-table
+
+Next phase
+----------
+Phase 15.5 — Memory UI.

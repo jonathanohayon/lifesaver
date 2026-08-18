@@ -1,0 +1,41 @@
+LIFE.SAVER v0.1.3 DATABASE FOUNDATION
+
+Purpose:
+This version adds the database foundation without forcing the app to break if no database is configured yet.
+
+Important behaviour:
+- If DATABASE_URL is empty, the API still runs with mock metrics.
+- /api/v1/database/status tells you whether PostgreSQL is configured and connected.
+- npm.cmd run db:migrate applies SQL migrations only when DATABASE_URL is configured.
+- Migrations are versioned SQL files under database/migrations.
+
+Why this is important:
+In WordPress, plugin files and database data are separate. LIFE.SAVER follows the same idea:
+- Code updates live in project files/GitHub.
+- Customer data lives in PostgreSQL.
+- Migrations update database structure safely.
+
+SaaS-ready rule:
+All customer/business data tables include workspace_id, so future customers can have isolated dashboards.
+
+Current tables created by migrations:
+- users
+- workspaces
+- workspace_members
+- connected_accounts
+- metrics_snapshots
+- chat_history
+- briefs
+- drafts
+- usage_logs
+- system_events
+- schema_migrations
+
+Commands:
+- npm.cmd run db:status
+- npm.cmd run db:migrate
+
+API endpoint:
+- GET /api/v1/database/status
+
+Do not store real API keys in seed files, docs, screenshots, GitHub, or frontend code.

@@ -1,0 +1,117 @@
+LIFE.SAVER V2 — PHASE 5.2 GLOBAL PAUSE STATE
+Version: v0.6.0
+Phase: 5.2
+Status: Completed
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 5.2 defines and implements the backend meaning of pause_all_autonomy.
+
+When pause_all_autonomy is true for a workspace:
+
+1. No auto-approval is allowed.
+2. No executor execution is allowed.
+3. Existing proposed actions remain reviewable.
+4. Safe new proposed actions may still be created for founder review.
+
+This is the backend interpretation layer for the future Master Pause Switch. It does not add
+the pause/resume API or UI yet.
+
+================================================================================
+FILES ADDED
+================================================================================
+
+apps/api/src/modules/autonomy/autonomy.types.ts
+apps/api/src/modules/autonomy/autonomy.repository.ts
+apps/api/src/modules/autonomy/autonomy.service.ts
+packages/shared/src/autonomy-global-pause.ts
+docs/api-contracts/global-pause-state.v0.6.0.example.json
+START_HERE_v0.6.0_PHASE_5_2_GLOBAL_PAUSE_STATE.txt
+
+================================================================================
+FILES UPDATED
+================================================================================
+
+apps/api/src/modules/actions/actions.service.ts
+apps/api/src/modules/actions/actions.types.ts
+apps/api/src/modules/actions/actions.validation.ts
+apps/api/src/modules/actions/actions.errors.ts
+packages/shared/src/index.ts
+apps/api/src/client-testing-check.ts
+apps/api/src/security-check.ts
+apps/api/src/config/environment-separation.ts
+apps/api/src/modules/admin/admin.service.ts
+apps/api/src/modules/health/health.controller.ts
+apps/api/src/modules/product-surfaces/product-surfaces.service.ts
+package.json
+
+================================================================================
+BACKEND BEHAVIOR
+================================================================================
+
+The new autonomy service reads the workspace autonomy_settings row.
+
+If the row is missing, the service creates a default row with:
+
+pause_all_autonomy=false
+pause_content_actions=false
+pause_support_actions=false
+pause_ads_actions=false
+updated_by=null
+updated_at=now()
+
+This keeps future code from failing when a workspace has no autonomy settings row yet.
+
+================================================================================
+CREATE PROPOSED ACTION BEHAVIOR
+================================================================================
+
+createProposedAction now checks the global pause state.
+
+If pause_all_autonomy is false:
+- the action may be created normally,
+- but still remains internal and non-executing.
+
+If pause_all_autonomy is true:
+- the action may still be created if it passes normal validation,
+- approval_required is forced to true,
+- policy_decision is forced to ask,
+- audit metadata records that global pause was active,
+- no auto-approval is allowed,
+- no executor execution is allowed.
+
+This matches the Phase 5.2 rule:
+Existing proposed actions remain reviewable, and safe new proposed actions may still be created.
+
+================================================================================
+WHAT THIS PHASE DOES NOT ADD
+================================================================================
+
+Phase 5.2 does not add:
+
+- pause/resume API endpoints,
+- pause switch UI,
+- category pause enforcement,
+- policy engine,
+- auto-approval,
+- executor registry,
+- sandbox executor,
+- real executor,
+- content publishing,
+- support sending,
+- ad budget changes,
+- campaign pause,
+- rollback execution,
+- external platform writes.
+
+================================================================================
+SAFETY STATUS
+================================================================================
+
+Current safety remains:
+
+READ + ADVISE + DRAFT + INTERNAL APPROVAL/REJECTION/CANCELLATION ONLY
+
+No real-world action is enabled.

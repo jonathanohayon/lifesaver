@@ -1,0 +1,170 @@
+LIFE.SAVER v0.6.0 — Phase 3.9 Error Handling + Request IDs
+================================================================
+
+Purpose
+-------
+Phase 3.9 adds safe, stable, machine-readable action error handling for the V2 approval queue backend.
+
+The goal is not to add new action power. The goal is to make failures clear, safe, traceable, and easy to QA before Phase 3.10 backend tests.
+
+Scope
+-----
+This phase covers these existing action endpoints:
+
+- GET  /api/v1/actions
+- GET  /api/v1/actions/:id
+- POST /api/v1/actions/:id/approve
+- POST /api/v1/actions/:id/reject
+- POST /api/v1/actions/:id/cancel
+
+It also covers internal action service errors from createProposedAction-style flows.
+
+What changed
+------------
+
+1. Request IDs are now part of every safe error response.
+2. The x-request-id response header is preserved.
+3. Incoming x-request-id is accepted only if short and safe.
+4. Action errors use stable codes.
+5. Action error details are safe and redacted.
+6. Approval permission failures return APPROVAL_FORBIDDEN.
+7. Invalid state transitions return clear 409-style errors.
+8. Workspace isolation errors do not reveal whether an action exists in another workspace.
+
+Stable action error examples
+----------------------------
+
+ACTION_NOT_FOUND
+- Used when the action does not exist in the current workspace or should not be revealed.
+- HTTP status: 404
+
+ACTION_ALREADY_EXECUTED
+- Used when approval/rejection/cancellation is attempted after the action has moved beyond a safe pre-execution state.
+- HTTP status: 409
+
+ACTION_REJECTED
+- Used when trying to approve/cancel an already rejected action.
+- HTTP status: 409
+
+APPROVAL_FORBIDDEN
+- Used when the current role cannot approve the action.
+- Example: member/viewer approving, or admin approving a critical action.
+- HTTP status: 403
+
+INVALID_STATUS_TRANSITION
+- Used for a status change not allowed by the lifecycle.
+- HTTP status: 409
+
+Error response shape
+--------------------
+
+Example:
+
+{
+  "success": false,
+  "error": {
+    "code": "INVALID_STATUS_TRANSITION",
+    "message": "Actions with status failed cannot be approved from this endpoint.",
+    "requestId": "req_123"
+  },
+  "requestId": "req_123",
+  "timestamp": "2026-06-29T00:00:00.000Z"
+}
+
+The response keeps requestId at top level for old UI compatibility and inside error for easier support/debugging.
+
+Safe details
+------------
+Some AppError responses may include safe details, such as:
+
+- module
+- phase
+- operation
+- currentStatus
+- attemptedStatus
+- allowedStatuses
+- role
+- riskLevel
+- guardCode
+- externalWritesEnabled=false
+- executorEnabled=false
+
+Forbidden in error details
+--------------------------
+Error responses must never expose:
+
+- payload_json
+- rollback_payload
+- raw API keys
+- OAuth tokens
+- passwords
+- raw .env values
+- DATABASE_URL
+- Claude API key
+- Triple Whale API key
+- APP_ENCRYPTION_KEY
+- WORKER_SHARED_SECRET
+- customer private data beyond what is necessary for safe debugging
+
+Workspace isolation rule
+------------------------
+If a normal customer requests an action from another workspace, the API must not reveal useful information about that action.
+
+Allowed safe behavior:
+- 403 ACTION_WORKSPACE_FORBIDDEN when membership itself is invalid for the current workspace context.
+- 404 ACTION_NOT_FOUND when the action is not available inside the current workspace-scoped query.
+
+Do not reveal:
+- another workspace name
+- another action title
+- another action payload
+- whether the action exists elsewhere
+
+Execution safety
+----------------
+Phase 3.9 does not add execution.
+
+These remain disabled:
+
+- executor registry
+- sandbox executor
+- real executor
+- social publishing
+- support sending
+- ad budget changes
+- campaign pause
+- refunds
+- external platform writes
+- rollback execution
+- auto-run rules
+
+V1 remains READ + ADVISE + DRAFT ONLY.
+
+QA checklist
+------------
+
+1. Call a missing action detail endpoint and confirm ACTION_NOT_FOUND with requestId.
+2. Try to approve a rejected action and confirm ACTION_REJECTED with requestId.
+3. Try to cancel an executed fixture/manual test row and confirm ACTION_ALREADY_EXECUTED with requestId.
+4. Test member/viewer approval attempt and confirm APPROVAL_FORBIDDEN or equivalent permission block with requestId.
+5. Confirm error body does not include payload_json, secrets, tokens, or raw database values.
+6. Confirm x-request-id header exists in the response.
+7. Confirm no external writes occurred.
+
+Next phase
+----------
+Phase 3.10 — Backend Tests
+
+Backend tests should verify:
+
+- List actions
+- Get action detail
+- Approve action
+- Reject action
+- Cancel action
+- Invalid transition
+- Permission denial
+- Workspace isolation
+- Request ID in safe errors
+
+END OF PHASE 3.9 SAFE ERROR HANDLING PLAN

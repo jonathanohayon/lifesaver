@@ -1,0 +1,39 @@
+LIFE.SAVER UI — Reject With Reason Modal
+Version: v0.6.0 Phase 4.6
+
+UI elements
+-----------
+- Reject action title
+- What will happen
+- Current status
+- Platform affected
+- Risk level
+- Rejection reason dropdown
+- Optional reason note textarea
+- Cancel button
+- Final Reject button
+- Safety note
+
+Rejection reasons
+-----------------
+- Not on brand
+- Too risky
+- Wrong timing
+- Incorrect data
+- Needs edits
+- Other
+
+Interaction rules
+-----------------
+- Clicking Reject opens the modal.
+- Cancel closes the modal without changing status.
+- Final Reject calls POST /api/v1/actions/:id/reject.
+- After a successful rejection, action cards refresh.
+- The Rejected filter should show rejected actions.
+- Escape closes the modal.
+- Clicking the overlay closes the modal.
+
+Safety copy
+-----------
+This rejection records an internal LIFE.SAVER decision only. It does not publish,
+send, spend, pause, refund, edit products, or write to any external platform.

@@ -1,0 +1,44 @@
+LIFE.SAVER v0.6.0 — Phase 6.4 Condition Operator Library
+
+Purpose:
+Phase 6.4 gives the policy evaluator a real condition-matching library. This lets a policy rule match an action using predictable operators instead of only empty conditions or always=true.
+
+Supported operators:
+- equals
+- contains
+- less_than
+- greater_than
+- channel_is
+- risk_below
+- confidence_above
+- amount_below
+
+Supported composition:
+- all: every nested condition must match
+- any: at least one nested condition must match
+- not: nested condition must not match
+- conditions: array alias for all
+
+Example conditions_json:
+{
+  "all": [
+    { "channel_is": "instagram" },
+    { "risk_below": "high" },
+    { "confidence_above": 0.9 },
+    { "amount_below": 50 }
+  ]
+}
+
+Safety:
+- Condition operators only decide whether a policy matches.
+- They do not approve by themselves.
+- They do not queue or execute anything.
+- Unsupported or invalid operators fail closed and do not match.
+- Default ask still applies when no enabled policy matches.
+- Pause and emergency safe mode still override auto-approval.
+
+Files:
+- apps/api/src/modules/policies/policy.condition-operators.ts
+- apps/api/src/modules/policies/policy.condition-operators-tests.ts
+- apps/api/src/modules/policies/policy.evaluator.ts
+- packages/shared/src/policy-condition-operators.ts

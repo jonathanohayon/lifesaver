@@ -1,0 +1,35 @@
+LIFE.SAVER v0.7.0 — Phase 13.7 Sensitive Ticket Guard
+======================================================
+
+Roadmap phase:
+- Phase 13.7 — Sensitive Ticket Guard.
+
+Goal:
+- Always require founder/admin approval for refund, cancellation, complaint, payment issue, legal issue, unknown intent, and low-confidence support replies.
+
+Deliverable:
+- Sensitive ticket protection.
+
+Implementation summary:
+- Added support-sensitive-ticket-guard types/model/controller/routes/tests.
+- Added preview-only status/example/preview endpoints under /api/v1/support/sensitive-ticket-guard.
+- Integrated sensitive-ticket guard into the manual-approved Gmail support send executor before credentials are loaded or Gmail is called.
+- Added executor checks for sensitiveTicketGuardPassed, sensitiveTicketDetected, lowConfidenceDetected, and sensitiveManualApprovalRequired.
+- Added result/event metadata indicators for sensitive-ticket status without exposing raw ticket/customer/provider payloads.
+
+Current executor behavior:
+- Non-sensitive single-thread support replies continue to later gates.
+- Sensitive support replies continue only after manual approval is confirmed.
+- Manual approval evidence must include actor, approval event, and approved_at timestamp.
+- Auto-send is blocked for sensitive tickets.
+- Force requests do not bypass the guard.
+
+Safety:
+- Guard only.
+- No Gmail API call from preview endpoints.
+- No email send from preview endpoints.
+- No support auto-send.
+- No bulk sending.
+- No new OAuth route.
+- No raw provider payload/token/MIME returned.
+- No database migration.

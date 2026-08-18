@@ -1,0 +1,35 @@
+# LIFE.SAVER v0.6.0 — Phase 8.7 Execution Result Logs
+
+## Goal
+
+Store sandbox executor results in `action_results` and make result logs visible in admin/UI.
+
+## Deliverable
+
+Result log visible.
+
+## Implementation
+
+New backend module:
+
+- `apps/api/src/modules/executors/executor.result-logs.ts`
+
+It converts a Phase 8.6 sandbox lifecycle result into an `action_results`-compatible record with:
+
+- action_id
+- workspace_id
+- executor_name
+- external_id
+- external_url
+- result_status
+- result_summary
+- error_message
+- rollback_supported
+- rollback_payload
+- metadata_json
+
+The existing action detail endpoint already reads `action_results` through `resultSummary`. Phase 8.7 improves the Actions UI result section so stored result logs display executor name, status, summary, fake external ID/link, rollback availability, and safe metadata preview.
+
+## Safety
+
+All values are sandbox-only. External IDs and URLs are fake. Rollback payloads are not exposed to the browser. No external platform writes are enabled.

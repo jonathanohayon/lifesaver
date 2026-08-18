@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LIFE.SAVER — Product Surfaces & Access Model</title>
+<link rel="stylesheet" href="./assets/css/admin.css" />
+<link rel="stylesheet" href="./assets/css/mobile-release-qa.css" />
+</head>
+<body>
+  <main class="admin-shell">
+    <section class="topbar">
+      <div class="brand">
+        <h1>LIFE.SAVER SURFACES</h1>
+        <span>Product surface separation · Access model · v0.5.2</span>
+      </div>
+      <div class="footer-actions">
+        <a class="btn" href="./landing.html">Public Site</a>
+        <a class="btn" href="./index.html">Customer App</a>
+        <a class="btn" href="./functional-audit.html">Functional Audit</a>
+        <a class="btn" href="./admin.html">Admin</a>
+        <a class="btn" href="./settings.html">Settings</a>
+        <a class="btn" href="./login.html">Login</a>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="panel"><div class="kicker">Version</div><div class="value" id="surfaceVersion">—</div></div>
+      <div class="panel"><div class="kicker">Mode</div><div class="value green" id="surfaceMode">—</div></div>
+      <div class="panel"><div class="kicker">API</div><div class="value amber" id="apiUrl">—</div></div>
+      <div class="panel"><div class="kicker">Safety</div><div class="value green">READ ONLY</div></div>
+    </section>
+
+    <section class="panel">
+      <h2>Recommended Domain Structure</h2>
+      <div class="surface-map" id="surfaceMap">
+        <div class="note">Loading product surface model…</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Secret Ownership Rules</h2>
+      <div class="list" id="secretRules"><div class="row"><strong>Loading…</strong></div></div>
+    </section>
+
+    <section class="panel">
+      <h2>V1 Safety Rules</h2>
+      <div class="grid three" id="safetyRules"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Next Implementation Notes</h2>
+      <p class="note" id="surfaceMessage">This page makes the SaaS split visible before we add team users, billing, or production deployment.</p>
+      <div class="list" id="nextNotes"></div>
+    </section>
+  </main>
+
+<script src="./assets/js/runtime-config.js"></script>
+<script src="./assets/js/surface-access.js"></script>
+</body>
+</html>

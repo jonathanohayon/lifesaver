@@ -1,0 +1,61 @@
+LIFE.SAVER v0.7.0 — Phase 12.2 Read-Only Support Connector First
+
+Purpose
+Bring support tickets into LIFE.SAVER safely before any sending or reply execution exists.
+
+Selected connector
+Gmail remains the first support connector selected in Phase 12.1.
+
+Deliverable
+Read-only ticket import.
+
+Implemented behavior
+1. Normalize Gmail message snapshots into support tickets.
+2. Store support tickets in support_tickets.
+3. Keep raw provider payload separate from normalized ticket fields.
+4. Return only browser-safe ticket summaries.
+5. Allow idempotent upsert by workspace, provider, and external message id.
+6. Provide a preview endpoint that does not write to the database.
+7. Provide a ticket list endpoint that returns recent safe support tickets.
+
+What is intentionally not included
+- Gmail OAuth routes.
+- Gmail API client.
+- Gmail external API calls.
+- Gmail send scope.
+- Gmail modify scope.
+- Email sending.
+- Support reply action creation.
+- Support send executor.
+- Support auto-reply.
+- Worker/scheduled email import.
+
+Endpoints
+GET /api/v1/support/read-only-import/status
+- Returns Phase 12.2 safety status.
+
+POST /api/v1/support/read-only-import/preview
+- Accepts message snapshots and returns normalized tickets.
+- Does not write to the database.
+- Does not call Gmail.
+- Does not send email.
+
+POST /api/v1/support/read-only-import/import
+- Accepts already-provided Gmail read-only message snapshots.
+- Upserts support_tickets rows.
+- Requires auth and database configuration.
+- Does not call Gmail or send email.
+
+GET /api/v1/support/tickets
+- Lists recent safe support tickets for the current workspace.
+- Does not return raw_provider_payload_json.
+
+Security notes
+- Raw OAuth tokens, refresh tokens, Authorization headers, client secrets, passwords, API keys, and env secret names are rejected from rawProviderPayload.
+- Browser responses do not include raw provider payloads.
+- Customer email is returned as a masked hint, not as a full raw address.
+- Ticket rows are workspace scoped.
+- The migration is additive only.
+
+Next recommended phase
+Phase 12.3 — Gmail OAuth/token model or Support Ticket UI, depending on roadmap preference.

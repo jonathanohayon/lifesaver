@@ -1,0 +1,42 @@
+# LIFE.SAVER v0.7.4 Mobile Rules Memory Proactivity — Test Results
+
+## Commands run in packaging workspace
+
+```bash
+npm run phase-mobile:0-7-3:test
+npm run phase-mobile:0-7-1:test
+node scripts/build-web-static.mjs
+```
+
+## Expected results
+
+- `mobile-rules-memory-proactivity-check — 46 passed, 0 failed`
+- `mobile-shell-version-check — 32 passed, 0 failed`
+- Static web build completes and copies the dashboard assets.
+
+## Manual responsive QA checklist
+
+Check these widths:
+
+- 360px
+- 390px
+- 414px
+- 430px
+- 768px
+- 1024px
+- desktop
+
+Verify:
+
+- Daily Brief is readable.
+- KPI cards do not overflow.
+- AI chat input and Send button are easy to tap.
+- Voice input buttons are easy to tap.
+- Weekly Summary stacks properly.
+- No horizontal scrolling appears.
+- Shared visible version shows v0.7.4.
+- Health endpoint reports `v2-mobile-0-7-4-rules-memory-proactivity`.
+
+## Safety
+
+No database migration, executor behavior, policy behavior, approval behavior, external connector behavior, Claude behavior, auto-run behavior, or real-world write behavior changed.

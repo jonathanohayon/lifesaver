@@ -1,0 +1,32 @@
+LIFE.SAVER V2
+Phase 7.7 — Rule Simulation UI
+
+Goal:
+Founder can test a proposed rule/action before enabling it.
+
+Example output:
+"This proposed Instagram post would be: auto-approved / ask / blocked."
+
+Implementation:
+- Adds a Rule Simulation Preview section inside /rules.html.
+- Uses existing local preview objects from the Create Rule Wizard, Content Rules, Support Rules, Ads Rules, and Caps UI.
+- Produces a browser-local simulation decision and reasoning.
+- Saves local preview only via localStorage.
+
+Decision preview logic:
+- Master pause active => block.
+- Critical risk => block.
+- High risk downgrades auto-approval to ask.
+- Content preview can auto-approve only when auto-publish is allowed and risk is within threshold.
+- Support preview can auto-approve only when auto-reply is allowed, confidence meets threshold, and category is not escalation/sensitive.
+- Ads preview remains ask/manual review because ads are money-impacting.
+- Caps preview can block if an amount exceeds relevant cap.
+- Scope mismatch defaults to ask.
+
+Safety boundary:
+- No policy database writes.
+- No simulation database writes.
+- No policy editing endpoints.
+- No executors.
+- No external writes.
+- No auto-run.

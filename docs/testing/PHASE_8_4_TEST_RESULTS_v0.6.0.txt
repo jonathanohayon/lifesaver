@@ -1,0 +1,31 @@
+LIFE.SAVER v0.6.0 — Phase 8.4 Test Results
+================================================
+
+Primary test:
+- executor:sandbox-support:test — expected 16 passed, 0 failed
+
+Regression tests to run:
+- executor:sandbox-content:test
+- executor:registry:test
+- executor:interface:test
+- executor:pause:test
+- policy:tests:test
+- rules:permission:test
+- actions:test:backend
+- client:test-checklist
+- security:check
+- env:check
+
+Expected local note:
+security:check and env:check may show local warnings when real .env, DATABASE_URL, and production secrets are not present.
+
+Safety confirmed:
+- fake_external_reply_id is generated only in sandbox result.
+- fake_thread_permalink is generated only in sandbox result.
+- sandbox_success is returned for valid payloads.
+- external_helpdesk_called remains false.
+- external_email_sent remains false.
+- externalWritesAttempted remains false.
+- externalWritesSucceeded remains false.
+- no real support reply is sent.
+- no email/helpdesk API is called.

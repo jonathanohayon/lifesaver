@@ -1,0 +1,36 @@
+{
+  "version": "0.6.0",
+  "phase": "v0.6.0 Phase 8.10 Safe Demo QA",
+  "title": "Sandbox Executor QA Report",
+  "liveDomain": "https://lifesaveragent.com",
+  "goal": "Demonstrate complete V2 flow safely.",
+  "flow": "Draft -> Proposed Action -> Approval -> Sandbox Execution -> Result Log",
+  "workspaceId": "workspace-safe-demo-qa",
+  "draftId": "draft-action-safe-demo-qa-content-1",
+  "actionId": "action-safe-demo-qa-content-1",
+  "actionType": "content_publish",
+  "qaPassed": true,
+  "steps": [
+    { "step": 1, "name": "draft", "status": "draft_created", "passed": true },
+    { "step": 2, "name": "proposed_action", "status": "proposed", "passed": true },
+    { "step": 3, "name": "approval", "status": "approved", "passed": true },
+    { "step": 4, "name": "sandbox_execution", "status": "executed", "passed": true },
+    { "step": 5, "name": "result_log", "status": "result_log_previewed", "passed": true }
+  ],
+  "resultLog": {
+    "targetTable": "action_results",
+    "stored": false,
+    "skippedReason": "persistence_not_requested",
+    "recordPreview": {
+      "result_status": "success",
+      "rollback_payload": "hidden from browser in real UI"
+    }
+  },
+  "safety": {
+    "sandboxOnly": true,
+    "externalWritesAttempted": false,
+    "externalWritesSucceeded": false,
+    "realExecutorsEnabled": false,
+    "autoRunEnabled": false
+  }
+}

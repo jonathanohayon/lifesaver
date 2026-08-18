@@ -1,0 +1,134 @@
+LIFE.SAVER V2 — PHASE 5.7 POLICY PAUSE ENFORCEMENT
+Version: v0.6.0
+Phase: 5.7
+Status: Backend safety contract only
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 5.7 makes the future policy engine pause-aware.
+
+The rule is simple:
+
+- If pause_all_autonomy is active, the policy layer must never return auto_approve.
+- If a category pause is active, the policy layer must never return auto_approve for that category.
+- If pause state cannot be read, the policy layer must fail closed and return block or ask.
+
+This phase does not add a full policy table, rule builder, rules UI, auto-run engine, executor, or external write connector.
+
+================================================================================
+WHY THIS IS NEEDED
+================================================================================
+
+V2 will eventually include rules such as:
+
+- Auto-publish approved-style content.
+- Auto-send safe FAQ replies.
+- Auto-adjust small ad budgets inside hard caps.
+
+Those rules are powerful. They must always be subordinate to the master pause and category pause settings.
+
+Even if a future policy says "auto_approve", active pause must override it.
+
+================================================================================
+FILES ADDED
+================================================================================
+
+apps/api/src/modules/policies/policy.types.ts
+apps/api/src/modules/policies/policy.pause-enforcement.ts
+apps/api/src/modules/policies/policy.pause-tests.ts
+packages/shared/src/policy-pause-enforcement.ts
+
+docs/v2/POLICY_PAUSE_ENFORCEMENT_v0.6.0_PHASE_5_7.txt
+docs/api-contracts/policy-pause-enforcement.v0.6.0.example.json
+START_HERE_v0.6.0_PHASE_5_7_POLICY_PAUSE_ENFORCEMENT.txt
+
+================================================================================
+POLICY DECISION RULES
+================================================================================
+
+When no pause is active:
+
+- ask remains ask.
+- block remains block.
+- auto_approve may continue to later policy/cap checks.
+
+When global pause is active:
+
+- ask remains ask.
+- block remains block.
+- auto_approve becomes ask by default.
+- auto_approve may become block if strict enforcement mode is requested.
+
+When category pause is active:
+
+- Same as global pause, but only for the matching action category.
+
+When pause state cannot be read:
+
+- Decision becomes block.
+- autoApprovalAllowed=false.
+- executorExecutionAllowed=false.
+- No external write is attempted.
+
+================================================================================
+CATEGORY MAPPING
+================================================================================
+
+content_publish      -> content
+support_reply_send   -> support
+ad_budget_adjust     -> ads
+ad_pause             -> ads
+research_task        -> research
+dev_task             -> dev
+notification_send    -> system
+rollback_action      -> system
+
+================================================================================
+CREATE PROPOSED ACTION INTEGRATION
+================================================================================
+
+createProposedAction() now uses the policy pause enforcement helper after reading autonomy state.
+
+If pause is active, it forces:
+
+- policy_decision = ask, unless a stricter block decision is used by future policy code.
+- approval_required = true.
+
+This keeps proposed actions reviewable while preventing hidden auto-approval.
+
+================================================================================
+SAFETY STATUS
+================================================================================
+
+This phase does NOT add:
+
+- policy rules table
+- policy rules UI
+- auto-run rules
+- executor registry activation
+- sandbox executor
+- real executor
+- content publishing
+- support sending
+- ad spend changes
+- campaign pause execution
+- rollback execution
+- external write connectors
+
+Current safety remains:
+
+READ + ADVISE + DRAFT + INTERNAL APPROVAL/REJECTION/CANCELLATION ONLY
+
+================================================================================
+TEST COMMAND
+================================================================================
+
+npm.cmd run policy:pause:test
+
+The offline test confirms that an auto_approve request cannot pass if pause state cannot be verified.
+
+================================================================================
+END
+================================================================================

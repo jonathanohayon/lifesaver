@@ -1,0 +1,48 @@
+{
+  "statusEndpoint": "GET /api/v1/notifications/delivery-logs/status",
+  "listEndpoint": "GET /api/v1/notifications/delivery-logs?limit=50&eventType=notification_created&channel=email",
+  "openedEndpoint": "POST /api/v1/notifications/delivery-logs/opened",
+  "allowedEventTypes": [
+    "notification_created",
+    "notification_sent",
+    "notification_failed",
+    "notification_opened"
+  ],
+  "allowedChannels": ["in_app", "email", "slack"],
+  "openedRequestExample": {
+    "actionId": "11111111-1111-1111-1111-111111111111",
+    "notificationKey": "approval_11111111_email",
+    "channel": "email"
+  },
+  "safeLogResponseExample": {
+    "version": "0.7.0",
+    "phase": "phase_10_8_delivery_logs",
+    "workspaceId": "workspace-id",
+    "actionId": "action-id",
+    "userId": "user-id",
+    "notificationKey": "approval_action_email",
+    "channel": "email",
+    "eventType": "notification_opened",
+    "status": "opened",
+    "recipientHint": null,
+    "deliveryProvider": "lifesaver_internal",
+    "message": "Notification review link was opened by an authenticated workspace member.",
+    "errorMessage": null,
+    "metadata": {
+      "source": "approval_deep_link",
+      "phase": "phase_10_8_delivery_logs",
+      "externalServicesCalled": false
+    },
+    "safety": {
+      "deliveryLogOnly": true,
+      "sendsEmailInThisPhase": false,
+      "sendsSlackInThisPhase": false,
+      "callsExternalServices": false,
+      "canApproveAction": false,
+      "canExecuteAction": false,
+      "exposesTokensOrSecrets": false,
+      "exposesActionPayloadJson": false,
+      "exposesRollbackPayload": false
+    }
+  }
+}

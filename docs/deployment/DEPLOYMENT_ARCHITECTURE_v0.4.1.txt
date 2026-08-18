@@ -1,0 +1,43 @@
+LIFE.SAVER v0.4.1 — Deployment Architecture
+
+RECOMMENDED PRODUCTION SHAPE
+LIFE.SAVER should deploy as three separately managed parts:
+
+1. API Service
+- Runs apps/api
+- Command after build: npm --workspace apps/api run start
+- Needs DATABASE_URL, AUTH_TOKEN_SECRET, APP_ENCRYPTION_KEY, Triple Whale config, Claude config, CORS settings
+
+2. Web Frontend
+- Runs apps/web static build
+- Build command: npm --workspace apps/web run build
+- Output folder: apps/web/dist or apps/dist depending host config. Current Vite build outputs apps/dist from apps/web package script.
+- Can be served as static site behind HTTPS
+
+3. Worker Service
+- Runs apps/worker
+- Command after build: npm --workspace apps/worker run start
+- Needs DATABASE_URL indirectly through API only if worker calls API endpoints, WORKER_SHARED_SECRET, WORKER_API_BASE_URL, schedule settings
+
+4. Database
+- Supabase PostgreSQL recommended for early production
+- Use a separate production Supabase project, not the development database
+
+DOMAIN MODEL
+Recommended future:
+- app.yourdomain.com -> web frontend
+- api.yourdomain.com -> API service
+- admin.yourdomain.com -> eventually separate admin, currently admin.html inside app
+
+CORS
+ALLOWED_ORIGINS should include only the frontend production domain, for example:
+ALLOWED_ORIGINS=https://app.yourdomain.com
+FRONTEND_URL=https://app.yourdomain.com
+
+WORKER SECURITY
+Worker endpoints must be protected by WORKER_SHARED_SECRET.
+Production WORKER_SHARED_SECRET must be long and random.
+
+V1 SAFETY
+Even when deployed, v1 remains read + advise + draft only.
+No external write tools are allowed.

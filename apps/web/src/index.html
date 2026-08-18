@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LIFE.SAVER — Founder Intelligence Console</title>
+<link rel="stylesheet" href="./assets/css/style.css" />
+<link rel="stylesheet" href="./assets/css/dashboard.css" />
+<link rel="stylesheet" href="./assets/css/voice-input.css" />
+<link rel="stylesheet" href="./assets/css/mobile-shell.css" />
+<link rel="stylesheet" href="./assets/css/mobile-release-qa.css" />
+</head>
+<body>
+<div class="wrap">
+
+  <!-- DAILY BRIEF -->
+  <div class="panel brief">
+    <div class="brief-orb"></div>
+    <div class="brief-main">
+      <div class="brief-head"><span class="bh-title">DAILY BRIEF</span><span class="bh-date" id="briefDate">—</span></div>
+      <div class="brief-text" id="dailyBriefText">Good morning. LIFE.SAVER is loading verified ecommerce metrics. Active platform conversion value is included only when non-zero Triple Whale platform fields are available.</div>
+    </div>
+    <div class="brief-actions">
+      <span class="chip">▸ Review refund draft · $49</span>
+      <span class="chip">▸ Review creative draft</span>
+      <span class="chip">▸ Draft support reply</span>
+    </div>
+  </div>
+
+  <!-- LEFT -->
+  <div class="col">
+    <div class="panel">
+      <div class="ph"><div><h3>Audience Reach</h3><div class="sub" id="audienceReachSub">Read-only metrics derived</div></div><span class="tag" id="audienceReachStatus">LOADING</span></div>
+      <canvas id="mapGlobal" class="mapc"></canvas>
+      <div class="botstats">
+        <div class="b"><div class="bk" id="audienceMetricOneLabel">Customers</div><div class="bv" id="audienceCustomers">Loading</div></div>
+        <div class="b"><div class="bk" id="audienceMetricTwoLabel">Reach Est.</div><div class="bv" id="audienceReachEstimate">Loading</div></div>
+        <div class="b"><div class="bk" id="audienceMetricThreeLabel">Channels</div><div class="bv" id="audienceChannels">Loading</div></div>
+        <div class="b"><div class="bk" id="audienceMetricFourLabel">Conv.</div><div class="bv" id="audienceEngagement">Loading</div></div>
+      </div>
+      <p class="ls-audience-note" id="audienceMappingNote">Loading audience mapping guidance.</p>
+    </div>
+    <div class="panel">
+      <div class="ph"><div><h3>Revenue Stream</h3><div class="sub">Core Live / Active Platform Conversion</div></div></div>
+      <div style="display:flex;gap:12px"><canvas id="traffic" style="flex:1;height:96px"></canvas>
+        <div class="legend">
+          <div class="lg"><span class="sw" style="background:var(--blue)"></span>REVENUE<span class="lv" id="metricStreamRevenue">Loading</span></div>
+          <div class="lg"><span class="sw" style="background:var(--blueb)"></span>PAID SPEND<span class="lv" id="metricAdSpend">Loading</span></div>
+          <div class="lg"><span class="sw" style="background:#b388ff"></span>PLATFORM CONV.<span class="lv" id="metricStreamAttribution">Awaiting Data</span></div>
+        </div></div>
+    </div>
+    <div class="panel">
+      <div class="ph"><div><h3>Growth Metrics</h3><div class="sub">Verified Triple Whale Core</div></div></div>
+      <div class="gauge">
+        <svg width="86" height="86" viewBox="0 0 86 86" style="flex:none"><circle cx="43" cy="43" r="34" fill="none" stroke="rgba(43,180,255,.15)" stroke-width="7"/><circle id="cpuArc" cx="43" cy="43" r="34" fill="none" stroke="#2bb4ff" stroke-width="7" stroke-linecap="round" stroke-dasharray="213.6" stroke-dashoffset="213.6" transform="rotate(-90 43 43)" style="filter:drop-shadow(0 0 5px #2bb4ff)"/><text x="43" y="40" text-anchor="middle" fill="#5d80a0" font-family="Rajdhani" font-size="9" letter-spacing="1">GOAL</text><text x="43" y="56" text-anchor="middle" fill="#eaf6ff" font-family="Rajdhani" font-weight="700" font-size="20">91%</text></svg>
+        <div style="flex:1">
+          <div class="statrow"><span class="k">Revenue</span><span class="v green" id="metricRevenue">Loading</span></div>
+          <div class="statrow"><span class="k">Orders</span><span class="v" id="metricOrders">Loading</span></div>
+          <div class="statrow"><span class="k">AOV</span><span class="v" id="metricAov">Loading</span></div>
+          <div class="statrow"><span class="k">Conversion</span><span class="v green" id="metricConversionRate">—</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph"><div><h3>Advisory Status</h3><div class="sub">Safe Mode</div></div></div>
+      <div class="lockwrap">
+        <div class="lockcirc"><span class="lk">⚙</span></div>
+        <div style="flex:1">
+          <div class="statrow"><span class="k">Content Drafts</span><span class="v green">READY</span></div>
+          <div class="statrow"><span class="k">Ad Intelligence</span><span class="v green">READ ONLY</span></div>
+          <div class="statrow"><span class="k">Support Drafts</span><span class="v green">READY</span></div>
+          <div class="statrow"><span class="k">Draft Mode</span><span class="v green">ACTIVE</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CENTER -->
+  <div class="center">
+    <div class="voicebar">
+      <div class="vi">◉</div><div><div class="nm">LIFE.SAVER AI</div><div class="on">ONLINE</div></div>
+      <canvas id="waveTop"></canvas>
+      <div class="vl" id="voiceToggle" style="cursor:pointer" title="Tap to mute / unmute">VOICE LINK<b id="voiceState">ACTIVE</b></div>
+    </div>
+
+    <div class="orbstage">
+      <canvas id="orb"></canvas>
+      <div class="hero">
+        <div class="hex">⬡</div>
+        <div class="wm">LIFE.SAVER</div>
+        <div class="wmsub">FOUNDER INTELLIGENCE CONSOLE</div>
+        <div class="qc">ADVISORY CORE ONLINE</div>
+        <div class="statuspill"><div class="sl">SYSTEM STATUS</div><div class="sv" id="sysstat">ACTIVE</div></div>
+      </div>
+    </div>
+
+    <div class="interface">
+      <div class="il">LIFE.SAVER AI INTERFACE</div>
+      <div class="big" id="ihead">CONNECTION ESTABLISHED</div>
+      <div class="msg"><span id="out">Good day, sir. LIFE.SAVER is now in advisory mode. Once Triple Whale is connected, I shall report only from verified business data.</span><span class="cur" id="cur" style="display:none"></span></div>
+      <canvas id="waveBot"></canvas>
+      <div class="ibar"><input id="inp" placeholder="Transmit to LIFE.SAVER…" autocomplete="off"/><button id="send">SEND</button></div>
+      <div class="voice-input-row" id="voiceInputBar" aria-label="Voice input controls"><button class="voice-mic-btn" id="voiceInputBtn" type="button">🎙 Speak</button><button class="voice-submit-btn" id="voiceSubmitBtn" type="button" disabled>Submit transcript</button><div class="voice-status" id="voiceInputStatus">Voice input preparing. Text fallback remains active.</div></div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="col">
+    <div class="panel">
+      <div class="ph"><div><h3>Draft Engine</h3><div class="sub">Live Drafts · Approval Mode</div></div><span class="tag">LIVE</span></div>
+      <div class="draft-stats">
+        <div class="b"><div class="bk">Total</div><div class="bv" id="draftCountTotal">—</div></div>
+        <div class="b"><div class="bk">Draft</div><div class="bv amber" id="draftCountDraft">—</div></div>
+        <div class="b"><div class="bk">Approved</div><div class="bv green" id="draftCountApproved">—</div></div>
+        <div class="b"><div class="bk">Rejected</div><div class="bv" id="draftCountRejected">—</div></div>
+      </div>
+      <div class="draft-actions">
+        <button class="mini-btn" id="newContentDraftBtn" type="button">New Content Draft</button>
+        <button class="mini-btn" id="newSupportDraftBtn" type="button">New Support Reply</button>
+        <button class="mini-btn ghost" id="refreshDraftsBtn" type="button">Refresh</button>
+      </div>
+      <div class="draft-safe-note">Drafts are founder approval only. No posting, sending, refunds, or campaign changes are enabled in v1.</div>
+    </div>
+    <div class="panel">
+      <div class="ph"><div><h3>Draft Review Panel</h3><div class="sub">Saved Chat + Manual Drafts</div></div><span class="tag amber-tag" id="draftReviewStatus">LOADING</span></div>
+      <div id="draftReviewList" class="draft-list"><div class="draft-empty">Loading saved drafts…</div></div>
+    </div>
+    <div class="panel">
+      <div class="ph"><div><h3>Ad Intelligence</h3><div class="sub">Core ROAS Live · Attribution Needs Mapping</div></div></div>
+      <div style="display:flex;gap:12px">
+        <canvas id="mapAgent" style="flex:1;height:96px"></canvas>
+        <div style="flex:none;width:108px">
+          <div class="statrow"><span class="k">Status</span><span class="v green" id="adIntelligenceStatus">CORE</span></div>
+          <div class="statrow"><span class="k">Impress.</span><span class="v" id="adImpressions">—</span></div>
+          <div class="statrow"><span class="k">Conv.</span><span class="v" id="adConversions">—</span></div>
+          <div class="statrow"><span class="k">ROAS</span><span class="v green" id="metricRoas">3.4x</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="ph"><div><h3>Business Events</h3><div class="sub">Static Demo Signals</div></div></div>
+      <div id="transBox"></div>
+    </div>
+  </div>
+
+  <!-- WEEKLY SUMMARY -->
+  <div class="panel weekly">
+    <div class="ph"><div><h3>Weekly Summary</h3><div class="sub">Last 7 Days</div></div><span class="tag">REVIEW</span></div>
+    <div class="wk-tiles">
+      <div class="wk"><div class="wkk">Revenue</div><div class="wkv green" id="weeklyRevenue">Loading</div><div class="wks" id="weeklyRevenueSub">verified core</div></div>
+      <div class="wk"><div class="wkk">Orders</div><div class="wkv" id="weeklyOrders">Loading</div><div class="wks" id="weeklyOrdersSub">confirmed core metric</div></div>
+      <div class="wk"><div class="wkk">AOV</div><div class="wkv" id="weeklyAov">Loading</div><div class="wks">average order value</div></div>
+      <div class="wk"><div class="wkk">Blended ROAS</div><div class="wkv" id="weeklyRoas">Loading</div><div class="wks" id="weeklyAdSpend">paid-media spend</div></div>
+      <div class="wk"><div class="wkk">Conversion</div><div class="wkv green" id="weeklyConversion">—</div><div class="wks" id="weeklyConversionSub">needs confirmation</div></div>
+      <div class="wk"><div class="wkk">Mode</div><div class="wkv green" id="weeklyMode">LIVE</div><div class="wks" id="weeklyModeSub">verified core metrics</div></div>
+    </div>
+    <div class="wk-note" id="weeklySummaryNote"><b style="color:var(--blueb)">Status:</b> Loading verified Triple Whale core metrics. Static/demo modules are labelled separately.</div>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav">
+    <span class="up">SYSTEM UPTIME <b id="uptime">152D 14H 27M 42S</b></span>
+    <div class="tabs"><span class="tab on">Dashboard</span><span class="tab" id="focusDraftsTab">Drafts</span><span class="tab">Ads</span><span class="tab">Revenue</span><span class="tab">Support</span><a class="tab" href="./actions.html">Actions</a>
+        <a class="tab" href="./rules.html">Rules</a><a class="tab" href="./onboarding.html">Onboarding</a><a class="tab" href="./settings.html">Settings</a><a class="tab" href="./memory.html">Memory</a><a class="tab" href="./functional-audit.html">Audit</a><a class="tab" href="./admin.html">Admin</a></div>
+    <span class="ls-dashboard-version-chip" data-ls-version>0.8.5</span>
+    <span class="va">VIEW ALL ›</span>
+  </div>
+</div>
+
+<script src="./assets/js/runtime-config.js"></script>
+<script src="./assets/js/main.js"></script>
+<script src="./assets/js/audience-reach.js"></script>
+<script src="./assets/js/dashboard.js"></script>
+<script src="./assets/js/voice-input.js"></script>
+<script src="./assets/js/lifesaver-version.js"></script>
+<script src="./assets/js/lifesaver-mobile-shell.js"></script>
+</body>
+</html>

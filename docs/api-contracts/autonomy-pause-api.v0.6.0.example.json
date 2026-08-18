@@ -1,0 +1,80 @@
+{
+  "version": "0.6.0",
+  "phase": "Phase 5.4 — Read/Update Pause API",
+  "endpoints": {
+    "status": {
+      "method": "GET",
+      "path": "/api/v1/autonomy/status",
+      "authRequired": true,
+      "allowedRoles": ["owner", "admin", "member", "viewer"],
+      "externalWritesEnabled": false
+    },
+    "pause": {
+      "method": "POST",
+      "path": "/api/v1/autonomy/pause",
+      "authRequired": true,
+      "allowedRoles": ["owner", "admin"],
+      "body": {
+        "scope": "all|content|support|ads|research|dev",
+        "reason": "optional safe note"
+      },
+      "externalWritesEnabled": false
+    },
+    "resume": {
+      "method": "POST",
+      "path": "/api/v1/autonomy/resume",
+      "authRequired": true,
+      "allowedRoles": ["owner", "admin"],
+      "body": {
+        "scope": "all|content|support|ads|research|dev",
+        "reason": "optional safe note"
+      },
+      "externalWritesEnabled": false
+    }
+  },
+  "exampleStatusResponse": {
+    "success": true,
+    "data": {
+      "version": "0.6.0",
+      "phase": "v0.6.0 Phase 5.4 Read/Update Pause API",
+      "workspaceId": "workspace_uuid",
+      "pauseAllAutonomy": false,
+      "pauseContentActions": false,
+      "pauseSupportActions": false,
+      "pauseAdsActions": true,
+      "pauseResearchActions": false,
+      "pauseDevActions": false,
+      "permissions": {
+        "currentUserRole": "owner",
+        "canViewAutonomyStatus": true,
+        "canPauseAutonomy": true,
+        "canResumeAutonomy": true,
+        "updateRoles": ["owner", "admin"]
+      },
+      "safety": {
+        "canAutoApprove": false,
+        "canExecute": false,
+        "canWriteExternally": false,
+        "note": "Phase 5.4 exposes read/update pause APIs only. It does not add executors, auto-run rules, queueing, rollback execution, or external writes."
+      }
+    }
+  },
+  "examplePauseRequest": {
+    "scope": "ads",
+    "reason": "Pause ad autonomy while campaign review is in progress."
+  },
+  "examplePauseResponse": {
+    "success": true,
+    "data": {
+      "version": "0.6.0",
+      "operation": "pause",
+      "scope": "ads",
+      "execution": {
+        "queued": false,
+        "executed": false,
+        "executorEnabled": false,
+        "externalWritesEnabled": false
+      }
+    }
+  }
+}

@@ -1,0 +1,204 @@
+/* LIFE.SAVER V2 Phase 4.10 — Approval Queue Action Cards + Detail Drawer */
+.actions-shell .panel small{color:var(--dim)}
+.actions-toolbar{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px;align-items:end}
+.actions-toolbar label{display:flex;flex-direction:column;gap:7px;color:var(--white);font-size:11px;letter-spacing:1.2px;text-transform:uppercase}
+.actions-toolbar select{background:rgba(4,10,20,.75);border:1px solid var(--line);color:var(--white);padding:10px 12px;font-family:var(--ui);font-size:14px;outline:none}
+.actions-toolbar select:focus{border-color:var(--blueb);box-shadow:0 0 12px rgba(43,180,255,.18)}
+.actions-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.action-card{border:1px solid var(--line);background:linear-gradient(180deg,rgba(8,17,32,.82),rgba(4,10,20,.72));padding:14px;position:relative;overflow:hidden;min-height:254px;display:flex;flex-direction:column;gap:11px;box-shadow:inset 0 0 22px rgba(43,180,255,.035)}
+.action-card::before,.action-card::after{content:"";position:absolute;width:10px;height:10px;border:1.5px solid var(--blue);opacity:.72}
+.action-card::before{top:-1px;left:-1px;border-right:0;border-bottom:0}.action-card::after{right:-1px;bottom:-1px;border-left:0;border-top:0}
+.action-card-header{display:flex;gap:7px;align-items:center;justify-content:space-between;flex-wrap:wrap;position:relative;z-index:1}
+.action-card-title{font-size:17px;line-height:1.12;color:var(--white);letter-spacing:1.2px;text-transform:uppercase;margin:0;position:relative;z-index:1}
+.action-card-description{font-size:13px;line-height:1.45;color:var(--txt);min-height:38px;position:relative;z-index:1}
+.action-card-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;position:relative;z-index:1}
+.action-meta-item{border:1px solid var(--line2);background:rgba(43,180,255,.04);padding:8px;min-height:54px}
+.action-meta-item span{display:block;font-size:9px;letter-spacing:1.2px;color:var(--dim);text-transform:uppercase;margin-bottom:3px}.action-meta-item strong{display:block;font-family:var(--mono);font-size:12px;color:var(--blueb);word-break:break-word}
+.action-card-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto;position:relative;z-index:1}.action-card-actions .btn{padding:8px 11px;font-size:10px}.action-card-actions .btn[aria-disabled="true"]{opacity:.58;cursor:not-allowed}.action-card-actions .btn.reject{border-color:rgba(255,82,82,.38);color:#ff8a8a;background:rgba(255,82,82,.07)}.action-card-actions .btn.detail{margin-left:auto}
+.action-pill{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;border:1px solid var(--line);padding:5px 7px;color:var(--blueb);background:rgba(43,180,255,.06);white-space:nowrap}.action-pill.status-proposed,.action-pill.status-approval_required{color:var(--amber);background:rgba(255,181,61,.06);border-color:rgba(255,181,61,.28)}.action-pill.status-approved,.action-pill.status-auto_approved{color:var(--green);background:rgba(55,224,138,.06);border-color:rgba(55,224,138,.28)}.action-pill.status-rejected,.action-pill.status-cancelled,.action-pill.status-failed{color:var(--red);background:rgba(255,82,82,.06);border-color:rgba(255,82,82,.28)}.action-pill.status-executed,.action-pill.status-rolled_back{color:var(--green)}.action-pill.status-queued,.action-pill.status-executing,.action-pill.status-rollback_requested{color:var(--blueb)}
+.action-pill.risk-low{color:var(--green);border-color:rgba(55,224,138,.28)}.action-pill.risk-medium{color:var(--amber);border-color:rgba(255,181,61,.28)}.action-pill.risk-high{color:#ff9f43;border-color:rgba(255,159,67,.38)}.action-pill.risk-critical{color:var(--red);border-color:rgba(255,82,82,.42);background:rgba(255,82,82,.08)}
+.action-card-footer-note{font-size:10.5px;line-height:1.35;color:var(--dim);border-top:1px solid var(--line2);padding-top:8px;position:relative;z-index:1}.action-card-empty{grid-column:1/-1;min-height:160px}.action-card-loading{grid-column:1/-1}.action-safe-lock{color:var(--green);font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase}
+@media(max-width:1100px){.actions-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.actions-toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:720px){.actions-grid,.actions-toolbar{grid-template-columns:1fr}.action-card-meta{grid-template-columns:1fr}.action-card-actions .btn.detail{margin-left:0}}
+
+/* LIFE.SAVER V2 Phase 4.10 — Action Detail Drawer */
+.action-detail-overlay{position:fixed;inset:0;z-index:120;background:rgba(0,6,14,.74);backdrop-filter:blur(4px);display:flex;justify-content:flex-end;align-items:stretch;padding:14px}
+.action-detail-overlay[hidden]{display:none}
+.action-detail-drawer{width:min(760px,100%);height:100%;overflow:hidden;border:1px solid var(--line);background:linear-gradient(180deg,rgba(8,17,32,.98),rgba(3,8,18,.96));box-shadow:-18px 0 40px rgba(0,0,0,.35), inset 0 0 28px rgba(43,180,255,.035);display:flex;flex-direction:column;outline:none;position:relative}
+.action-detail-drawer::before,.action-detail-drawer::after{content:"";position:absolute;width:13px;height:13px;border:1.5px solid var(--blue);opacity:.74;pointer-events:none}.action-detail-drawer::before{top:-1px;left:-1px;border-right:0;border-bottom:0}.action-detail-drawer::after{right:-1px;bottom:-1px;border-left:0;border-top:0}
+.action-detail-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;border-bottom:1px solid var(--line2);padding:18px;position:relative;z-index:1}.action-detail-head h2{margin:2px 0 6px;color:var(--white);font-size:22px;line-height:1.08;letter-spacing:2px;text-transform:uppercase}.action-detail-head p{font-size:12px;color:var(--dim);letter-spacing:.8px;text-transform:uppercase}.action-detail-status-row{display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--line2);padding:12px 18px;background:rgba(43,180,255,.035)}
+.action-detail-body{padding:18px;overflow:auto;display:flex;flex-direction:column;gap:14px;min-height:0}.action-detail-section{border:1px solid var(--line2);background:rgba(43,180,255,.035);padding:13px}.action-detail-section h3{font-size:13px;color:var(--blueb);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}.action-detail-section p{font-size:13px;line-height:1.55;color:var(--txt)}.action-detail-section .muted{color:var(--dim)}
+.action-proposed-content{white-space:pre-wrap;word-break:break-word;border-left:3px solid var(--blue);background:rgba(2,6,13,.45);padding:12px;color:var(--white);line-height:1.55;font-size:14px}.action-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.action-detail-kv{border:1px solid var(--line2);background:rgba(2,6,13,.42);padding:10px}.action-detail-kv span{display:block;color:var(--dim);font-size:9px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:4px}.action-detail-kv strong{display:block;color:var(--white);font-size:13px;line-height:1.35;word-break:break-word}.action-detail-kv code{font-family:var(--mono);font-size:12px;color:var(--blueb);white-space:pre-wrap;word-break:break-word}
+.action-preview-json{max-height:220px;overflow:auto;white-space:pre-wrap;word-break:break-word;border:1px solid var(--line2);background:rgba(2,6,13,.62);padding:10px;font-family:var(--mono);font-size:11px;line-height:1.45;color:var(--txt)}
+.action-timeline{display:flex;flex-direction:column;gap:9px}.action-timeline-item{border-left:3px solid var(--line);background:rgba(2,6,13,.35);padding:9px 10px}.action-timeline-title{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}.action-timeline-title strong{color:var(--white);font-size:12px;letter-spacing:1px;text-transform:uppercase}.action-timeline-title time{font-family:var(--mono);font-size:10px;color:var(--dim)}.action-timeline-item p{font-size:12px;color:var(--txt);margin-top:4px}.action-timeline-flow{font-family:var(--mono);font-size:10px;color:var(--blueb);margin-top:4px}.action-result-item{border:1px solid var(--line2);background:rgba(2,6,13,.35);padding:10px;margin-bottom:8px}.action-result-item:last-child{margin-bottom:0}.action-result-item strong{color:var(--white)}.action-result-item small{display:block;color:var(--dim);font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-top:3px}.action-detail-footer{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line2);padding:14px 18px;background:rgba(2,6,13,.52)}.action-detail-footer .btn[aria-disabled="true"]{opacity:.58;cursor:not-allowed}.action-detail-footer .btn.reject{border-color:rgba(255,82,82,.38);color:#ff8a8a;background:rgba(255,82,82,.07)}
+@media(max-width:720px){.action-detail-overlay{padding:0}.action-detail-drawer{width:100%;height:100%;border-left:0;border-right:0}.action-detail-head{flex-direction:column}.action-detail-grid{grid-template-columns:1fr}.action-detail-footer{align-items:flex-start;flex-direction:column}.action-detail-footer .btn{width:100%;text-align:center}}
+
+/* LIFE.SAVER V2 Phase 4.10 — Status Filters */
+.status-filter-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 10px}
+.status-filter-tab{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--blueb);border:1px solid var(--line);background:rgba(43,180,255,.055);padding:9px 12px;cursor:pointer;transition:background .16s ease,border-color .16s ease,transform .16s ease,color .16s ease}
+.status-filter-tab:hover{background:rgba(43,180,255,.12);border-color:rgba(127,220,255,.44)}
+.status-filter-tab:focus{outline:2px solid rgba(127,220,255,.55);outline-offset:2px}
+.status-filter-tab.is-active{color:#03060d;background:linear-gradient(135deg,var(--blueb),var(--blue));border-color:rgba(127,220,255,.72);box-shadow:0 0 16px rgba(43,180,255,.18)}
+.compact-note{margin-top:2px;font-size:12px}
+@media(max-width:720px){.status-filter-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.status-filter-tab{width:100%;text-align:center}}
+
+/* LIFE.SAVER V2 Phase 4.10 — Approve Confirmation Modal */
+.approval-confirm-overlay{position:fixed;inset:0;z-index:140;background:rgba(0,6,14,.78);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:18px}
+.approval-confirm-overlay[hidden]{display:none}
+.approval-confirm-modal{width:min(720px,100%);max-height:94vh;overflow:auto;border:1px solid var(--line);background:linear-gradient(180deg,rgba(8,17,32,.98),rgba(3,8,18,.97));box-shadow:0 24px 60px rgba(0,0,0,.42), inset 0 0 28px rgba(43,180,255,.04);outline:none;position:relative}
+.approval-confirm-modal::before,.approval-confirm-modal::after{content:"";position:absolute;width:13px;height:13px;border:1.5px solid var(--blue);opacity:.74;pointer-events:none}.approval-confirm-modal::before{top:-1px;left:-1px;border-right:0;border-bottom:0}.approval-confirm-modal::after{right:-1px;bottom:-1px;border-left:0;border-top:0}
+.approval-confirm-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;border-bottom:1px solid var(--line2);padding:18px;position:relative;z-index:1}.approval-confirm-head h2{margin:2px 0 6px;color:var(--white);font-size:22px;line-height:1.1;letter-spacing:2px;text-transform:uppercase}.approval-confirm-head p{font-size:12px;color:var(--dim);letter-spacing:.8px;text-transform:uppercase}
+.approval-confirm-body{padding:18px;display:flex;flex-direction:column;gap:14px}.approval-warning{border:1px solid rgba(255,181,61,.32);background:rgba(255,181,61,.075);color:var(--amber);padding:12px;font-size:13px;line-height:1.45;letter-spacing:.4px}.approval-confirm-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.approval-confirm-item{border:1px solid var(--line2);background:rgba(43,180,255,.035);padding:11px}.approval-confirm-item span{display:block;color:var(--dim);font-size:9px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:5px}.approval-confirm-item strong{display:block;color:var(--white);font-size:13px;line-height:1.4;word-break:break-word}.approval-note-label{display:flex;flex-direction:column;gap:8px;color:var(--white);font-size:10px;letter-spacing:1.2px;text-transform:uppercase}.approval-note-label textarea{width:100%;resize:vertical;min-height:78px;background:rgba(4,10,20,.75);border:1px solid var(--line);color:var(--white);padding:11px 12px;font-family:var(--ui);font-size:13px;line-height:1.45;outline:none}.approval-note-label textarea:focus{border-color:var(--blueb);box-shadow:0 0 12px rgba(43,180,255,.18)}
+.approval-confirm-footer{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line2);padding:14px 18px;background:rgba(2,6,13,.52)}.approval-confirm-footer .btn[disabled],.approval-confirm-footer .btn[aria-disabled="true"]{opacity:.55;cursor:not-allowed}.approval-confirm-footer .btn.primary[disabled]{filter:grayscale(.35)}
+@media(max-width:720px){.approval-confirm-overlay{padding:0;align-items:stretch}.approval-confirm-modal{width:100%;max-height:100vh;border-left:0;border-right:0}.approval-confirm-head{flex-direction:column}.approval-confirm-grid{grid-template-columns:1fr}.approval-confirm-footer{align-items:flex-start;flex-direction:column}.approval-confirm-footer .btn{width:100%;text-align:center}}
+
+/* LIFE.SAVER V2 Phase 4.10 — Reject With Reason Modal */
+.reject-confirm-overlay{position:fixed;inset:0;z-index:145;background:rgba(0,6,14,.8);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:18px}
+.reject-confirm-overlay[hidden]{display:none}
+.reject-confirm-modal{width:min(720px,100%);max-height:94vh;overflow:auto;border:1px solid rgba(255,82,82,.34);background:linear-gradient(180deg,rgba(8,17,32,.98),rgba(3,8,18,.97));box-shadow:0 24px 60px rgba(0,0,0,.42), inset 0 0 28px rgba(255,82,82,.035);outline:none;position:relative}
+.reject-confirm-modal::before,.reject-confirm-modal::after{content:"";position:absolute;width:13px;height:13px;border:1.5px solid var(--red);opacity:.72;pointer-events:none}.reject-confirm-modal::before{top:-1px;left:-1px;border-right:0;border-bottom:0}.reject-confirm-modal::after{right:-1px;bottom:-1px;border-left:0;border-top:0}
+.reject-confirm-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;border-bottom:1px solid var(--line2);padding:18px;position:relative;z-index:1}.reject-confirm-head h2{margin:2px 0 6px;color:var(--white);font-size:22px;line-height:1.1;letter-spacing:2px;text-transform:uppercase}.reject-confirm-head p{font-size:12px;color:var(--dim);letter-spacing:.8px;text-transform:uppercase}
+.reject-confirm-body{padding:18px;display:flex;flex-direction:column;gap:14px}.reject-warning{border:1px solid rgba(255,82,82,.34);background:rgba(255,82,82,.075);color:#ff9f9f;padding:12px;font-size:13px;line-height:1.45;letter-spacing:.4px}.reject-confirm-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.reject-confirm-item{border:1px solid var(--line2);background:rgba(255,82,82,.025);padding:11px}.reject-confirm-item span{display:block;color:var(--dim);font-size:9px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:5px}.reject-confirm-item strong{display:block;color:var(--white);font-size:13px;line-height:1.4;word-break:break-word}.reject-reason-label{display:flex;flex-direction:column;gap:8px;color:var(--white);font-size:10px;letter-spacing:1.2px;text-transform:uppercase}.reject-reason-label select,.reject-reason-label textarea{width:100%;background:rgba(4,10,20,.75);border:1px solid rgba(255,82,82,.28);color:var(--white);padding:11px 12px;font-family:var(--ui);font-size:13px;line-height:1.45;outline:none}.reject-reason-label textarea{resize:vertical;min-height:78px}.reject-reason-label select:focus,.reject-reason-label textarea:focus{border-color:#ff9f9f;box-shadow:0 0 12px rgba(255,82,82,.16)}
+.reject-confirm-footer{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line2);padding:14px 18px;background:rgba(2,6,13,.52)}.reject-confirm-footer .btn[disabled],.reject-confirm-footer .btn[aria-disabled="true"]{opacity:.55;cursor:not-allowed}.btn.reject[disabled]{filter:grayscale(.35);opacity:.55;cursor:not-allowed}
+@media(max-width:720px){.reject-confirm-overlay{padding:0;align-items:stretch}.reject-confirm-modal{width:100%;max-height:100vh;border-left:0;border-right:0}.reject-confirm-head{flex-direction:column}.reject-confirm-grid{grid-template-columns:1fr}.reject-confirm-footer{align-items:flex-start;flex-direction:column}.reject-confirm-footer .btn{width:100%;text-align:center}}
+
+/* LIFE.SAVER V2 Phase 4.10 — Risk Badges + Warnings */
+.action-risk-badge{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;border:1px solid var(--line);padding:5px 8px;background:rgba(43,180,255,.055);white-space:nowrap}
+.risk-dot{width:8px;height:8px;border-radius:999px;display:inline-block;background:var(--blueb);box-shadow:0 0 10px rgba(43,180,255,.32);flex:none}
+.action-risk-badge.risk-low,.risk-guide-item.risk-low{color:var(--green);border-color:rgba(55,224,138,.34);background:rgba(55,224,138,.055)}
+.action-risk-badge.risk-medium,.risk-guide-item.risk-medium{color:var(--amber);border-color:rgba(255,181,61,.34);background:rgba(255,181,61,.06)}
+.action-risk-badge.risk-high,.risk-guide-item.risk-high{color:#ff9f43;border-color:rgba(255,159,67,.44);background:rgba(255,159,67,.07)}
+.action-risk-badge.risk-critical,.risk-guide-item.risk-critical{color:#ff8a8a;border-color:rgba(255,82,82,.52);background:rgba(255,82,82,.09);box-shadow:0 0 16px rgba(255,82,82,.08)}
+.action-risk-badge.risk-low .risk-dot,.risk-guide-item.risk-low .risk-dot{background:var(--green)}
+.action-risk-badge.risk-medium .risk-dot,.risk-guide-item.risk-medium .risk-dot{background:var(--amber)}
+.action-risk-badge.risk-high .risk-dot,.risk-guide-item.risk-high .risk-dot{background:#ff9f43}
+.action-risk-badge.risk-critical .risk-dot,.risk-guide-item.risk-critical .risk-dot{background:var(--red);box-shadow:0 0 12px rgba(255,82,82,.56)}
+.risk-guide{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:12px 0 4px}
+.risk-guide-item{border:1px solid var(--line2);padding:9px 10px;background:rgba(43,180,255,.04);display:flex;align-items:center;gap:8px;min-height:48px}
+.risk-guide-item strong{font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;color:inherit}.risk-guide-item small{margin-left:auto;font-size:10px;line-height:1.25;color:var(--dim);text-align:right}
+.action-risk-alert{border:1px solid var(--line2);padding:9px 10px;background:rgba(43,180,255,.04);display:flex;flex-direction:column;gap:4px;font-size:11.5px;line-height:1.38;color:var(--txt);position:relative;z-index:1}
+.action-risk-alert strong{font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;font-size:10px}.action-risk-alert span{color:var(--txt)}
+.action-risk-alert.risk-alert-high{border-color:rgba(255,159,67,.38);background:rgba(255,159,67,.065)}.action-risk-alert.risk-alert-high strong{color:#ffb16a}
+.action-risk-alert.risk-alert-critical{border-color:rgba(255,82,82,.48);background:rgba(255,82,82,.085)}.action-risk-alert.risk-alert-critical strong{color:#ff8a8a}
+.risk-warning-panel,.risk-warning-box{border:1px solid var(--line2);background:rgba(43,180,255,.04);padding:11px 12px;margin:10px 0;display:flex;justify-content:space-between;gap:12px;align-items:flex-start;color:var(--txt)}
+.risk-warning-panel strong,.risk-warning-box strong{display:block;font-family:var(--mono);font-size:11px;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;color:var(--blueb)}
+.risk-warning-panel p,.risk-warning-box span{display:block;font-size:12.5px;line-height:1.45;color:var(--txt)}
+.risk-warning-panel>span{font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;border:1px solid currentColor;padding:5px 7px;white-space:nowrap;color:inherit}
+.risk-warning-low{border-color:rgba(55,224,138,.3);background:rgba(55,224,138,.045)}.risk-warning-low strong{color:var(--green)}
+.risk-warning-medium{border-color:rgba(255,181,61,.32);background:rgba(255,181,61,.055)}.risk-warning-medium strong{color:var(--amber)}
+.risk-warning-high{border-color:rgba(255,159,67,.42);background:rgba(255,159,67,.07)}.risk-warning-high strong{color:#ffb16a}
+.risk-warning-critical{border-color:rgba(255,82,82,.52);background:rgba(255,82,82,.09)}.risk-warning-critical strong{color:#ff8a8a}
+@media(max-width:720px){.risk-guide{grid-template-columns:repeat(2,minmax(0,1fr))}.risk-guide-item{align-items:flex-start;flex-direction:column}.risk-guide-item small{margin-left:0;text-align:left}.risk-warning-panel,.risk-warning-box{flex-direction:column}}
+
+
+/* LIFE.SAVER V2 Phase 4.10 — Live Refresh / Polling */
+.live-refresh-panel{border:1px solid var(--line2);background:linear-gradient(135deg,rgba(43,180,255,.06),rgba(55,224,138,.035));padding:12px;margin:12px 0;display:flex;align-items:center;justify-content:space-between;gap:14px;position:relative;overflow:hidden}
+.live-refresh-panel::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(43,180,255,.05),transparent);transform:translateX(-100%);animation:liveRefreshSweep 8s linear infinite;pointer-events:none}
+@keyframes liveRefreshSweep{to{transform:translateX(100%)}}
+.live-refresh-copy,.live-refresh-controls{position:relative;z-index:1}.live-refresh-copy strong{display:block;color:var(--blueb);font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;font-size:15px;margin:4px 0}.live-refresh-copy small{display:block;color:var(--dim);font-size:11px;line-height:1.4;letter-spacing:.45px}
+.live-refresh-controls{display:flex;align-items:end;gap:10px;flex-wrap:wrap}.live-refresh-controls label{display:flex;flex-direction:column;gap:6px;color:var(--dim);font-size:9px;letter-spacing:1px;text-transform:uppercase}.live-refresh-controls select{min-width:150px;background:rgba(4,10,20,.75);border:1px solid var(--line);color:var(--white);padding:9px 10px;font-family:var(--ui);font-size:12px;outline:none}.live-refresh-controls select:focus{border-color:var(--blueb);box-shadow:0 0 12px rgba(43,180,255,.14)}
+.badge.danger-badge{border-color:rgba(255,82,82,.42);color:#ff9f9f;background:rgba(255,82,82,.07)}
+@media(max-width:760px){.live-refresh-panel{align-items:stretch;flex-direction:column}.live-refresh-controls{align-items:stretch;flex-direction:column}.live-refresh-controls .btn,.live-refresh-controls select{width:100%}}
+
+/* LIFE.SAVER V2 Phase 4.10 — Mobile Approval UX */
+.mobile-approval-panel{border:1px solid var(--line2);background:linear-gradient(135deg,rgba(127,220,255,.055),rgba(255,181,61,.035));padding:12px;margin:12px 0;display:flex;align-items:center;justify-content:space-between;gap:14px;position:relative;overflow:hidden}
+.mobile-approval-copy strong{display:block;color:var(--blueb);font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;font-size:15px;margin:4px 0}.mobile-approval-copy small{display:block;color:var(--dim);font-size:11px;line-height:1.4;letter-spacing:.45px}.mobile-approval-checks{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.mobile-approval-checks span{border:1px solid var(--line);background:rgba(43,180,255,.06);color:var(--blueb);font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:7px 9px;white-space:nowrap}
+.action-card-actions .btn,.action-detail-footer .btn,.approval-confirm-footer .btn,.reject-confirm-footer .btn{min-height:42px;display:inline-flex;align-items:center;justify-content:center;text-align:center;touch-action:manipulation}.approval-confirm-modal,.reject-confirm-modal,.action-detail-drawer{overscroll-behavior:contain}.approval-note-label textarea,.reject-reason-label textarea,.reject-reason-label select{font-size:16px}.mobile-final-action{font-weight:700;position:relative}.mobile-final-action::after{content:"INTERNAL ONLY";display:block;font-family:var(--mono);font-size:8px;letter-spacing:1px;opacity:.68;margin-left:8px;color:inherit}
+@media(max-width:900px){body{padding:10px}.actions-shell{gap:12px;max-width:100%;overflow-x:hidden}.actions-shell .topbar{align-items:stretch}.actions-shell .brand h1{font-size:20px;letter-spacing:2px}.actions-shell .brand span{font-size:9.5px;line-height:1.35}.actions-shell .footer-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;gap:8px}.actions-shell .footer-actions .btn,.actions-shell .footer-actions .badge{width:100%;min-height:40px;text-align:center;display:flex;align-items:center;justify-content:center}.actions-shell .grid.four{grid-template-columns:1fr 1fr}.actions-shell .panel{padding:13px}.mobile-approval-panel{align-items:stretch;flex-direction:column}.mobile-approval-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));justify-content:stretch}.mobile-approval-checks span{text-align:center;white-space:normal}.actions-toolbar{gap:10px}.actions-toolbar label span,.live-refresh-controls label span{font-size:10px}.actions-toolbar select,.live-refresh-controls select{min-height:44px;font-size:16px}.status-filter-tabs{gap:9px}.status-filter-tab{min-height:44px;display:flex;align-items:center;justify-content:center;text-align:center}.action-card{min-height:0;padding:13px}.action-card-title{font-size:16px;letter-spacing:.8px}.action-card-description{min-height:0}.action-card-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.action-card-actions .btn{width:100%;min-height:48px;padding:12px 10px;font-size:11px}.action-card-actions .btn.detail{grid-column:1/-1;margin-left:0}.action-risk-badge,.action-pill{white-space:normal;line-height:1.25}.risk-warning-panel,.risk-warning-box,.action-risk-alert{word-break:break-word}.action-detail-overlay,.approval-confirm-overlay,.reject-confirm-overlay{padding:0}.action-detail-drawer,.approval-confirm-modal,.reject-confirm-modal{width:100%;height:100dvh;max-height:100dvh;border-left:0;border-right:0}.action-detail-head,.approval-confirm-head,.reject-confirm-head{padding:14px;gap:12px}.action-detail-head h2,.approval-confirm-head h2,.reject-confirm-head h2{font-size:18px;letter-spacing:1.2px;line-height:1.18}.action-detail-body,.approval-confirm-body,.reject-confirm-body{padding:14px;gap:12px}.action-detail-section{padding:11px}.action-proposed-content{font-size:14px}.action-detail-footer,.approval-confirm-footer,.reject-confirm-footer{position:sticky;bottom:0;z-index:5;display:grid;grid-template-columns:1fr;gap:9px;padding:12px 14px;background:rgba(2,6,13,.94);box-shadow:0 -12px 26px rgba(0,0,0,.28)}.action-detail-footer .btn,.approval-confirm-footer .btn,.reject-confirm-footer .btn{width:100%;min-height:50px;font-size:12px;padding:13px 14px}.action-safe-lock{display:block;width:100%;font-size:9px;line-height:1.35;text-align:center}.approval-confirm-grid,.reject-confirm-grid,.action-detail-grid{grid-template-columns:1fr}.approval-confirm-item,.reject-confirm-item,.action-detail-kv{min-width:0}.approval-note-label textarea,.reject-reason-label textarea{min-height:112px}.reject-reason-label select{min-height:48px}.mobile-final-action::after{margin-left:10px}}
+@media(max-width:520px){body{padding:8px}.actions-shell .grid.four{grid-template-columns:1fr}.actions-shell .footer-actions{grid-template-columns:1fr}.status-filter-tabs{grid-template-columns:1fr 1fr}.actions-grid{gap:12px}.action-card-meta{grid-template-columns:1fr}.action-card-header{align-items:flex-start;justify-content:flex-start}.action-card-actions{grid-template-columns:1fr}.risk-guide{grid-template-columns:1fr}.live-refresh-copy strong,.mobile-approval-copy strong{font-size:13px}.mobile-approval-checks{grid-template-columns:1fr}.approval-confirm-head .btn,.reject-confirm-head .btn,.action-detail-head .btn{width:100%;min-height:44px}.approval-confirm-body,.reject-confirm-body,.action-detail-body{padding-bottom:18px}.approval-warning,.reject-warning{font-size:13px}.mobile-final-action::after{font-size:7.5px}}
+@media(max-width:380px){.actions-shell .brand h1{font-size:18px}.action-card-title{font-size:15px}.action-card-actions .btn,.action-detail-footer .btn,.approval-confirm-footer .btn,.reject-confirm-footer .btn{font-size:10.5px;letter-spacing:.9px}.mobile-final-action::after{display:none}}
+
+/* LIFE.SAVER V2 Phase 4.10 — UI QA + Accessibility Pass */
+.skip-link{position:absolute;left:12px;top:8px;z-index:9999;transform:translateY(-160%);background:#02060d;color:var(--blueb);border:2px solid var(--blueb);padding:10px 14px;font-family:var(--mono);font-size:12px;letter-spacing:1px;text-transform:uppercase;text-decoration:none;box-shadow:0 0 18px rgba(43,180,255,.28)}
+.skip-link:focus{transform:translateY(0);outline:3px solid var(--amber);outline-offset:3px}
+.actions-shell:focus{outline:none}
+.actions-shell a:focus-visible,.actions-shell button:focus-visible,.actions-shell select:focus-visible,.actions-shell textarea:focus-visible,.action-detail-drawer:focus-visible,.approval-confirm-modal:focus-visible,.reject-confirm-modal:focus-visible{outline:3px solid var(--amber);outline-offset:3px;box-shadow:0 0 0 5px rgba(255,181,61,.14),0 0 20px rgba(255,181,61,.22)}
+.actions-shell textarea,.actions-shell select{line-height:1.45}
+.action-card-description,.action-proposed-content,.action-detail-section p,.approval-confirm-item strong,.reject-confirm-item strong,.note{line-height:1.55}
+.ui-qa-panel{border:1px solid var(--line2);background:linear-gradient(135deg,rgba(55,224,138,.055),rgba(43,180,255,.035));padding:12px;margin:12px 0;display:flex;align-items:center;justify-content:space-between;gap:14px;position:relative;overflow:hidden}
+.ui-qa-copy strong{display:block;color:var(--green);font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;font-size:15px;margin:4px 0}.ui-qa-copy small{display:block;color:var(--dim);font-size:11px;line-height:1.45;letter-spacing:.45px}.ui-qa-checks{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.ui-qa-checks span{border:1px solid rgba(55,224,138,.32);background:rgba(55,224,138,.055);color:var(--green);font-family:var(--mono);font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:7px 9px;white-space:nowrap}
+.action-card-loading{position:relative;overflow:hidden}.action-card-loading::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(127,220,255,.06),transparent);animation:qaSkeletonSweep 1.8s linear infinite;pointer-events:none}@keyframes qaSkeletonSweep{to{transform:translateX(100%)}}
+.actions-grid[aria-busy="true"]{opacity:.86}.actions-grid[aria-busy="true"] .action-card{cursor:progress}
+.action-card-empty{border-style:dashed}.note.danger,.danger{border-color:rgba(255,82,82,.5);background:rgba(255,82,82,.08);color:#ffb3b3}
+.action-detail-overlay:not([hidden]),.approval-confirm-overlay:not([hidden]),.reject-confirm-overlay:not([hidden]){animation:qaOverlayIn .12s ease-out}@keyframes qaOverlayIn{from{opacity:.72}to{opacity:1}}
+.action-preview-json{overflow:auto;max-width:100%;white-space:pre-wrap;word-break:break-word}
+.action-detail-kv strong,.approval-confirm-item strong,.reject-confirm-item strong{overflow-wrap:anywhere}.action-card-title,.action-card-description{overflow-wrap:anywhere}
+@media(max-width:900px){.ui-qa-panel{align-items:stretch;flex-direction:column}.ui-qa-checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));justify-content:stretch}.ui-qa-checks span{text-align:center;white-space:normal}.actions-shell a:focus-visible,.actions-shell button:focus-visible,.actions-shell select:focus-visible,.actions-shell textarea:focus-visible{outline-offset:2px}.action-detail-drawer,.approval-confirm-modal,.reject-confirm-modal{scrollbar-gutter:stable}}
+@media(max-width:520px){.ui-qa-checks{grid-template-columns:1fr}.ui-qa-copy strong{font-size:13px}.skip-link{left:8px;right:8px;text-align:center}.action-card-description,.action-detail-section p,.note{font-size:13px}.action-preview-json{font-size:11px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.001ms!important}.live-refresh-panel::before,.action-card-loading::after{display:none}}
+
+
+.action-result-metadata { margin-top: 10px; }
+.action-result-metadata summary { cursor: pointer; font-weight: 700; color: #d8eadf; }
+.action-result-metadata pre { white-space: pre-wrap; overflow-wrap: anywhere; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 12px; }
+
+/* LIFE.SAVER v0.8.3 — Mobile Operator UI Release QA hardening */
+.actions-mobile-command-bar{
+  display:none;
+  gap:8px;
+  margin:12px 0 14px;
+  padding:10px;
+  border:1px solid var(--line2);
+  background:rgba(43,180,255,.04);
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+}
+.actions-mobile-command-bar a{
+  flex:0 0 auto;
+  min-height:44px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  color:var(--blueb);
+  background:rgba(43,180,255,.06);
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  text-decoration:none;
+}
+.actions-mobile-card-list{scroll-margin-top:88px;max-width:100%;overflow-x:hidden}
+.action-card-mobile-summary{display:none}
+.btn.cancel{border-color:rgba(255,181,61,.42);color:var(--amber);background:rgba(255,181,61,.07)}
+.btn.cancel:hover{background:rgba(255,181,61,.13)}
+.cancel-confirm-overlay{position:fixed;inset:0;z-index:143;background:rgba(0,6,14,.8);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:18px}
+.cancel-confirm-overlay[hidden]{display:none}
+.cancel-confirm-modal{width:min(720px,100%);max-height:94vh;overflow:auto;border:1px solid rgba(255,181,61,.36);background:linear-gradient(180deg,rgba(8,17,32,.98),rgba(3,8,18,.97));box-shadow:0 24px 60px rgba(0,0,0,.42), inset 0 0 28px rgba(255,181,61,.035);outline:none;position:relative;overscroll-behavior:contain}
+.cancel-confirm-modal::before,.cancel-confirm-modal::after{content:"";position:absolute;width:13px;height:13px;border:1.5px solid var(--amber);opacity:.74;pointer-events:none}
+.cancel-confirm-modal::before{top:-1px;left:-1px;border-right:0;border-bottom:0}.cancel-confirm-modal::after{right:-1px;bottom:-1px;border-left:0;border-top:0}
+.cancel-confirm-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;border-bottom:1px solid var(--line2);padding:18px;position:relative;z-index:1}.cancel-confirm-head h2{margin:2px 0 6px;color:var(--white);font-size:22px;line-height:1.1;letter-spacing:2px;text-transform:uppercase}.cancel-confirm-head p{font-size:12px;color:var(--dim);letter-spacing:.8px;text-transform:uppercase}
+.cancel-confirm-body{padding:18px;display:flex;flex-direction:column;gap:14px}.cancel-warning{border:1px solid rgba(255,181,61,.34);background:rgba(255,181,61,.075);color:var(--amber);padding:12px;font-size:13px;line-height:1.45;letter-spacing:.4px}.cancel-confirm-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.cancel-confirm-item{border:1px solid var(--line2);background:rgba(255,181,61,.025);padding:11px}.cancel-confirm-item span{display:block;color:var(--dim);font-size:9px;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:5px}.cancel-confirm-item strong{display:block;color:var(--white);font-size:13px;line-height:1.4;word-break:break-word}.cancel-reason-label{display:flex;flex-direction:column;gap:8px;color:var(--white);font-size:10px;letter-spacing:1.2px;text-transform:uppercase}.cancel-reason-label textarea{width:100%;background:rgba(4,10,20,.75);border:1px solid rgba(255,181,61,.28);color:var(--white);padding:11px 12px;font-family:var(--ui);font-size:16px;line-height:1.45;outline:none;resize:vertical;min-height:88px}.cancel-reason-label textarea:focus{border-color:var(--amber);box-shadow:0 0 12px rgba(255,181,61,.16)}
+.cancel-confirm-footer{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line2);padding:14px 18px;background:rgba(2,6,13,.52)}.cancel-confirm-footer .btn[disabled],.cancel-confirm-footer .btn[aria-disabled="true"]{opacity:.55;cursor:not-allowed}.btn.cancel[disabled]{filter:grayscale(.35);opacity:.55;cursor:not-allowed}
+.cancel-confirm-overlay:not([hidden]){animation:qaOverlayIn .12s ease-out}.cancel-confirm-item strong{overflow-wrap:anywhere}
+.actions-shell .panel,.actions-shell .topbar,.action-card,.action-detail-section,.action-result-item{max-width:100%;overflow-wrap:anywhere}
+.action-result-item,.action-result-metadata,.action-result-metadata pre{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.action-detail-status-row{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.action-detail-section h3{line-height:1.35}
+@media(max-width:900px){
+  .actions-mobile-command-bar{display:flex}
+  .actions-shell{padding-bottom:18px}
+  .actions-shell .topbar{position:relative;z-index:8}
+  .status-filter-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch}
+  .status-filter-tab{width:100%}
+  .actions-toolbar{scroll-margin-top:88px}
+  .actions-grid{grid-template-columns:1fr!important;width:100%}
+  .action-card{border-radius:14px;padding:14px;gap:12px;box-shadow:0 12px 26px rgba(0,0,0,.16), inset 0 0 22px rgba(43,180,255,.035)}
+  .action-card-header{gap:9px}.action-card-header .action-pill,.action-card-header .action-risk-badge{min-height:34px;display:inline-flex;align-items:center}
+  .action-card-mobile-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;border:1px solid var(--line2);background:rgba(2,6,13,.38);padding:9px}
+  .action-card-mobile-summary span{display:flex;flex-direction:column;gap:4px;font-family:var(--mono);font-size:11px;color:var(--blueb);min-width:0;word-break:break-word}
+  .action-card-mobile-summary strong{font-family:var(--ui);font-size:8px;letter-spacing:1.2px;color:var(--dim);text-transform:uppercase}
+  .action-card-actions{grid-template-columns:repeat(2,minmax(0,1fr))!important}.action-card-actions .btn.detail{grid-column:auto!important}
+  .action-card-actions .btn{border-radius:10px;min-height:52px!important;font-size:11px!important;line-height:1.2;white-space:normal}
+  .action-detail-status-row{padding:10px 14px;gap:8px}.action-detail-status-row .action-pill{flex:0 0 auto;min-height:34px;display:inline-flex;align-items:center}
+  .action-detail-body{max-width:100%;overflow-x:hidden}.action-detail-section{border-radius:12px}.action-detail-section .action-detail-grid,.action-detail-grid,.approval-confirm-grid,.reject-confirm-grid,.cancel-confirm-grid{grid-template-columns:1fr!important}
+  .action-preview-json,.action-proposed-content,.action-result-metadata pre{font-size:11px;max-height:280px;overflow:auto;border-radius:10px}
+  .cancel-confirm-overlay{padding:0;align-items:stretch}.cancel-confirm-modal{width:100%;height:100dvh;max-height:100dvh;border-left:0;border-right:0;scrollbar-gutter:stable}.cancel-confirm-head{flex-direction:column;padding:14px;gap:12px}.cancel-confirm-head h2{font-size:18px;letter-spacing:1.2px;line-height:1.18}.cancel-confirm-body{padding:14px;gap:12px}.cancel-confirm-footer{position:sticky;bottom:0;z-index:5;display:grid;grid-template-columns:1fr;gap:9px;padding:12px 14px;background:rgba(2,6,13,.94);box-shadow:0 -12px 26px rgba(0,0,0,.28)}.cancel-confirm-footer .btn{width:100%;min-height:50px;font-size:12px;padding:13px 14px}.cancel-reason-label textarea{min-height:112px}.cancel-warning{font-size:13px}
+  .action-card-footer-note{font-size:11px}
+}
+@media(max-width:520px){
+  .actions-mobile-command-bar{margin-left:-2px;margin-right:-2px;padding:8px}.actions-mobile-command-bar a{min-width:128px}
+  .status-filter-tabs{grid-template-columns:1fr}.action-card-mobile-summary{grid-template-columns:1fr}.action-card-actions{grid-template-columns:1fr!important}.action-detail-head .btn,.approval-confirm-head .btn,.reject-confirm-head .btn,.cancel-confirm-head .btn{width:100%;min-height:44px}.cancel-confirm-body{padding-bottom:18px}
+}

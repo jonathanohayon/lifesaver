@@ -1,0 +1,57 @@
+PHASE 12.8 — SYNC STATUS + ERRORS
+=================================
+
+Purpose
+-------
+Give the founder a safe support connector status screen before any real Gmail sync worker or support send executor exists.
+
+What the UI shows
+-----------------
+- Connector connected/disconnected/not configured.
+- Last sync timestamp.
+- Last successful sync timestamp.
+- Last attempt timestamp.
+- Sync error count.
+- Redacted recent sync errors.
+- Token health state.
+- Token expiry timestamp, if known.
+- Whether Gmail read-only scope is present.
+- Whether read-only import is safe from the displayed status.
+- Next recommended action.
+
+API endpoints
+-------------
+- GET  /api/v1/support/sync-status/status
+- GET  /api/v1/support/sync-status/current
+- GET  /api/v1/support/sync-status/example
+- POST /api/v1/support/sync-status/preview
+
+UI files
+--------
+- apps/web/src/support.html
+- apps/web/src/assets/css/support-status.css
+- apps/web/src/assets/js/support-status.js
+
+Safety boundary
+---------------
+Phase 12.8 is status/UI-only.
+
+It does not add:
+- Gmail OAuth routes.
+- Gmail API client.
+- Gmail API calls.
+- Gmail send or modify scopes.
+- Email sending.
+- Support send executor.
+- Support auto-reply.
+- Token value exposure.
+- Raw token payload exposure.
+- Raw provider payload exposure.
+
+Current behavior
+----------------
+Because real Gmail OAuth/token lookup is not implemented yet, the current endpoint returns a safe baseline showing Gmail as not configured/disconnected. The example endpoint provides QA scenarios for connected healthy, connected with errors, and expired token states.
+
+No migration
+------------
+This phase does not require a database migration.

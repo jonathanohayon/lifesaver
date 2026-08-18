@@ -1,0 +1,91 @@
+{
+  "statusEndpoint": "GET /api/v1/support/sync-status/status",
+  "currentEndpoint": "GET /api/v1/support/sync-status/current",
+  "exampleEndpoint": "GET /api/v1/support/sync-status/example",
+  "previewEndpoint": "POST /api/v1/support/sync-status/preview",
+  "statusResponse": {
+    "success": true,
+    "data": {
+      "phase": "V2 Phase 12.8 — Sync Status + Errors",
+      "healthMode": "v2-phase-12-8-sync-status-errors",
+      "deliverable": "support_connector_status_ui",
+      "selectedConnector": "gmail",
+      "connectorStatusUiAdded": true,
+      "showsConnectedDisconnected": true,
+      "showsLastSync": true,
+      "showsSyncErrors": true,
+      "showsTokenStatus": true,
+      "browserSafeOnly": true,
+      "gmailApiClientAdded": false,
+      "gmailExternalApiCalled": false,
+      "emailSendAdded": false,
+      "supportAutoReplyAdded": false,
+      "tokenValueReturned": false
+    }
+  },
+  "previewRequest": {
+    "provider": "gmail",
+    "configured": true,
+    "connected": true,
+    "tokenStatus": "expiring_soon",
+    "tokenExpiresAt": "2026-07-08T10:00:00.000Z",
+    "readOnlyScopeGranted": true,
+    "lastSyncAt": "2026-07-07T10:00:00.000Z",
+    "lastSuccessfulSyncAt": "2026-07-07T09:59:00.000Z",
+    "lastAttemptAt": "2026-07-07T10:00:00.000Z",
+    "syncErrors": [
+      {
+        "code": "gmail_rate_limited",
+        "message": "Gmail read-only import was rate limited for customer@example.com.",
+        "occurredAt": "2026-07-07T10:01:00.000Z",
+        "retryable": true,
+        "severity": "warning"
+      }
+    ]
+  },
+  "previewResponseShape": {
+    "success": true,
+    "data": {
+      "valid": true,
+      "snapshot": {
+        "provider": "gmail",
+        "connectorLabel": "Gmail",
+        "connectionState": "connected",
+        "connectorConnected": true,
+        "configured": true,
+        "lastSyncAt": "2026-07-07T10:00:00.000Z",
+        "lastSuccessfulSyncAt": "2026-07-07T09:59:00.000Z",
+        "lastAttemptAt": "2026-07-07T10:00:00.000Z",
+        "syncErrorCount": 1,
+        "recentSyncErrors": [
+          {
+            "code": "gmail_rate_limited",
+            "message": "Gmail read-only import was rate limited for [REDACTED_EMAIL].",
+            "occurredAt": "2026-07-07T10:01:00.000Z",
+            "retryable": true,
+            "severity": "warning",
+            "redacted": true
+          }
+        ],
+        "tokenStatus": "expiring_soon",
+        "tokenExpiresAt": "2026-07-08T10:00:00.000Z",
+        "tokenValueReturned": false,
+        "rawTokenPayloadReturned": false,
+        "readOnlyScopeGranted": true,
+        "safeToImportReadOnly": false,
+        "syncHealth": "warning",
+        "uiBadges": ["CONNECTED", "TOKEN EXPIRING SOON", "LAST SYNC AVAILABLE", "1 SYNC ERROR"],
+        "nextRecommendedAction": "Review the redacted sync errors and retry read-only import after the issue is fixed."
+      },
+      "safety": {
+        "browserSafeOnly": true,
+        "tokenValueReturned": false,
+        "rawTokenPayloadReturned": false,
+        "rawProviderPayloadReturned": false,
+        "gmailExternalApiCalled": false,
+        "emailSendAdded": false,
+        "supportAutoReplyAdded": false
+      }
+    }
+  }
+}

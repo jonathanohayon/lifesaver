@@ -1,0 +1,45 @@
+LIFE.SAVER v0.6.0 — Phase 6.3 Policy Evaluation Service
+
+Purpose:
+Create the policy engine service function:
+
+evaluateActionPolicy(action)
+
+Required return values:
+- ask / auto_approve / block
+- reason
+- matched_policy_id
+- cap_status
+
+What this phase adds:
+- apps/api/src/modules/policies/policy.evaluator.ts
+- apps/api/src/modules/policies/policy.repository.ts
+- apps/api/src/modules/policies/policy.evaluator-tests.ts
+- packages/shared/src/policy-evaluator.ts
+- npm.cmd run policy:evaluator:test
+
+Evaluator behavior:
+1. Loads enabled policies for the workspace and action_type.
+2. Checks policy matches in priority order.
+3. Phase 6.3 matches only:
+   - empty conditions_json = workspace/action-type-level match
+   - { "always": true } = explicit always match
+4. Non-empty condition operators are deferred to Phase 6.4, so unsupported conditions do not match yet.
+5. If no enabled policy matches, default ask/manual-review applies.
+6. If an explicit policy matches, its decision may return ask, auto_approve, or block.
+7. Pause and emergency safe mode override auto_approve.
+8. cap_status reports whether caps exist, but cap enforcement is not implemented until later phases.
+
+Safety:
+- No executor is registered.
+- No sandbox executor is registered.
+- No real content publish executor is registered.
+- No support send executor is registered.
+- No ad executor is registered.
+- No external write connector is added.
+- auto_approve does not mean executed.
+- approved does not mean executed.
+- evaluator returns a decision only.
+
+Next phase:
+Phase 6.4 — Condition Operators.

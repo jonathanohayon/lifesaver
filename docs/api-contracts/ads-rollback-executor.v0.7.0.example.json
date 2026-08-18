@@ -1,0 +1,428 @@
+{
+  "version": "0.7.0",
+  "phase": "phase_14_8_rollback_reenable",
+  "healthMode": "v2-phase-14-8-rollback-reenable",
+  "deliverable": "ads_rollback_executor",
+  "generatedAt": "2026-07-09T07:31:37.595Z",
+  "executiveSummary": "Phase 14.8 adds the approval-gated ads rollback/re-enable executor shell. It defines safe rollback plans for restoring a previous budget, re-enabling a paused ad set/ad group, and re-enabling a campaign from verified snapshots. This phase still adds no Meta/Google API client and performs no live ad mutation.",
+  "supportedRollbackTypes": [
+    "restore_previous_budget",
+    "reenable_paused_adset",
+    "reenable_campaign"
+  ],
+  "rollbackExamples": [
+    "Restore a previous campaign/adset budget from a verified before-execution snapshot.",
+    "Re-enable a paused Meta ad set or Google Ads ad group only when the previous status was active/enabled.",
+    "Re-enable a campaign only when the previous status was active/enabled and a linked snapshot/result exists."
+  ],
+  "exampleInput": {
+    "action": {
+      "workspace_id": "00000000-0000-4000-8000-000000000014",
+      "action_id": "00000000-0000-4000-8000-000000000146",
+      "action_type": "adjust_budget",
+      "status": "approved",
+      "platform": "meta_marketing_api",
+      "account_id": "act_safe_example_123",
+      "approval": {
+        "approved_by_user_id": "00000000-0000-4000-8000-000000000001",
+        "approved_at": "2026-07-09T12:00:00.000Z",
+        "approval_event_exists": true,
+        "approval_event_actor_id": "00000000-0000-4000-8000-000000000001",
+        "approval_method": "founder_manual"
+      },
+      "pause": {
+        "master_pause_active": false,
+        "ads_pause_active": false,
+        "emergency_safe_mode_active": false
+      },
+      "budget_payload": {
+        "action_type": "adjust_budget",
+        "platform": "meta_marketing_api",
+        "account_id": "act_sandbox_example_account",
+        "campaign_id": "campaign_sandbox_example_001",
+        "adset_id": "adset_sandbox_example_001",
+        "current_budget": 100,
+        "proposed_budget": 110,
+        "delta": 10,
+        "percentage_change": 10,
+        "reason": "ROAS improved in the latest read-only performance context, so LIFE.SAVER is proposing a small manual-reviewed budget test.",
+        "risk_level": "critical",
+        "manual_approval_required": true,
+        "hard_caps_required_before_execution": true,
+        "before_after_snapshot_required_before_execution": true,
+        "result_log_required_after_execution": true,
+        "external_ad_api_called": false
+      },
+      "hard_caps": {
+        "platform": "global",
+        "account_id": null,
+        "currency": "USD",
+        "max_daily_budget_change": 100,
+        "max_percentage_change": 15,
+        "max_changes_per_day": 3,
+        "always_ask_above_threshold": 25,
+        "emergency_never_exceed_limit": 500,
+        "enabled": true
+      },
+      "hard_caps_usage": {
+        "daily_budget_change_used": 20,
+        "changes_today": 1
+      },
+      "force": false
+    },
+    "rollback_request": {
+      "rollback_type": "restore_previous_budget",
+      "source_action_id": "00000000-0000-4000-8000-000000000146",
+      "source_action_result_id": "00000000-0000-4000-8000-000000001146",
+      "source_snapshot_id": "00000000-0000-4000-8000-000000002146",
+      "reason": "Restore the prior safe budget after a manually approved test adjustment.",
+      "manual_rollback_requested": true,
+      "requested_by_user_id": "00000000-0000-4000-8000-000000000001",
+      "requested_at": "2026-07-09T13:00:00.000Z"
+    },
+    "before_snapshot": {
+      "snapshot_kind": "before_execution",
+      "platform": "meta_marketing_api",
+      "account_id": "act_safe_example_123",
+      "campaign_id": "cmp_safe_example_123",
+      "adset_id": "adset_safe_example_123",
+      "budget": 100,
+      "currency": "USD",
+      "campaign_status": "active",
+      "adset_status": "active",
+      "timestamp": "2026-07-09T12:00:00.000Z",
+      "platform_data_summary": {
+        "summary": "Safe summary of before state for rollback planning. No raw provider payload.",
+        "source": "manual_fixture"
+      }
+    },
+    "current_state": {
+      "platform": "meta_marketing_api",
+      "account_id": "act_safe_example_123",
+      "campaign_id": "cmp_safe_example_123",
+      "adset_id": "adset_safe_example_123",
+      "current_budget": 125,
+      "currency": "USD",
+      "campaign_status": "active",
+      "adset_status": "active",
+      "timestamp": "2026-07-09T13:00:00.000Z",
+      "platform_data_summary": "Current safe state summary for rollback planning. No provider call in this phase."
+    },
+    "force": false
+  },
+  "exampleEvaluation": {
+    "version": "0.7.0",
+    "phase": "phase_14_8_rollback_reenable",
+    "healthMode": "v2-phase-14-8-rollback-reenable",
+    "deliverable": "ads_rollback_executor",
+    "decision": "rollback_ready_for_executor_shell",
+    "readyForFutureProviderRollbackExecutor": true,
+    "allowedToCallProviderApiThisPhase": false,
+    "allowedToMutateAdsThisPhase": false,
+    "manualApprovalRequired": true,
+    "autoRunAllowed": false,
+    "issues": [],
+    "warnings": [],
+    "checks": {
+      "manualApprovalGatePassed": true,
+      "rollbackTypeSupported": true,
+      "sourceSnapshotPresent": true,
+      "currentStatePresent": true,
+      "sourceActionReferencePresent": true,
+      "sourceResultOrSnapshotReferencePresent": true,
+      "manualRollbackRequested": true,
+      "singleEntityOnly": true,
+      "budgetRestoreValid": true,
+      "adsetReenableValid": false,
+      "campaignReenableValid": false,
+      "beforeAfterSnapshotLinked": true,
+      "noProviderClientLoaded": true,
+      "noExternalAdApiCalled": true,
+      "noBudgetRestoredThisPhase": true,
+      "noCampaignReenabledThisPhase": true,
+      "noAdsetReenabledThisPhase": true,
+      "noBulkRollbackSupported": true
+    },
+    "manualApprovalEvaluation": {
+      "version": "0.7.0",
+      "phase": "phase_14_6_manual_approval_only",
+      "healthMode": "v2-phase-14-6-manual-approval-only",
+      "deliverable": "approval_gated_ads_executor",
+      "executorName": "manualApprovalOnlyAdsExecutorGate",
+      "decision": "ready_for_manual_executor_shell",
+      "readyForFutureProviderClient": true,
+      "allowedToCallProviderApiThisPhase": false,
+      "manualApprovalRequired": true,
+      "autoRunAllowed": false,
+      "issues": [],
+      "warnings": [],
+      "checks": {
+        "actionTypeSupported": true,
+        "statusApproved": true,
+        "autoApprovalRejected": true,
+        "manualApprovalActorPresent": true,
+        "manualApprovalTimestampPresent": true,
+        "manualApprovalEventPresent": true,
+        "manualApprovalMethodValid": true,
+        "forceIgnored": true,
+        "masterPauseOff": true,
+        "adsPauseOff": true,
+        "emergencySafeModeOff": true,
+        "hardCapsPresentForBudgetAction": true,
+        "hardCapsNotExceeded": true,
+        "budgetPayloadValidWhenRequired": true,
+        "noProviderClientLoaded": true,
+        "noExternalAdApiCalled": true
+      },
+      "normalizedAction": {
+        "workspace_id": "00000000-0000-4000-8000-000000000014",
+        "action_id": "00000000-0000-4000-8000-000000000146",
+        "action_type": "adjust_budget",
+        "status": "approved",
+        "platform": "meta_marketing_api",
+        "account_id": "act_safe_example_123"
+      },
+      "normalizedBudgetPayload": {
+        "action_type": "adjust_budget",
+        "platform": "meta_marketing_api",
+        "account_id": "act_sandbox_example_account",
+        "campaign_id": "campaign_sandbox_example_001",
+        "adset_id": "adset_sandbox_example_001",
+        "current_budget": 100,
+        "proposed_budget": 110,
+        "delta": 10,
+        "percentage_change": 10,
+        "reason": "ROAS improved in the latest read-only performance context, so LIFE.SAVER is proposing a small manual-reviewed budget test.",
+        "risk_level": "critical",
+        "manual_approval_required": true,
+        "hard_caps_required_before_execution": true,
+        "before_after_snapshot_required_before_execution": true,
+        "result_log_required_after_execution": true,
+        "external_ad_api_called": false
+      },
+      "hardCapsEvaluation": {
+        "decision": "allowed_manual_review",
+        "allowed": true,
+        "manualApprovalRequired": true,
+        "issues": [],
+        "warnings": [],
+        "checks": [
+          {
+            "capKey": "max_daily_budget_change",
+            "limit": 100,
+            "current": 20,
+            "increment": 10,
+            "projected": 30,
+            "exceeded": false,
+            "alwaysAskTriggered": false,
+            "reason": "Projected daily absolute budget-change amount must remain inside the configured hard cap."
+          },
+          {
+            "capKey": "max_percentage_change",
+            "limit": 15,
+            "current": 0,
+            "increment": 10,
+            "projected": 10,
+            "exceeded": false,
+            "alwaysAskTriggered": false,
+            "reason": "Single budget-change percentage must remain inside the configured hard cap."
+          },
+          {
+            "capKey": "max_changes_per_day",
+            "limit": 3,
+            "current": 1,
+            "increment": 1,
+            "projected": 2,
+            "exceeded": false,
+            "alwaysAskTriggered": false,
+            "reason": "Daily number of budget-control changes must remain inside the configured hard cap."
+          },
+          {
+            "capKey": "always_ask_above_threshold",
+            "limit": 25,
+            "current": 0,
+            "increment": 10,
+            "projected": 10,
+            "exceeded": false,
+            "alwaysAskTriggered": false,
+            "reason": "Crossing this value requires ask/manual review and must never become auto-approval permission."
+          },
+          {
+            "capKey": "emergency_never_exceed_limit",
+            "limit": 500,
+            "current": 0,
+            "increment": 110,
+            "projected": 110,
+            "exceeded": false,
+            "alwaysAskTriggered": false,
+            "reason": "Proposed budget must never exceed the emergency never-exceed limit."
+          }
+        ],
+        "normalizedCaps": {
+          "platform": "global",
+          "account_id": null,
+          "currency": "USD",
+          "max_daily_budget_change": 100,
+          "max_percentage_change": 15,
+          "max_changes_per_day": 3,
+          "always_ask_above_threshold": 25,
+          "emergency_never_exceed_limit": 500,
+          "enabled": true
+        },
+        "normalizedBudgetPayload": {
+          "action_type": "adjust_budget",
+          "platform": "meta_marketing_api",
+          "account_id": "act_sandbox_example_account",
+          "campaign_id": "campaign_sandbox_example_001",
+          "adset_id": "adset_sandbox_example_001",
+          "current_budget": 100,
+          "proposed_budget": 110,
+          "delta": 10,
+          "percentage_change": 10,
+          "reason": "ROAS improved in the latest read-only performance context, so LIFE.SAVER is proposing a small manual-reviewed budget test.",
+          "risk_level": "critical",
+          "manual_approval_required": true,
+          "hard_caps_required_before_execution": true,
+          "before_after_snapshot_required_before_execution": true,
+          "result_log_required_after_execution": true,
+          "external_ad_api_called": false
+        },
+        "computed": {
+          "absoluteBudgetDelta": 10,
+          "absolutePercentageChange": 10,
+          "projectedDailyBudgetChange": 30,
+          "projectedChangesToday": 2,
+          "emergencyLimitExceeded": false,
+          "alwaysAskTriggered": false
+        },
+        "safety": {
+          "storageOnly": true,
+          "migrationAdditiveOnly": true,
+          "noAdsExecutorAdded": true,
+          "noMetaAdsApiClientAdded": true,
+          "noGoogleAdsApiClientAdded": true,
+          "noAdOAuthRouteAdded": true,
+          "noAdTokenStorageAdded": true,
+          "noWriteScopeRequested": true,
+          "noCampaignPaused": true,
+          "noAdsetPaused": true,
+          "noBudgetChanged": true,
+          "noBudgetRestored": true,
+          "noCampaignReenabled": true,
+          "noAdsAutoRunEnabled": true,
+          "noExternalAdApiCalled": true,
+          "noRawTokensReturned": true,
+          "noRawProviderPayloadReturned": true,
+          "databaseMigrationAdded": true
+        }
+      },
+      "statusPathPreview": [
+        "approved",
+        "executing_blocked_until_provider_phase"
+      ],
+      "resultLogRequiredBeforeClaimingExecution": true,
+      "safety": {
+        "manualApprovalOnly": true,
+        "approvalGateOnly": true,
+        "executorShellAdded": true,
+        "noMetaAdsApiClientAdded": true,
+        "noGoogleAdsApiClientAdded": true,
+        "noAdOAuthRouteAdded": true,
+        "noAdTokenStorageAdded": true,
+        "noWriteScopeRequested": true,
+        "noCampaignPaused": true,
+        "noAdsetPaused": true,
+        "noBudgetChanged": true,
+        "noBudgetRestored": true,
+        "noCampaignReenabled": true,
+        "noAdsAutoRunEnabled": true,
+        "noExternalAdApiCalled": true,
+        "noRawTokensReturned": true,
+        "noRawProviderPayloadReturned": true,
+        "noDatabaseMigrationRequired": true
+      }
+    },
+    "normalizedAction": {
+      "workspace_id": "00000000-0000-4000-8000-000000000014",
+      "action_id": "00000000-0000-4000-8000-000000000146",
+      "action_type": "adjust_budget",
+      "platform": "meta_marketing_api",
+      "account_id": "act_safe_example_123"
+    },
+    "rollbackPlan": {
+      "rollback_type": "restore_previous_budget",
+      "executor_name": "manualApprovalOnlyAdsRollbackExecutor",
+      "target": {
+        "platform": "meta_marketing_api",
+        "account_id": "act_safe_example_123",
+        "campaign_id": "cmp_safe_example_123",
+        "adset_id": "adset_safe_example_123"
+      },
+      "planned_provider_operation": "restore_budget",
+      "planned_safe_restore_value": {
+        "previous_budget": 100,
+        "previous_campaign_status": "active",
+        "previous_adset_status": "active",
+        "currency": "USD"
+      },
+      "requiredStorage": {
+        "actionEvents": [
+          "rollback_requested",
+          "rollback_started",
+          "rollback_finished_or_failed"
+        ],
+        "actionResults": "rollback result row with result_status rollback_success or rollback_failed",
+        "adsActionSnapshots": "before rollback and after rollback snapshots must link to action_results when provider phase exists"
+      }
+    },
+    "statusPathPreview": [
+      "executed",
+      "rollback_requested",
+      "rollback_ready",
+      "executing_blocked_until_provider_phase"
+    ],
+    "safety": {
+      "rollbackExecutorShellOnly": true,
+      "manualApprovalRequired": true,
+      "providerMutationPlanningOnly": true,
+      "noMetaAdsApiClientAdded": true,
+      "noGoogleAdsApiClientAdded": true,
+      "noAdOAuthRouteAdded": true,
+      "noAdTokenStorageAdded": true,
+      "noWriteScopeRequested": true,
+      "noBudgetRestored": true,
+      "noCampaignReenabled": true,
+      "noAdsetReenabled": true,
+      "noCampaignPaused": true,
+      "noAdsetPaused": true,
+      "noBudgetChanged": true,
+      "noAdsAutoRunEnabled": true,
+      "noExternalAdApiCalled": true,
+      "noRawTokensReturned": true,
+      "noRawProviderPayloadReturned": true,
+      "noDatabaseMigrationRequired": true
+    }
+  },
+  "safety": {
+    "rollbackExecutorShellOnly": true,
+    "manualApprovalRequired": true,
+    "providerMutationPlanningOnly": true,
+    "noMetaAdsApiClientAdded": true,
+    "noGoogleAdsApiClientAdded": true,
+    "noAdOAuthRouteAdded": true,
+    "noAdTokenStorageAdded": true,
+    "noWriteScopeRequested": true,
+    "noBudgetRestored": true,
+    "noCampaignReenabled": true,
+    "noAdsetReenabled": true,
+    "noCampaignPaused": true,
+    "noAdsetPaused": true,
+    "noBudgetChanged": true,
+    "noAdsAutoRunEnabled": true,
+    "noExternalAdApiCalled": true,
+    "noRawTokensReturned": true,
+    "noRawProviderPayloadReturned": true,
+    "noDatabaseMigrationRequired": true
+  },
+  "nextStep": "Phase 14.9 — Auto-Run Below Threshold Later"
+}

@@ -1,0 +1,43 @@
+# LIFE.SAVER v0.7.4 — Mobile Rules Memory Proactivity
+
+## Purpose
+
+Phase 2 of the mobile operator UI readiness roadmap focuses on the founder dashboard. The goal is to make the main dashboard, Daily Brief, KPI cards, Weekly Summary, AI chat, and voice input usable on phones and tablets.
+
+## Version
+
+```js
+window.LIFESAVER_APP_VERSION = {
+  version: '0.7.4',
+  label: 'V2 Mobile Rules Memory Proactivity',
+  healthMode: 'v2-mobile-0-7-4-rules-memory-proactivity'
+};
+```
+
+## Layout rules
+
+- Desktop keeps the existing full dashboard grid.
+- Tablet uses a two-column dashboard structure where the AI/chat core stays full width.
+- Phone uses one column with no horizontal scrolling.
+- Mobile jump buttons make the important dashboard areas easier to reach.
+
+## Dashboard areas improved
+
+- Daily Brief
+- AI Chat
+- Voice input
+- KPI/Growth Metrics
+- Draft Review
+- Weekly Summary
+- Revenue Stream
+- Business Events
+
+## Files added
+
+- `apps/web/src/assets/css/dashboard.css`
+- `apps/web/src/assets/js/dashboard.js`
+- `scripts/mobile-rules-memory-proactivity-check.mjs`
+
+## Safety statement
+
+This phase is frontend responsive hardening only. It does not create or execute actions, does not change policies, does not call external connectors, and does not enable auto-run.

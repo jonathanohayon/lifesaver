@@ -1,0 +1,51 @@
+{
+  "success": true,
+  "data": {
+    "version": "0.6.0",
+    "phase": "v0.6.0 Phase 3.6 Reject Action Endpoint",
+    "workspaceId": "workspace-uuid",
+    "userRole": "owner",
+    "rejected": true,
+    "alreadyRejected": false,
+    "action": {
+      "id": "action-uuid",
+      "workspaceId": "workspace-uuid",
+      "createdByUserId": "user-uuid",
+      "actionType": "content_publish",
+      "title": "Fixture: Proposed Instagram post",
+      "description": "Safe local-only proposed action fixture.",
+      "status": "rejected",
+      "riskLevel": "low",
+      "approvalRequired": true,
+      "policyDecision": "ask",
+      "idempotencyKey": "local-fixture-content-publish-v1",
+      "actionHash": "sha256-example",
+      "createdAt": "2026-06-29T00:00:00.000Z",
+      "updatedAt": "2026-06-29T00:01:00.000Z",
+      "approvedAt": null,
+      "executedAt": null,
+      "hasPayload": false
+    },
+    "transition": {
+      "fromStatus": "proposed",
+      "toStatus": "rejected"
+    },
+    "rejection": {
+      "rejectedByUserId": "user-uuid",
+      "rejectedAt": "2026-06-29T00:01:00.000Z",
+      "rejectionReason": "Not on brand for this campaign.",
+      "eventLogged": true
+    },
+    "execution": {
+      "executed": false,
+      "queued": false,
+      "executorEnabled": false,
+      "note": "Rejection is recorded internally only. Executor phases are not enabled yet, so this endpoint does not queue or execute the action."
+    },
+    "safety": {
+      "canExecuteFromThisEndpoint": false,
+      "externalWritesEnabled": false,
+      "note": "POST /api/v1/actions/:id/reject only changes internal LIFE.SAVER action status and logs a rejected event. It cannot publish content, send support replies, change ad spend, pause campaigns, refund orders, edit products, or write to external platforms."
+    }
+  }
+}

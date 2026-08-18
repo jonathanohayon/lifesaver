@@ -1,0 +1,43 @@
+{
+  "version": "0.6.0",
+  "phase": "v0.6.0 Phase 6.10 Policy Tests",
+  "dryRun": true,
+  "dryRunId": "dryrun_example_20260705120000",
+  "useCase": "policy_ui_preview",
+  "simulationName": "Instagram approved-style preview",
+  "workspaceId": "workspace_123",
+  "action": {
+    "actionId": null,
+    "actionType": "content_publish",
+    "riskLevel": "low",
+    "requestedDecision": "auto_approve",
+    "payloadPreviewKeys": ["platform", "caption", "confidence_score"]
+  },
+  "evaluation": {
+    "decision": "auto_approve",
+    "reason": "Policy matched and caps are OK.",
+    "matched_policy_id": "policy_123",
+    "cap_status": "caps_ok",
+    "executorExecutionAllowed": false
+  },
+  "outcomePreview": {
+    "decision": "auto_approve",
+    "approvalRequired": false,
+    "autoApprovalAllowed": true,
+    "executorExecutionAllowed": false,
+    "wouldPersistAction": false,
+    "wouldPersistPolicyDecisionSnapshot": false,
+    "wouldQueueExecution": false,
+    "wouldRunExecutor": false,
+    "wouldWriteExternally": false
+  },
+  "safety": {
+    "databaseWritesPerformed": false,
+    "actionCreated": false,
+    "policySnapshotPersisted": false,
+    "approvalStateChanged": false,
+    "executorRan": false,
+    "externalWritesAttempted": false,
+    "autoRunTriggered": false
+  }
+}

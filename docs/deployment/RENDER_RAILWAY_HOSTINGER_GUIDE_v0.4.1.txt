@@ -1,0 +1,42 @@
+LIFE.SAVER v0.4.1 — Render / Railway / Hostinger Deployment Notes
+
+RECOMMENDED BEGINNER PATH
+For the first production-like deployment, use:
+- Supabase for PostgreSQL
+- Render or Railway for API and worker
+- Static web hosting for frontend
+
+RENDER OPTION
+API service:
+- Runtime: Node
+- Build command: npm ci && npm run build
+- Start command: npm --workspace apps/api run start
+- Environment variables: use production checklist
+
+Worker service:
+- Runtime: Node
+- Build command: npm ci && npm run build
+- Start command: npm --workspace apps/worker run start
+- Environment variables: WORKER_* plus shared API settings
+
+Web static site:
+- Build command: npm ci && npm --workspace apps/web run build
+- Publish directory: apps/dist based on current Vite config
+
+RAILWAY OPTION
+- Create separate services for API and worker, or one project with multiple services.
+- Set root build as npm ci && npm run build.
+- API start: npm --workspace apps/api run start
+- Worker start: npm --workspace apps/worker run start
+
+HOSTINGER OPTION
+Use Hostinger only if the plan supports persistent Node.js applications.
+- API must run as a Node service, not as static hosting.
+- Worker needs either another Node process, cron command, or external scheduler.
+- Supabase remains the database.
+- Set environment variables in Hostinger panel if available.
+
+IMPORTANT
+Do not upload .env through public file manager or GitHub.
+Do not use shared hosting that only supports PHP/static files for the API.
+The backend must run Node.js.

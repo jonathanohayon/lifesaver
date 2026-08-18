@@ -1,0 +1,213 @@
+LIFE.SAVER V2 — PHASE 3.2 ACTION LIST API
+Version: v0.6.0
+Phase: 3.2 — List Actions API
+Status: Backend read-only endpoint added
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 3.2 adds the first real approval-queue backend API surface:
+
+GET /api/v1/actions
+
+This endpoint lets an authenticated workspace user list V2 actions that belong to their
+current workspace.
+
+This is still a safe backend foundation step. It does not approve, reject, cancel, queue,
+or execute any action.
+
+================================================================================
+ENDPOINT
+================================================================================
+
+GET /api/v1/actions
+
+Auth:
+- Required.
+- Request must include the normal LIFE.SAVER Bearer token.
+- The token determines userId and workspaceId.
+- The browser/user cannot choose another workspace through query parameters.
+
+Supported query filters:
+- status
+- action_type
+- risk_level
+- limit
+- offset
+
+Examples:
+
+GET /api/v1/actions
+GET /api/v1/actions?status=proposed
+GET /api/v1/actions?action_type=content_publish
+GET /api/v1/actions?risk_level=high
+GET /api/v1/actions?status=proposed&action_type=support_reply_send&limit=10&offset=0
+
+================================================================================
+SUPPORTED FILTER VALUES
+================================================================================
+
+Statuses:
+- proposed
+- approval_required
+- auto_approved
+- approved
+- rejected
+- cancelled
+- queued
+- executing
+- executed
+- failed
+- rollback_requested
+- rolled_back
+
+Action types:
+- content_publish
+- support_reply_send
+- ad_budget_adjust
+- ad_pause
+- research_task
+- dev_task
+- notification_send
+- rollback_action
+
+Risk levels:
+- low
+- medium
+- high
+- critical
+
+Pagination:
+- limit defaults to 50.
+- limit maximum is 100.
+- offset defaults to 0.
+
+================================================================================
+RESPONSE SHAPE
+================================================================================
+
+The endpoint returns:
+- version
+- phase
+- workspaceId
+- userRole
+- filters
+- pagination
+- items
+- safety
+
+Each item is a summary only.
+
+The list response includes:
+- id
+- workspaceId
+- createdByUserId
+- actionType
+- title
+- description
+- status
+- riskLevel
+- approvalRequired
+- policyDecision
+- idempotencyKey
+- actionHash
+- createdAt
+- updatedAt
+- approvedAt
+- executedAt
+- hasPayload=false
+
+Important:
+- payload_json is intentionally not returned in the list endpoint.
+- A future Phase 3.3 detail endpoint will safely expose a detail view after workspace membership is verified.
+
+================================================================================
+WORKSPACE SCOPING RULE
+================================================================================
+
+The endpoint uses the authenticated token's workspaceId.
+
+The backend also verifies that the user has an active workspace_members row for that
+workspace before returning actions.
+
+Rules:
+- A user can only list actions for their own workspace.
+- Query parameters cannot override workspace_id.
+- The list endpoint does not return actions from another workspace.
+- Internal admin monitoring must remain redacted and separate from customer list APIs.
+
+================================================================================
+SECURITY RULES
+================================================================================
+
+This endpoint must never expose:
+- raw API keys
+- Claude API key
+- Triple Whale API key
+- APP_ENCRYPTION_KEY
+- WORKER_SHARED_SECRET
+- OAuth tokens
+- passwords
+- raw .env values
+- payment/card data
+- unnecessary full payload_json in list view
+
+================================================================================
+WHAT THIS PHASE DOES NOT DO
+================================================================================
+
+Phase 3.2 does not add:
+- action detail endpoint
+- create proposed action endpoint
+- approve endpoint
+- reject endpoint
+- cancel endpoint
+- queue endpoint
+- executor registry
+- sandbox executor
+- real content publishing
+- support reply sending
+- ad budget changes
+- campaign pause
+- external write connectors
+- auto-run rules
+
+V1 remains READ + ADVISE + DRAFT ONLY.
+
+================================================================================
+TESTING CHECKLIST
+================================================================================
+
+After copying the working .env into this package and running the backend:
+
+1. Login normally.
+2. Seed local action fixtures only in local testing:
+   npm.cmd run db:seed:actions:local
+3. Call:
+   GET http://localhost:4000/api/v1/actions
+4. Confirm response contains only the current workspace's actions.
+5. Confirm payload_json is not present in list items.
+6. Test filters:
+   GET /api/v1/actions?status=proposed
+   GET /api/v1/actions?action_type=content_publish
+   GET /api/v1/actions?risk_level=high
+7. Test pagination:
+   GET /api/v1/actions?limit=2&offset=0
+8. Confirm no approve/reject/cancel/execute endpoint is available yet.
+9. Confirm no external write happened.
+
+================================================================================
+NEXT PHASE
+================================================================================
+
+Phase 3.3 — Action Detail API
+
+The next phase should add:
+- GET /api/v1/actions/:id
+- workspace-scoped detail view
+- safe payload_json preview
+- status history
+- result summary
+- no approval/execution yet
+

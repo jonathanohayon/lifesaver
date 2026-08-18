@@ -1,0 +1,44 @@
+LIFE.SAVER v0.6.0 Phase 7.7 Rule Simulation UI
+
+Package:
+lifesaver-v0.6.0-phase-7-7-rule-simulation-ui
+
+Tests expected/passed in this package:
+- npm run build
+- npm run rules:simulation:test
+- npm run rules:caps:test
+- npm run rules:ads:test
+- npm run rules:support:test
+- npm run rules:content:test
+- npm run rules:wizard:test
+- npm run rules:layout:test
+- npm run policy:tests:test
+- npm run policy:dry-run:test
+- npm run policy:decision-records:test
+- npm run policy:conflict-resolution:test
+- npm run policy:cap-validation:test
+- npm run policy:evaluator:test
+- npm run policy:scope-matching:test
+- npm run policy:condition-operators:test
+- npm run policy:default-ask:test
+- npm run policy:schema:test
+- npm run policy:pause:test
+- npm run executor:pause:test
+- npm run actions:test:backend
+- npm run client:test-checklist
+- npm run security:check
+- npm run env:check
+
+Key Phase 7.7 checks:
+- Rule Simulation section exists.
+- Simulation fields exist.
+- Simulation produces auto-approved / ask / blocked labels.
+- Master pause blocks preview.
+- Risk/confidence/amount/caps are considered.
+- Simulation save is localStorage only.
+- No /api/v1/policies write call exists.
+- No executor or external write is enabled.
+
+Security/env notes:
+Local warnings are expected when real .env, DATABASE_URL, and production secrets are absent.
+Do not run npm audit fix --force casually.

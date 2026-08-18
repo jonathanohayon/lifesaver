@@ -1,0 +1,98 @@
+# LIFE.SAVER v0.7.0 — Phase 9.7 Content Publish Result Tracking
+
+## Purpose
+
+Phase 9.7 stores and exposes safe result logs for manual-approved LinkedIn content publishing.
+
+This is built on top of Phase 9.6. The executor remains manual-approved and default-off, but its result data is now clearer and safer for later UI confirmation, support, auditing, and rollback planning.
+
+## Result fields
+
+The content publish result log records:
+
+- platform post ID: stored in `action_results.external_id` when returned by LinkedIn.
+- permalink: stored in `action_results.external_url` when LinkedIn returns one or a safe LinkedIn URL is available.
+- published time: stored in `action_results.metadata_json.published_time`.
+- platform response summary: stored in `action_results.metadata_json.platform_response_summary`.
+- failed/blocked error: stored in `action_results.error_message`.
+
+## New endpoint
+
+```txt
+GET /api/v1/actions/:id/content-publish-result-logs
+```
+
+Returns safe result logs only.
+
+It does not return:
+
+- raw access token,
+- raw refresh token,
+- Authorization header,
+- raw LinkedIn response body,
+- rollback payload,
+- secret-like metadata.
+
+## LinkedIn-specific result behaviour
+
+LinkedIn post creation returns success with HTTP `201`, and the post ID is returned in the `x-restli-id` response header.
+
+Phase 9.7 stores that ID.
+
+Permalink behaviour is intentionally conservative. The LinkedIn create-post response may not return a public permalink. LIFE.SAVER stores a permalink only when one is returned by LinkedIn in a safe LinkedIn URL field. It does not invent a public URL.
+
+## Safety gates remain unchanged
+
+Before any real publish attempt:
+
+- feature flag must be enabled,
+- user/manual approval must exist,
+- action must be approved,
+- master pause must be off,
+- content pause must be off,
+- emergency safe mode must be off,
+- cap validation must pass,
+- token must be valid,
+- `w_member_social` must be present,
+- payload must validate,
+- media type must be `none` or `link` only.
+
+## Still not supported
+
+- Auto-run publishing.
+- Worker/scheduled publish.
+- Image/video/document publish.
+- Organization/page publishing.
+- Rollback/unpublish.
+- Support sending.
+- Ad changes.
+
+## Files added
+
+- `apps/api/src/modules/content-publishing/content-publish-result-logs.ts`
+- `apps/api/src/modules/content-publishing/content-publish-result-logs-tests.ts`
+- `docs/api-contracts/content-publish-result-logs.v0.7.0.example.json`
+- `docs/testing/PHASE_9_7_TEST_RESULTS_v0.7.0.txt`
+- `START_HERE_v0.7.0_PHASE_9_7_RESULT_TRACKING.txt`
+
+## Files updated
+
+- `apps/api/src/modules/content-publishing/content-real-publish.executor.ts`
+- `apps/api/src/modules/content-publishing/content-real-publish.repository.ts`
+- `apps/api/src/modules/content-publishing/content-real-publish.controller.ts`
+- `apps/api/src/modules/actions/actions.controller.ts`
+- `apps/api/src/modules/actions/actions.routes.ts`
+- `apps/api/src/modules/health/health.controller.ts`
+- `README.txt`
+- `CHANGELOG.txt`
+- `package.json`
+- `apps/api/package.json`
+
+## Phase status
+
+Phase 9.7 is complete when:
+
+- `phase9:result-tracking:test` passes,
+- `phase9:real-publish:test` still passes,
+- `build` passes,
+- health mode shows `v2-phase-9-7-result-tracking`.

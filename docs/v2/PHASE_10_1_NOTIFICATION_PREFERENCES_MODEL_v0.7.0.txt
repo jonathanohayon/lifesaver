@@ -1,0 +1,67 @@
+================================================================================
+LIFE.SAVER v0.7.0 — PHASE 10.1 NOTIFICATION PREFERENCES MODEL
+================================================================================
+
+Phase 10 purpose:
+Notify the founder when an action needs approval.
+
+Phase 10.1 purpose:
+Create a safe workspace-level notification settings model before any notification delivery is implemented.
+
+Deliverable:
+Notification settings model.
+
+Model fields:
+1. In-app preference
+   - Stored as in_app_enabled.
+   - Default: true.
+   - Phase 10.1 does not create in-app notification rows yet.
+
+2. Email preference
+   - Stored as email_enabled.
+   - Default: false.
+   - Phase 10.1 does not send email.
+   - Future phases may add email provider, templates, verification, rate limits, and delivery logs.
+
+3. Slack preference
+   - Stored as slack_enabled.
+   - Phase 10.1 enforces false.
+   - Slack is planned for later.
+   - No Slack app, webhook, OAuth, bot token, or Slack message send is added.
+
+4. Quiet hours
+   - quiet_hours_enabled.
+   - quiet_hours_start.
+   - quiet_hours_end.
+   - quiet_hours_timezone.
+   - Supports overnight quiet hours such as 22:00 -> 08:00.
+   - Phase 10.1 only stores the rules; it does not schedule or suppress actual notifications yet.
+
+5. Escalation timing
+   - approval_escalation_minutes.
+   - repeat_escalation_minutes.
+   - max_escalations.
+   - Phase 10.1 only stores timing values; no escalation job is added.
+
+API endpoints:
+- GET /api/v1/notification-preferences
+- PATCH /api/v1/notification-preferences
+
+Permission model:
+- Any active workspace member can read preferences.
+- Only owner/admin can update preferences.
+
+Safety boundary:
+- Settings only.
+- No external notification provider is called.
+- No email delivery.
+- No Slack delivery.
+- No notification worker jobs.
+- No auto-run.
+- No changes to approval/executor logic.
+
+Why this is needed:
+Before LIFE.SAVER alerts the founder about pending actions, the product needs to know how the founder wants to be notified and when notifications should be quiet or escalated.
+
+Next likely phase:
+Phase 10.2 should add in-app notification records or notification event table, still without email/Slack delivery unless explicitly scoped.

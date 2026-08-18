@@ -1,0 +1,50 @@
+LIFE.SAVER v0.7.0 — Phase 10.6 Reminder/Escalation Logic
+
+GOAL
+Remind the founder if an action is pending too long.
+
+DELIVERABLE
+Approval reminder system.
+
+WHAT WAS BUILT
+- Approval reminder model.
+- Reminder preview service.
+- Reminder status endpoint.
+- Reminder preview endpoint.
+- Reminder tests.
+
+NEW ENDPOINTS
+GET /api/v1/notifications/reminders/status
+GET /api/v1/notifications/reminders/preview
+
+REMINDER RULES
+A reminder is due only when:
+1. action.status is proposed or approval_required.
+2. action.approval_required is true.
+3. reminder_count is below maxEscalations.
+4. For the first reminder, action age is greater than or equal to approvalEscalationMinutes.
+5. For repeat reminders, time since lastReminderAt is greater than or equal to repeatEscalationMinutes.
+
+PREFERENCES USED
+- inAppEnabled
+- emailEnabled
+- quietHoursEnabled
+- quietHoursStart
+- quietHoursEnd
+- quietHoursTimezone
+- approvalEscalationMinutes
+- repeatEscalationMinutes
+- maxEscalations
+
+SAFETY BEHAVIOR
+- The service only previews due reminders.
+- It does not send email.
+- It does not send Slack.
+- It does not create durable notification delivery rows in this phase.
+- It does not approve actions.
+- It does not execute actions.
+- It does not call LinkedIn or any external platform.
+- It does not expose raw payload_json, rollback payloads, OAuth tokens, SMTP secrets, or Slack secrets.
+
+FUTURE WORK
+A later phase may connect this preview logic to durable notification rows, email delivery, or worker scheduling. That should be done only with rate limits, quiet hours, deduplication, audit logs, and delivery status tracking.

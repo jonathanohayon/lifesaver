@@ -1,0 +1,22 @@
+# LIFE.SAVER v0.8.4 Test Results
+
+Commands run in packaging workspace:
+
+- npm run phase-functional:0-8-4:test
+- node --check apps/web/src/assets/js/audience-reach.js
+- node --check apps/web/src/assets/js/main.js
+- node --check apps/api/dist/modules/triple-whale/triple-whale.mapper.js
+- node --check apps/api/dist/modules/metrics/metrics.service.js
+- node --check apps/api/dist/modules/audience-reach/audience-reach.model.js
+- node --check apps/api/dist/modules/triple-whale/conversion-reach-source-tests.js
+- node scripts/build-web-static.mjs
+
+Expected passing output:
+
+- conversion-reach-source-check — 45 passed, 0 failed
+- audience-reach-tests — 70 passed, 0 failed
+- active-platform-conversion-tests — 22 passed, 0 failed
+- conversion-reach-source-tests — 28 passed, 0 failed
+- Static web build completed
+
+Full npm run build must be run after npm install because node_modules is intentionally not included in the generated ZIP.

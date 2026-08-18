@@ -1,0 +1,18 @@
+LIFE.SAVER v0.6.0 — Phase 6.8 Policy Decision Records Migration
+
+Migration:
+- database/migrations/016_add_policy_decision_snapshot_to_actions.sql
+
+Adds:
+- actions.policy_decision_snapshot_json JSONB NOT NULL DEFAULT '{}'
+- actions.policy_evaluated_at TIMESTAMPTZ
+
+Indexes:
+- idx_actions_workspace_policy_evaluated
+- idx_actions_workspace_policy_decision
+
+Migration strategy:
+- Additive only.
+- No destructive table changes.
+- No existing V1/V2 tables are dropped.
+- No external writes or executors are introduced.

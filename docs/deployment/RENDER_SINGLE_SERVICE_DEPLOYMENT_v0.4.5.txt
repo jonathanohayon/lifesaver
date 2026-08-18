@@ -1,0 +1,72 @@
+LIFE.SAVER v0.4.5 Render Single-Service Deployment Guide
+
+Purpose:
+Deploy LIFE.SAVER quickly as one Render Web Service that serves both:
+- Express API under /api/v1
+- Built static frontend from the same Render URL
+
+Why this version exists:
+v0.4.4 was locally stable, but the frontend JavaScript defaulted to http://localhost:4000.
+A deployed browser cannot call localhost:4000 on the user's computer.
+v0.4.5 adds runtime frontend API-base detection and optional API-side static web serving.
+
+Recommended first live target:
+Internal staging URL on Render, not final customer production.
+
+Render service:
+- Type: Web Service
+- Runtime: Node
+- Repository: GitHub private lifesaver repo
+- Branch: master
+- Build Command: npm install && npm run build
+- Start Command: npm --workspace apps/api start
+
+Required env vars for single-service staging:
+NODE_ENV=development
+APP_ENVIRONMENT=staging
+DATABASE_ENVIRONMENT=development
+ENVIRONMENT_LOCK=staging:development
+PORT=4000
+SERVE_WEB_APP=true
+FRONTEND_URL=https://YOUR_RENDER_SERVICE.onrender.com
+ALLOWED_ORIGINS=https://YOUR_RENDER_SERVICE.onrender.com
+DATABASE_URL=your Supabase connection string
+DATABASE_SSL=true
+AUTH_TOKEN_SECRET=use a long random string
+APP_ENCRYPTION_KEY=use the same key as the database environment if existing Triple Whale keys are already encrypted
+WORKER_SHARED_SECRET=use a long random string
+WORKER_API_BASE_URL=https://YOUR_RENDER_SERVICE.onrender.com
+WORKER_ENABLED=false
+ENABLE_DEBUG_ROUTES=false
+DASHBOARD_REQUIRE_AUTH=false for first staging smoke test, true before real production
+CHAT_REQUIRE_AUTH=false for first staging smoke test, true before real production
+TRIPLE_WHALE_API_BASE_URL=https://api.triplewhale.com
+TRIPLE_WHALE_VALIDATE_PATH=/api/v2/users/api-keys/me
+TRIPLE_WHALE_SUMMARY_PATH=/api/v2/summary-page/get-data
+TRIPLE_WHALE_SHOP_DOMAIN=budclub.com
+TRIPLE_WHALE_ADDITIONAL_SHOP_IDS=budclub.com
+TRIPLE_WHALE_CURRENCY=USD
+TRIPLE_WHALE_TIMEZONE=America/New_York
+TRIPLE_WHALE_TIMEZONE_OFFSET=-04:00
+TRIPLE_WHALE_SUMMARY_GROUP_BY=hour
+TRIPLE_WHALE_ATTRIBUTION_PATH=/api/v2/attribution/get-orders-with-journeys-v2
+TRIPLE_WHALE_ATTRIBUTION_PAGE=1
+TRIPLE_WHALE_ATTRIBUTION_PAGE_SIZE=25
+TRIPLE_WHALE_ATTRIBUTION_EXCLUDE_JOURNEY_DATA=true
+
+Optional Claude vars:
+CLAUDE_API_KEY=
+CLAUDE_API_BASE_URL=https://api.anthropic.com
+CLAUDE_API_VERSION=2023-06-01
+CLAUDE_MODEL=claude-sonnet-4-20250514
+CLAUDE_MAX_TOKENS=700
+CLAUDE_TEMPERATURE=0.35
+
+After deployment, test:
+https://YOUR_RENDER_SERVICE.onrender.com/api/v1/health
+https://YOUR_RENDER_SERVICE.onrender.com/login.html
+https://YOUR_RENDER_SERVICE.onrender.com/admin.html
+https://YOUR_RENDER_SERVICE.onrender.com/settings.html
+
+Important:
+This single-service deployment is the fastest staging path. A later production setup can split API, web, and worker into separate services when the deployment is stable.

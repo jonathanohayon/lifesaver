@@ -1,0 +1,27 @@
+LIFE.SAVER v0.7.0 — Phase 11.6 Pre-Publish Final Validation
+
+Goal
+Run one final validator before any future publish executor handoff.
+
+Checks covered
+- Token valid.
+- Master pause off.
+- Content pause off.
+- Emergency safe mode off.
+- Cap not exceeded.
+- Content safe.
+- Channel/time restriction still passes.
+- Auto-approval decision still passes.
+- The matched rule is still enabled.
+- Platform is the allowed LinkedIn member feed lane.
+- Media type is limited to none/link for the narrow first lane.
+
+Important implementation note
+This validator consumes safe metadata only. It checks token connection, expiry timestamp, and whether the required scope is present. It does not accept, decrypt, log, return, or expose raw OAuth tokens.
+
+Decision values
+- ready_for_executor_handoff
+- blocked_before_publish
+
+Safety boundary
+Phase 11.6 is validation-only. It does not publish, does not call LinkedIn, does not mutate actions, and does not create database records. The result may be used by a future executor gate, but this package itself does not execute any external write.

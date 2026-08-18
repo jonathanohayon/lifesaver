@@ -1,0 +1,36 @@
+LIFE.SAVER v0.4.0 — Production Security Hardening
+
+Purpose:
+This version begins the production-preparation phase. It does not add external action tools. It hardens API behavior, startup checks, admin visibility, and deployment discipline before real client traffic.
+
+Added:
+- Request ID middleware and x-request-id response header.
+- Helmet security headers.
+- No-store headers for API responses.
+- Strict CORS allow-list support through ALLOWED_ORIGINS.
+- Global API rate limit through API_RATE_LIMIT_PER_MINUTE.
+- JSON body limit through JSON_BODY_LIMIT.
+- DASHBOARD_REQUIRE_AUTH setting. In production, dashboard data endpoints require auth automatically.
+- CHAT_REQUIRE_AUTH is forced on in production.
+- Protected /api/v1/security/status endpoint.
+- npm.cmd run security:check command.
+- Production startup guard that blocks insecure production startup unless ALLOW_INSECURE_PRODUCTION_STARTUP=true.
+- .env.production.example with placeholder-only production values.
+
+Production startup guard checks:
+- NODE_ENV=production.
+- DATABASE_URL exists.
+- DATABASE_SSL=true.
+- AUTH_TOKEN_SECRET is not weak/default.
+- APP_ENCRYPTION_KEY is not weak/default.
+- WORKER_SHARED_SECRET is not weak/default.
+- DASHBOARD_REQUIRE_AUTH=true.
+- CHAT_REQUIRE_AUTH=true.
+- ENABLE_DEBUG_ROUTES=false.
+- ALLOWED_ORIGINS does not include localhost in production.
+
+Important:
+APP_ENCRYPTION_KEY must stay stable after connected account keys are stored. If changed, existing encrypted Triple Whale keys cannot be decrypted unless a re-encryption workflow is performed.
+
+V1 safety unchanged:
+Read + advise + draft only. No posting, sending, refunds, campaign edits, ad spend changes, or external writes.

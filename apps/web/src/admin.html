@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LIFE.SAVER — Super Admin Foundation</title>
+<link rel="stylesheet" href="./assets/css/admin.css" />
+<link rel="stylesheet" href="./assets/css/mobile-shell.css" />
+<link rel="stylesheet" href="./assets/css/mobile-release-qa.css" />
+</head>
+<body>
+  <main class="admin-shell">
+    <section class="topbar">
+      <div class="brand">
+        <h1>LIFE.SAVER ADMIN</h1>
+        <span>Super Admin · Active Platform Conversion · v0.8.3</span>
+      </div>
+      <div class="footer-actions">
+        <a class="btn" href="./index.html">← Founder Dashboard</a>
+        <a class="btn" href="./onboarding.html">Onboarding</a>
+        <a class="btn" href="./settings.html">Customer Settings</a>
+        <a class="btn" href="./functional-audit.html">Functional Audit</a>
+        <a class="btn" href="./actions.html">Actions</a>
+        <a class="btn" href="./rules.html">Rules</a>
+        <a class="btn" href="./notifications.html">Notifications</a>
+        <a class="btn" href="./login.html">Login</a>
+        <button class="btn" id="logoutBtn" type="button">Logout</button>
+        <span class="badge" id="authState">AUTH CHECKING</span>
+        <span class="badge" id="loadState">API CONNECTED</span>
+      </div>
+    </section>
+
+    <section class="panel emergency-safe-mode-panel" id="emergencySafeModePanel" hidden>
+      <h2>EMERGENCY SAFE MODE ACTIVE</h2>
+      <p class="note danger" id="emergencySafeModeMessage">All future executor execution is blocked. Resume does not execute waiting actions.</p>
+      <div class="grid three">
+        <div class="mini"><span>Environment Key</span><strong id="emergencySafeModeEnvKey">—</strong></div>
+        <div class="mini"><span>Execution</span><strong id="emergencySafeModeExecution">BLOCKED</strong></div>
+        <div class="mini"><span>Auto Approval</span><strong id="emergencySafeModeApproval">BLOCKED</strong></div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="panel"><div class="kicker">Logged In As</div><div class="value" id="loggedInUser">—</div><small id="loggedInWorkspace">—</small></div>
+      <div class="panel"><div class="kicker">Version</div><div class="value" id="appVersion" data-ls-version>0.8.3</div><small data-ls-version-small>Active Platform Conversion</small></div>
+      <div class="panel"><div class="kicker">Mode</div><div class="value green" id="appMode">—</div></div>
+      <div class="panel"><div class="kicker">Environment</div><div class="value amber" id="appEnvironment">—</div></div>
+      <div class="panel"><div class="kicker">Safety</div><div class="value green">READ ONLY</div></div>
+      <div class="panel"><div class="kicker">Database</div><div class="value amber" id="databaseStatus">CHECKING</div><small id="databaseMessage">Checking PostgreSQL status…</small></div>
+    </section>
+
+    <section class="grid two">
+      <div class="panel">
+        <h2>Database Foundation</h2>
+        <div class="list">
+          <div class="row"><div><strong>Configured</strong><br><small id="dbConfigured">—</small></div></div>
+          <div class="row"><div><strong>Connected</strong><br><small id="dbConnected">—</small></div></div>
+          <div class="row"><div><strong>Database</strong><br><small id="dbName">—</small></div></div>
+          <div class="row"><div><strong>Database Time</strong><br><small id="dbTime">—</small></div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Database Counts</h2>
+        <div class="grid four compact">
+          <div class="mini"><span>Users</span><strong id="countUsers">—</strong></div>
+          <div class="mini"><span>Workspaces</span><strong id="countWorkspaces">—</strong></div>
+          <div class="mini"><span>Connections</span><strong id="countConnections">—</strong></div>
+          <div class="mini"><span>Events</span><strong id="countEvents">—</strong></div>
+          <div class="mini"><span>Metrics</span><strong id="countMetrics">—</strong></div>
+          <div class="mini"><span>Chats</span><strong id="countChats">—</strong></div>
+          <div class="mini"><span>Briefs</span><strong id="countBriefs">—</strong></div>
+          <div class="mini"><span>Drafts</span><strong id="countDrafts">—</strong></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>Architecture Purpose</h2>
+        <div class="list">
+          <div class="row"><div><strong>Current Stage</strong><br><small id="currentStage">Loading…</small></div></div>
+          <div class="row"><div><strong>V1 Scope</strong><br><small id="v1Scope">Loading…</small></div></div>
+          <div class="row"><div><strong>Future SaaS Direction</strong><br><small id="futureSaas">Loading…</small></div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h2>WordPress Mental Model</h2>
+        <p class="note">This admin page is the beginning of what WordPress Admin gives you automatically: users, settings, system status, connected accounts, usage controls, and update confidence. LIFE.SAVER will not be controlled by random files forever; it will be controlled through its own admin layer.</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Default Workspace / Tenant Model</h2>
+      <div class="grid three">
+        <div class="note"><strong>Current V1</strong><br><span id="workspaceCurrent">Loading…</span></div>
+        <div class="note"><strong>Future SaaS</strong><br><span id="workspaceFuture">Loading…</span></div>
+        <div class="note warn"><strong>Isolation Rule</strong><br><span id="workspaceRule">Loading…</span></div>
+      </div>
+      <div class="list workspace-box">
+        <div class="row"><div><strong>Seed Status</strong><br><small id="seedStatus">—</small></div></div>
+        <div class="row"><div><strong>Workspace</strong><br><small id="defaultWorkspace">—</small></div></div>
+        <div class="row"><div><strong>Owner</strong><br><small id="defaultWorkspaceOwner">—</small></div></div>
+      </div>
+    </section>
+
+
+    <section class="panel">
+      <h2>Triple Whale Connection Monitor</h2>
+      <p class="note">In v0.5.2, customer-owned API-key management remains to the Customer Settings page. Super Admin should monitor connection status, sync health, system events, and errors without seeing raw customer API keys.</p>
+      <div class="grid three">
+        <div class="note"><strong>Status</strong><br><span id="twStatus">Checking…</span></div>
+        <div class="note"><strong>Key Hint</strong><br><span id="twKeyHint">—</span></div>
+        <div class="note"><strong>Last Connected</strong><br><span id="twLastConnected">—</span></div>
+      </div>
+      <div class="footer-actions align-left sync-actions">
+        <a class="btn primary" href="./settings.html">Open Customer Connections</a>
+        <button class="btn" id="testTripleWhaleBtn" type="button">Test Connection</button>
+      </div>
+      <div class="note" id="twMessage">Super Admin monitor only. The raw API key is never displayed here.</div>
+      <div class="note" id="testMessage">Live API testing remains disabled until a confirmed Triple Whale endpoint/sample response is configured.</div>
+    </section>
+
+    <section class="panel">
+      <h2>Connected Account Summary</h2>
+      <div class="list" id="connectionSummaries"><div class="row"><strong>No connections loaded yet.</strong></div></div>
+    </section>
+
+    <section class="panel">
+      <h2>Triple Whale Metrics Sync Skeleton</h2>
+      <p class="note">This button validates the encrypted Triple Whale key server-side, then attempts a live Summary snapshot using the captured Summary payload builder. No raw API key is exposed to the browser. No raw API key is exposed to the browser.</p>
+      <div class="grid four compact">
+        <div class="mini"><span>Latest Source</span><strong id="latestMetricSource">—</strong></div>
+        <div class="mini"><span>Revenue</span><strong id="latestMetricRevenue">—</strong></div>
+        <div class="mini"><span>Orders</span><strong id="latestMetricOrders">—</strong></div>
+        <div class="mini"><span>ROAS</span><strong id="latestMetricRoas">—</strong></div>
+      </div>
+      <div class="list workspace-box">
+        <div class="row"><div><strong>Snapshot ID</strong><br><small id="latestMetricSnapshotId">—</small></div></div>
+        <div class="row"><div><strong>Created At</strong><br><small id="latestMetricCreatedAt">—</small></div></div>
+        <div class="row"><div><strong>Source Note</strong><br><small id="latestMetricSourceNote">—</small></div></div>
+      </div>
+      <div class="footer-actions align-left sync-actions">
+        <button class="btn primary" id="refreshMetricsBtn" type="button">Refresh Metrics Snapshot</button>
+        <button class="btn" id="probeSummaryBtn" type="button">Probe Summary API</button>
+        <button class="btn" id="probeAttributionBtn" type="button">Probe Attribution / Pixel API</button>
+        <button class="btn" id="loadRawBtn" type="button">Load Summary Probe Response</button>
+        <button class="btn" id="loadAttributionBtn" type="button">Load Attribution Probe Response</button>
+        <button class="btn" id="loadValidationBtn" type="button">Load API-Key Validation Snapshot</button>
+        <button class="btn" id="snapshotHistoryBtn" type="button">Snapshot History</button>
+        <button class="btn" id="mappingPreviewBtn" type="button">Preview Metric Mapping</button>
+        <a class="btn" href="http://localhost:4000/api/v1/metrics" target="_blank" rel="noreferrer">Open /metrics</a>
+      </div>
+      <div class="note" id="syncMessage">Ready for a protected manual validated sync after Triple Whale key is stored.</div>
+      <div class="note" id="probeMessage">v0.5.2 separates Summary and Attribution/Pixels diagnostics from API-key validation placeholders and redacts sensitive raw previews.</div>
+      <pre id="rawResponsePreview" class="raw-preview">v0.5.2 redacted raw preview, Summary Probe diagnostics, or snapshot history will appear here. Sensitive auth/user fields are redacted in browser previews.</pre>
+    </section>
+
+
+    <section class="panel">
+      <h2>Briefs From Stored Metrics</h2>
+      <p class="note">v0.5.2 generates Daily Brief and Weekly Summary records from the latest stored metrics snapshot. If the snapshot is only a sample placeholder, the brief is clearly labelled as non-production.</p>
+      <div class="footer-actions align-left sync-actions">
+        <button class="btn primary" id="generateDailyBriefBtn" type="button">Generate Daily Brief</button>
+        <button class="btn" id="generateWeeklySummaryBtn" type="button">Generate Weekly Summary</button>
+        <button class="btn" id="loadLatestDailyBriefBtn" type="button">Load Latest Brief</button>
+        <button class="btn" id="loadLatestWeeklySummaryBtn" type="button">Load Latest Weekly Summary</button>
+        <a class="btn" href="http://localhost:4000/api/v1/brief" target="_blank" rel="noreferrer">Open /brief</a>
+        <a class="btn" href="http://localhost:4000/api/v1/weekly" target="_blank" rel="noreferrer">Open /weekly</a>
+      </div>
+      <div class="note" id="briefMessage">Ready to generate database-backed briefs from the latest metrics snapshot.</div>
+      <pre id="briefPreview" class="raw-preview">Generated brief and weekly summary preview will appear here.</pre>
+    </section>
+
+
+    <section class="panel">
+      <h2>Worker Scheduler / Automated Briefs</h2>
+      <p class="note">v0.5.2 keeps the worker automation foundation. The worker runs outside the browser and talks to protected internal API endpoints using WORKER_SHARED_SECRET. Keep WORKER_ENABLED=false during local testing unless you intentionally want scheduled jobs running.</p>
+      <div class="grid three">
+        <div class="note"><strong>One-off Daily Pipeline</strong><br><span>npm.cmd run worker:once:daily</span></div>
+        <div class="note"><strong>One-off Weekly Pipeline</strong><br><span>npm.cmd run worker:once:weekly</span></div>
+        <div class="note"><strong>Worker Status</strong><br><span>npm.cmd run worker:status</span></div>
+      </div>
+      <div class="list workspace-box">
+        <div class="row"><div><strong>Safety</strong><br><small>Worker jobs refresh read-only Triple Whale metrics and generate internal Daily/Weekly briefs only. No posting, sending, refunds, ad edits, or external writes are added.</small></div></div>
+        <div class="row"><div><strong>Production Reminder</strong><br><small>Set a strong WORKER_SHARED_SECRET and run the worker as a separate process on production hosting.</small></div></div>
+      </div>
+    </section>
+
+
+    <section class="panel">
+      <h2>Draft Review / Approval Queue</h2>
+      <p class="note">v0.5.2 shows saved content and support drafts from chat or manual draft tools. Approve/reject only changes LIFE.SAVER draft status; it does not post, send, refund, or modify any external platform.</p>
+      <div class="grid four compact">
+        <div class="mini"><span>Total Drafts</span><strong id="adminDraftTotal">—</strong></div>
+        <div class="mini"><span>Draft</span><strong id="adminDraftDraft">—</strong></div>
+        <div class="mini"><span>Approved</span><strong id="adminDraftApproved">—</strong></div>
+        <div class="mini"><span>Rejected</span><strong id="adminDraftRejected">—</strong></div>
+      </div>
+      <div class="footer-actions align-left sync-actions">
+        <button class="btn primary" id="adminLoadDraftsBtn" type="button">Load Drafts</button>
+        <button class="btn" id="adminCreateContentDraftBtn" type="button">Create Content Draft</button>
+        <button class="btn" id="adminCreateSupportDraftBtn" type="button">Create Support Reply</button>
+        <a class="btn" href="http://localhost:4000/api/v1/drafts" target="_blank" rel="noreferrer">Open /drafts</a>
+      </div>
+      <div class="note" id="adminDraftMessage">Draft queue is founder approval only. External action tools remain disabled in v1.</div>
+      <div class="list" id="adminDraftList"><div class="row"><strong>Drafts not loaded yet.</strong></div></div>
+    </section>
+
+
+    <section class="panel">
+      <h2>Admin Logs + Snapshot History</h2>
+      <p class="note">v0.5.2 adds a cleaner Super Admin operations panel. Use it to review system events, worker runs, Triple Whale snapshot history, generated briefs, and Claude/usage logs without opening Supabase for every check. Secret-like fields are redacted before browser display.</p>
+      <div class="grid four compact">
+        <div class="mini"><span>Events Loaded</span><strong id="opsEventCount">—</strong></div>
+        <div class="mini"><span>Snapshots</span><strong id="opsSnapshotCount">—</strong></div>
+        <div class="mini"><span>Briefs</span><strong id="opsBriefCount">—</strong></div>
+        <div class="mini"><span>Usage Logs</span><strong id="opsUsageCount">—</strong></div>
+      </div>
+      <div class="footer-actions align-left sync-actions">
+        <button class="btn primary" id="loadOpsLogBtn" type="button">Load Admin Logs</button>
+        <button class="btn" id="showOpsSnapshotsBtn" type="button">Show Snapshot Timeline</button>
+        <button class="btn" id="showOpsEventsBtn" type="button">Show System Events</button>
+        <button class="btn" id="showOpsBriefsBtn" type="button">Show Brief History</button>
+        <button class="btn" id="showOpsUsageBtn" type="button">Show Usage Logs</button>
+        <a class="btn" href="http://localhost:4000/api/v1/admin/operations-log" target="_blank" rel="noreferrer">Open /admin/operations-log</a>
+      </div>
+      <div class="note" id="opsLogMessage">Ready to load the admin operations log. This view is for diagnostics only and does not modify external platforms.</div>
+      <div class="ops-board" id="opsLogBoard">
+        <div class="admin-draft-empty">Admin logs not loaded yet.</div>
+      </div>
+    </section>
+
+
+    <section class="panel">
+      <h2>Worker Workspace Query Compatibility Fix</h2>
+      <p class="note">v0.5.2 adds environment separation checks so local, staging, and production can use separate Supabase databases, separate secrets, and safer deployment gates. Security hardening from v0.4.0 remains active.</p>
+      <div class="grid four compact">
+        <div class="mini"><span>Production Ready</span><strong id="securityProductionReady">—</strong></div>
+        <div class="mini"><span>Critical Failures</span><strong id="securityCriticalFailures">—</strong></div>
+        <div class="mini"><span>Warnings</span><strong id="securityWarnings">—</strong></div>
+        <div class="mini"><span>Mode</span><strong id="securityMode">—</strong></div>
+      </div>
+      <div class="footer-actions align-left sync-actions">
+        <button class="btn primary" id="loadSecurityStatusBtn" type="button">Load Security Status</button>
+        <a class="btn" href="http://localhost:4000/api/v1/security/status" target="_blank" rel="noreferrer">Open /security/status</a>
+      </div>
+      <div class="note" id="securityStatusMessage">Security status is admin-only. It never displays raw secrets, API keys, tokens, or database passwords.</div>
+      <div class="ops-board" id="securityStatusBoard">
+        <div class="admin-draft-empty">Security status not loaded yet.</div>
+      </div>
+    </section>
+
+
+
+    <section class="panel">
+      <h2>Worker Workspace Query Compatibility Fix</h2>
+      <p class="note">v0.5.2 packages the final local testing pass before deployment/client handoff. Use this checklist to test metrics, briefs, drafts, worker jobs, Claude, attribution probes, admin logs, security, and environment separation in one organized evidence round.</p>
+      <div class="grid four compact">
+        <div class="mini"><span>Command</span><strong>client:test-checklist</strong></div>
+        <div class="mini"><span>Evidence</span><strong>Required</strong></div>
+        <div class="mini"><span>External Actions</span><strong>None</strong></div>
+        <div class="mini"><span>Next Phase</span><strong>Deployment Rehearsal</strong></div>
+      </div>
+      <div class="list workspace-box">
+        <div class="row"><div><strong>Terminal Checklist</strong><br><small>Run: npm.cmd run client:test-checklist</small></div></div>
+        <div class="row"><div><strong>Docs</strong><br><small>Read docs/deployment/FINAL_CLIENT_TESTING_CHECKLIST_v0.5.2.txt and fill docs/deployment/HANDOFF_EVIDENCE_TEMPLATE_v0.5.2.txt.</small></div></div>
+        <div class="row"><div><strong>Handoff Rule</strong><br><small>Do not call production-ready until evidence is captured, secrets are rotated, .env is removed from deployable code, and production hosting environment variables are configured.</small></div></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Latest System Events</h2>
+      <div class="list" id="latestEvents"><div class="row"><strong>No events loaded yet.</strong></div></div>
+    </section>
+
+    <section class="panel">
+      <h2>Future Admin Panels</h2>
+      <div class="cards" id="adminPanels"></div>
+    </section>
+
+    <section class="grid two">
+      <div class="panel">
+        <h2>API Contract Map</h2>
+        <div class="list" id="apiEndpoints"></div>
+      </div>
+      <div class="panel">
+        <h2>Safety Rules</h2>
+        <div class="list" id="safetyRules"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Next Milestones</h2>
+      <div class="list" id="nextMilestones"></div>
+    </section>
+  </main>
+
+<script src="./assets/js/runtime-config.js"></script>
+<script src="./assets/js/admin.js"></script>
+<script src="./assets/js/lifesaver-version.js"></script>
+<script src="./assets/js/lifesaver-mobile-shell.js"></script>
+</body>
+</html>

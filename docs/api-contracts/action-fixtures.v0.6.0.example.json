@@ -1,0 +1,80 @@
+{
+  "version": "0.6.0",
+  "phase": "2.10",
+  "name": "Local-only action fixture set",
+  "safety": {
+    "localOnly": true,
+    "noExternalWrites": true,
+    "noExecutors": true,
+    "noApprovalApi": true,
+    "v1StillReadAdviseDraftOnly": true
+  },
+  "fixtures": [
+    {
+      "fixture_key": "phase_2_10_proposed_instagram_post",
+      "action_type": "content_publish",
+      "status": "proposed",
+      "risk_level": "low",
+      "approval_required": true,
+      "policy_decision": "ask",
+      "idempotency_key": "local-fixture:v0.6.0:phase-2.10:instagram-post",
+      "payload_json": {
+        "schema_version": "action-payload/v0.6.0",
+        "action_type": "content_publish",
+        "source": "system",
+        "intent_summary": "Proposed Instagram post fixture for approval queue testing only.",
+        "data": {
+          "platform": "instagram",
+          "caption": "A calm founder check-in: revenue is moving, ROAS needs attention, and the next step is disciplined optimisation.",
+          "media_url": "https://example.test/local-fixtures/instagram-post-preview.png",
+          "hashtags": ["ecommerce", "founderops", "lifesaver"],
+          "scheduled_time": null
+        }
+      }
+    },
+    {
+      "fixture_key": "phase_2_10_proposed_support_reply",
+      "action_type": "support_reply_send",
+      "status": "proposed",
+      "risk_level": "medium",
+      "approval_required": true,
+      "policy_decision": "ask",
+      "idempotency_key": "local-fixture:v0.6.0:phase-2.10:support-reply",
+      "payload_json": {
+        "schema_version": "action-payload/v0.6.0",
+        "action_type": "support_reply_send",
+        "source": "system",
+        "intent_summary": "Proposed support reply fixture for approval queue testing only.",
+        "data": {
+          "ticket_id": "fixture-ticket-1001",
+          "thread_id": "fixture-thread-1001",
+          "customer_email": "customer.fixture@example.test",
+          "reply_body": "Certainly — thank you for reaching out. I have checked the order note and the safest next step is for our team to review the delivery status before making any promise."
+        }
+      }
+    },
+    {
+      "fixture_key": "phase_2_10_proposed_ad_budget_change",
+      "action_type": "ad_budget_adjust",
+      "status": "proposed",
+      "risk_level": "high",
+      "approval_required": true,
+      "policy_decision": "ask",
+      "idempotency_key": "local-fixture:v0.6.0:phase-2.10:ad-budget-adjust",
+      "payload_json": {
+        "schema_version": "action-payload/v0.6.0",
+        "action_type": "ad_budget_adjust",
+        "source": "system",
+        "intent_summary": "Proposed Meta ad budget change fixture for approval queue testing only.",
+        "data": {
+          "platform": "meta_ads",
+          "campaign_id": "fixture-campaign-2001",
+          "current_budget": 100,
+          "proposed_budget": 85,
+          "change_amount": -15,
+          "currency": "USD"
+        }
+      }
+    }
+  ]
+}

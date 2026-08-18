@@ -1,0 +1,51 @@
+LIFE.SAVER v0.8.1 — Functional Audience Reach
+
+Goal:
+Make the homepage Audience Reach panel functional instead of static demo text.
+
+Problem fixed:
+The dashboard previously displayed static demo audience values such as Followers, Reach 30d, Markets, and Engage with a DEMO badge. This looked good visually, but it was not connected to backend data.
+
+Implemented solution:
+A new read-only Audience Reach API derives safe values from the latest LIFE.SAVER metrics snapshot and the homepage widget fetches that endpoint.
+
+New API endpoints:
+- GET /api/v1/audience-reach
+- GET /api/v1/audience-reach/status
+
+New backend files:
+- apps/api/src/modules/audience-reach/audience-reach.types.ts
+- apps/api/src/modules/audience-reach/audience-reach.model.ts
+- apps/api/src/modules/audience-reach/audience-reach.controller.ts
+- apps/api/src/modules/audience-reach/audience-reach.routes.ts
+- apps/api/src/modules/audience-reach/audience-reach-tests.ts
+
+New frontend file:
+- apps/web/src/assets/js/audience-reach.js
+
+Updated frontend:
+- apps/web/src/index.html
+- apps/web/src/assets/css/dashboard.css
+- apps/web/src/assets/js/lifesaver-version.js
+
+Displayed metrics:
+- Customers: latest orders count.
+- Reach Est.: estimated reach from orders / confirmed conversion rate, only when conversion rate is production-ready.
+- Channels: non-zero channel spend or attribution entries.
+- Conv.: confirmed conversion rate, only when production-ready.
+
+Important accuracy boundary:
+This is not a social audience connector. It does not fetch Instagram, Facebook, TikTok, LinkedIn, Google Ads, or Meta audience data. True follower count and platform reach require a later explicit connector phase.
+
+Safety status:
+- Read-only derived metrics only.
+- No DB migration.
+- No external API call besides existing LIFE.SAVER backend.
+- No social connector call.
+- No external write.
+- No action creation.
+- No approval/executor/auto-run behavior changed.
+
+Version:
+- App version: 0.8.1
+- Health mode: v2-functional-0-8-1-audience-reach

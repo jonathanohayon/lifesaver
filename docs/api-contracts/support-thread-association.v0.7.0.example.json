@@ -1,0 +1,56 @@
+{
+  "statusEndpoint": {
+    "method": "GET",
+    "path": "/api/v1/support/thread-association/status",
+    "response": {
+      "phase": "V2 Phase 13.4 — Thread Association",
+      "healthMode": "v2-phase-13-4-thread-association",
+      "deliverable": "thread_safe_reply_handling",
+      "selectedConnector": "gmail",
+      "actionType": "support_reply_send",
+      "requiresImportedTicketMatch": true,
+      "requiresThreadIdMatch": true,
+      "executorUsesValidatedThreadId": true,
+      "previewCallsGmail": false,
+      "previewSendsEmail": false,
+      "rawProviderPayloadReturned": false,
+      "rawTokenReturned": false,
+      "rawMimeReturned": false
+    }
+  },
+  "previewEndpoint": {
+    "method": "POST",
+    "path": "/api/v1/support/thread-association/preview",
+    "request": {
+      "actionType": "support_reply_send",
+      "provider": "gmail",
+      "ticketId": "support_ticket_123",
+      "threadId": "gmail_thread_123",
+      "customerEmail": "customer@example.com",
+      "subject": "Where is my order?",
+      "importedTicket": {
+        "id": "support_ticket_123",
+        "provider": "gmail",
+        "externalMessageId": "gmail_message_123",
+        "externalThreadId": "gmail_thread_123",
+        "customerEmail": "customer@example.com",
+        "status": "open"
+      }
+    },
+    "responseSummary": {
+      "verified": true,
+      "decision": "thread_association_verified",
+      "threadBinding": {
+        "threadIdSentToGmail": "gmail_thread_123",
+        "customerEmailVerified": true
+      },
+      "safety": {
+        "emailSent": false,
+        "gmailApiCalled": false,
+        "rawProviderPayloadReturned": false,
+        "rawTokenReturned": false,
+        "rawMimeReturned": false
+      }
+    }
+  }
+}

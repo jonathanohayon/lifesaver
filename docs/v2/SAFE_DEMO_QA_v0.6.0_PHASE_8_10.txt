@@ -1,0 +1,55 @@
+# LIFE.SAVER v0.6.0 Phase 8.10 — Safe Demo QA
+
+## Purpose
+
+Demonstrate the complete V2 action flow safely without touching any external platform.
+
+## Required flow
+
+Draft -> Proposed Action -> Approval -> Sandbox Execution -> Result Log
+
+## Deliverable
+
+Sandbox executor QA report.
+
+## Implementation
+
+Added `apps/api/src/modules/executors/executor.safe-demo-qa.ts`.
+
+The report generator:
+- creates a safe demo draft identity,
+- builds a proposed action,
+- runs the Phase 8 sandbox approve-to-execute lifecycle,
+- creates a safe action_results log preview,
+- returns a structured QA report for handoff/testing.
+
+## Supported demo action types
+
+- content_publish
+- support_reply_send
+- ad_budget_adjust
+- ad_pause
+
+## Safe QA checks
+
+The report confirms:
+- draft step is present,
+- proposed action step is present,
+- approval step is present,
+- sandbox executor reaches executed state,
+- action_results log preview is generated,
+- no external writes are attempted,
+- real executors remain disabled,
+- auto-run remains disabled.
+
+## Current live domain
+
+https://lifesaveragent.com
+
+## Safety
+
+Phase 8.10 is sandbox QA only. It does not publish content, send replies, call ad APIs, change budgets, pause campaigns, refund orders, edit products, run real rollback, or write to external platforms.
+
+## Phase 8 completion
+
+With Phase 8.10 complete, Phase 8 — Mock Executor / Sandbox Executor is complete.

@@ -1,0 +1,29 @@
+LIFE.SAVER v0.6.0 — Phase 5.3 Category Pause Flags Migration
+
+Migration file
+--------------
+database/migrations/014_add_category_pause_flags.sql
+
+Migration type
+--------------
+Additive and non-destructive.
+
+What it adds
+------------
+- autonomy_settings.pause_research_actions BOOLEAN NOT NULL DEFAULT FALSE
+- autonomy_settings.pause_dev_actions BOOLEAN NOT NULL DEFAULT FALSE
+- Supporting indexes for research/dev and any-category pause lookup.
+- Safe comments documenting the fields.
+
+What it does not do
+-------------------
+- Does not drop tables.
+- Does not rename columns.
+- Does not modify V1 tables.
+- Does not seed customer data.
+- Does not change existing pause flags.
+- Does not enable execution.
+
+Production note
+---------------
+Back up the production database before running migrations. Run db:migrate once, confirm success, then run db:status and normal application checks.

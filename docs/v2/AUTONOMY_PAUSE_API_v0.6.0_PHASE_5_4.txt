@@ -1,0 +1,162 @@
+LIFE.SAVER V2 — Phase 5.4
+Read/Update Pause API
+Version: v0.6.0
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 5.4 adds protected backend endpoints for reading and updating the V2 Master Pause
+state.
+
+Endpoints:
+- GET  /api/v1/autonomy/status
+- POST /api/v1/autonomy/pause
+- POST /api/v1/autonomy/resume
+
+This phase is an autonomy control API foundation only. It does not add executors,
+policy auto-approval, queue execution, content publishing, support sending, ad spend
+changes, campaign pause, rollback execution, or external write connectors.
+
+================================================================================
+ENDPOINTS
+================================================================================
+
+1. GET /api/v1/autonomy/status
+
+Purpose:
+- Return the authenticated workspace autonomy status.
+- Shows global pause and category pause flags.
+- Shows permission hints for the current user.
+
+Allowed roles:
+- owner
+- admin
+- member
+- viewer
+
+Returns:
+- pauseAllAutonomy
+- pauseContentActions
+- pauseSupportActions
+- pauseAdsActions
+- pauseResearchActions
+- pauseDevActions
+- category enforcement summaries
+- safety note
+- current user permissions
+
+2. POST /api/v1/autonomy/pause
+
+Purpose:
+- Pause all autonomy or one category.
+
+Allowed roles:
+- owner
+- admin
+
+Request body examples:
+
+{
+  "scope": "all",
+  "reason": "Client requested temporary emergency pause."
+}
+
+{
+  "scope": "ads",
+  "reason": "Campaign review pending."
+}
+
+Valid scope values:
+- all
+- content
+- support
+- ads
+- research
+- dev
+
+Behavior:
+- Updates the matching pause flag to true.
+- Updates updated_by and updated_at.
+- Does not execute anything.
+- Does not cancel existing actions.
+- Does not write to external platforms.
+
+3. POST /api/v1/autonomy/resume
+
+Purpose:
+- Resume all autonomy or one category.
+
+Allowed roles:
+- owner
+- admin
+
+Request body example:
+
+{
+  "scope": "content",
+  "reason": "Content review completed."
+}
+
+Behavior:
+- Updates the matching pause flag to false.
+- Updates updated_by and updated_at.
+- Does not execute waiting actions.
+- Does not auto-approve anything.
+- Does not write to external platforms.
+
+================================================================================
+SECURITY RULES
+================================================================================
+
+- All endpoints require authentication.
+- All endpoints are scoped to the token workspaceId.
+- Normal customers cannot read or update another workspace.
+- Members/viewers may read status but cannot pause/resume.
+- Only owner/admin can update pause state.
+- No raw secrets are returned.
+- No API keys, OAuth tokens, .env values, DATABASE_URL, APP_ENCRYPTION_KEY, or
+  WORKER_SHARED_SECRET are returned.
+
+================================================================================
+SAFETY BOUNDARY
+================================================================================
+
+Phase 5.4 does NOT add:
+- executor registry
+- sandbox executor
+- real executor
+- auto-approval policy engine
+- queue runner
+- content publishing
+- support reply sending
+- ad budget changes
+- campaign pause
+- external write connectors
+- rollback execution
+
+Resume is intentionally safe:
+- It only changes pause flags.
+- It does not execute previously approved or proposed actions.
+
+================================================================================
+EXPECTED FUTURE CONNECTION
+================================================================================
+
+Later phases will make policy and executor layers call the autonomy service before
+auto-approval or execution.
+
+If pause_all_autonomy is true:
+- no auto-approval
+- no executor execution
+- proposed actions remain reviewable
+- safe new proposed actions may still be created as approval_required=true and policy_decision=ask
+
+If a category pause is true:
+- that category cannot be auto-approved
+- that category cannot be executed by future executor layers
+- existing proposed actions remain reviewable
+
+================================================================================
+END
+================================================================================

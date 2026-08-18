@@ -1,0 +1,63 @@
+LIFE.SAVER v0.7.0 — Phase 9.8 Test Results
+===========================================
+
+Package:
+lifesaver-v0.7.0-phase-9-8-rate-post-caps.zip
+
+Test environment:
+Local package validation without DATABASE_URL configured for DB integration tests.
+No LinkedIn API call was made.
+No real publish was attempted.
+No npm audit fix or npm audit fix --force was run.
+
+Commands run:
+
+npm install --ignore-scripts
+npm run phase9:content-caps:test
+npm run phase9:real-publish:test
+npm run phase9:result-tracking:test
+npm run build
+npm run phase9:content-caps:test
+npm run phase9:real-publish:test
+npm run phase9:result-tracking:test
+npm run phase9:media-assets:test
+npm run phase9:content-payload:test
+npm run phase9:credential-model:test
+npm run phase9:write-scope:test
+npm run phase9:platform-plan:test
+npm run executor:safe-demo-qa:test
+npm run policy:tests:test
+npm run rules:permission:test
+npm run actions:test:backend
+
+Results:
+
+phase9:content-caps:test — 22 passed, 0 failed
+phase9:real-publish:test — 36 passed, 0 failed
+phase9:result-tracking:test — 18 passed, 0 failed
+phase9:media-assets:test — 49 passed, 0 failed
+phase9:content-payload:test — 26 passed, 0 failed
+phase9:credential-model:test — 22 passed, 0 failed
+phase9:write-scope:test — 22 passed, 0 failed
+phase9:platform-plan:test — 12 passed, 0 failed
+executor:safe-demo-qa:test — 28 passed, 0 failed
+policy:tests:test — 7 passed, 0 failed
+rules:permission:test — 13 passed, 0 failed
+actions:test:backend — 4 passed, 0 failed, 1 skipped because DATABASE_URL was not configured
+build — passed
+
+npm install note:
+3 existing dependency audit findings were reported: 1 low, 2 moderate.
+No automatic audit fix was applied.
+
+Safety verification:
+- Cap check does not call LinkedIn.
+- Cap check does not decrypt or return tokens.
+- Real executor remains default-off.
+- Manual approval remains required.
+- Auto-run remains disabled.
+- Worker/scheduled publishing remains disabled.
+- Media upload/publishing remains disabled.
+- Organization/page publishing remains disabled.
+- Support sending is not added.
+- Ad changes are not added.

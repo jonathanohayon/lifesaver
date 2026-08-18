@@ -1,0 +1,70 @@
+LIFE.SAVER V2 — Phase 4.6 Reject With Reason Modal
+Version: v0.6.0
+Deliverable: Reject modal with reason
+
+Purpose
+-------
+Phase 4.6 captures the founder decision when rejecting a proposed action from the
+Approval Queue UI.
+
+The modal requires a clear rejection reason before calling the existing safe backend
+reject endpoint:
+
+POST /api/v1/actions/:id/reject
+
+Supported rejection reasons
+---------------------------
+- Not on brand
+- Too risky
+- Wrong timing
+- Incorrect data
+- Needs edits
+- Other
+
+What changed
+------------
+- actions.html now includes a Reject With Reason modal.
+- Action cards can open the reject modal.
+- The action detail drawer can open the reject modal.
+- The modal shows what will happen, current status, affected platform, and risk level.
+- The founder can select a reason and optionally add details.
+- Final Reject calls the safe backend reject endpoint.
+- The action list refreshes after rejection.
+
+Safety boundary
+---------------
+Rejecting an action is internal only.
+
+It does not:
+- execute an action
+- queue an executor
+- publish content
+- send a support reply
+- change ad spend
+- pause a campaign
+- refund an order
+- edit a product
+- roll back anything
+- write to Triple Whale or any external platform
+
+Allowed status use
+------------------
+The UI enables final rejection only for statuses that the backend can reject safely:
+- proposed
+- approval_required
+
+Other statuses show a safe blocked message.
+
+Backend authority
+-----------------
+The browser is not trusted as the final authority. The backend still enforces:
+- workspace scoping
+- role permissions
+- valid status transitions
+- safe error codes and request IDs
+- action_events logging
+
+Next phase
+----------
+Phase 4.7 should add stronger risk badges and warnings for low, medium, high, and
+critical actions.

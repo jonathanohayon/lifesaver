@@ -1,0 +1,31 @@
+{
+  "version": "v0.6.0",
+  "phase": "4.10",
+  "name": "UI QA + Accessibility Pass",
+  "page": "actions.html",
+  "checks": {
+    "loadingStates": true,
+    "emptyStates": true,
+    "errorStates": true,
+    "focusStates": true,
+    "keyboardSupport": true,
+    "textReadability": true,
+    "noBrokenLayout": true
+  },
+  "accessibilityFeatures": [
+    "skip_link",
+    "aria_busy_on_actions_list",
+    "aria_live_status_message",
+    "dialog_aria_describedby",
+    "escape_to_close_dialogs",
+    "focus_trap_active_dialog",
+    "focus_visible_styles",
+    "reduced_motion_support"
+  ],
+  "safetyBoundary": {
+    "externalWritesEnabled": false,
+    "executorEnabled": false,
+    "queueingEnabled": false,
+    "rollbackExecutionEnabled": false
+  }
+}

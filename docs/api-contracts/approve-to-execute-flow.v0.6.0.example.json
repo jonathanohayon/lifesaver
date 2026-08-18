@@ -1,0 +1,71 @@
+{
+  "version": "0.6.0",
+  "phase": "v0.6.0 Phase 8.6 Approve-to-Execute Flow",
+  "workspaceId": "workspace-1",
+  "actionId": "action-content-1",
+  "actionType": "content_publish",
+  "lifecycle": {
+    "requestedTransition": "proposed_to_approved_to_executed",
+    "fromStatus": "proposed",
+    "finalStatus": "executed",
+    "approved": true,
+    "executed": true,
+    "failed": false,
+    "blocked": false,
+    "statusPath": ["proposed", "approved", "executing", "executed"],
+    "events": [
+      {
+        "eventType": "approved",
+        "fromStatus": "proposed",
+        "toStatus": "approved",
+        "message": "Action approved for sandbox lifecycle execution."
+      },
+      {
+        "eventType": "execution_started",
+        "fromStatus": "approved",
+        "toStatus": "executing",
+        "message": "Sandbox executor sandboxContentExecutor started."
+      },
+      {
+        "eventType": "execution_finished",
+        "fromStatus": "executing",
+        "toStatus": "executed",
+        "message": "Sandbox simulated content publishing successfully. No external platform was called."
+      }
+    ]
+  },
+  "executor": {
+    "found": true,
+    "name": "sandboxContentExecutor",
+    "mode": "sandbox",
+    "validationOk": true,
+    "executionResult": {
+      "ok": true,
+      "status": "executed",
+      "executorName": "sandboxContentExecutor",
+      "mode": "sandbox",
+      "externalWritesAttempted": false,
+      "externalWritesSucceeded": false,
+      "result": {
+        "sandbox_success": true,
+        "fake_external_post_id": "sandbox-post-action-content-1",
+        "fake_permalink": "https://sandbox.lifesaveragent.com/instagram/sandbox-post-action-content-1",
+        "external_platform_called": false
+      }
+    },
+    "resultStoragePreview": {
+      "executor_name": "sandboxContentExecutor",
+      "result_status": "success",
+      "external_id": "sandbox-post-action-content-1",
+      "external_url": "https://sandbox.lifesaveragent.com/instagram/sandbox-post-action-content-1",
+      "rollback_supported": true
+    }
+  },
+  "safety": {
+    "sandboxOnly": true,
+    "externalWritesAttempted": false,
+    "externalWritesSucceeded": false,
+    "autoRunEnabled": false,
+    "realExecutorEnabled": false
+  }
+}

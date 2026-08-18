@@ -1,0 +1,31 @@
+{
+  "version": "0.6.0",
+  "module": "actions",
+  "status": {
+    "phase": "v0.6.0 Phase 6.7 Policy Conflict Resolution",
+    "currentScope": "Phase 6.5 adds action scope matching on top of the Phase 6.4 condition operators. evaluateActionPolicy(action) can now match policies by action type, platform, channel, workspace, risk level, amount, category, and confidence score before condition operators run. Phase 6.5 does not execute anything or enable auto-run.",
+    "nextPhase": "Phase 6.5 — Action Scope Matching",
+    "externalWritesEnabled": false,
+    "executorEnabled": false,
+    "autoRunExecutionEnabled": false,
+    "enabledCapabilities": [
+      "workspace-scoped action list/detail APIs",
+      "approval/rejection/cancellation internal endpoints",
+      "master pause and emergency safe mode",
+      "policies table storage",
+      "default ask behavior",
+      "policy evaluation service",
+      "condition operator library"
+    ],
+    "conditionOperators": [
+      "equals",
+      "contains",
+      "less_than",
+      "greater_than",
+      "channel_is",
+      "risk_below",
+      "confidence_above",
+      "amount_below"
+    ]
+  }
+}

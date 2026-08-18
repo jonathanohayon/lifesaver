@@ -1,0 +1,24 @@
+# LIFE.SAVER v0.8.5 — Claude Backend Compatibility
+
+This release fixes the backend Claude integration layer.
+
+## Confirmed backend issue
+The previous Claude client used `env.CLAUDE_API_KEY` directly in the `x-api-key` header. That was fragile when Render env values contained hidden whitespace/newlines, quotes, `Bearer`, or accidental assignment text. It also did not support the standard `ANTHROPIC_API_KEY` environment variable as a fallback.
+
+## Fixes
+- Added `ANTHROPIC_API_KEY` to backend env parsing.
+- Added `normalizeClaudeApiKey()`.
+- Added candidate key handling for `CLAUDE_API_KEY` and `ANTHROPIC_API_KEY`.
+- Added alternate-key retry when one unique configured key returns HTTP 401.
+- Added protected diagnostics:
+  - `GET /api/v1/claude/status`
+  - `POST /api/v1/claude/smoke-test`
+
+## Data safety
+Diagnostics never return the key, key suffix, key prefix, or raw env value.
+
+## Runtime behavior
+Normal dashboard chat remains the same, except the Claude request now uses a sanitized key candidate instead of a raw env string.
+
+## No scope expansion
+This release does not enable real executors, external write connectors, support sends, ad mutation, content publishing, or auto-run.

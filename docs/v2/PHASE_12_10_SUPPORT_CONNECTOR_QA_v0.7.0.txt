@@ -1,0 +1,60 @@
+PHASE 12.10 — SUPPORT CONNECTOR QA
+===================================
+
+Purpose
+-------
+Validate the Phase 12 support connector lane safely before support sending exists.
+
+QA coverage
+-----------
+1. Ticket import
+   - Uses the Phase 12.2 Gmail read-only normalization flow.
+   - Confirms raw provider payload is separated.
+   - Confirms browser/admin-safe output uses masked email hints.
+
+2. Classification
+   - Uses the Phase 12.4 deterministic classifier.
+   - Uses Phase 12.7 escalation rules for refund/escalation safety.
+
+3. Draft action
+   - Uses the Phase 12.5 support draft-to-action flow.
+   - Confirms the internal action type is support_reply_send.
+   - Confirms policy decision remains ask and approval is required.
+
+4. No-send safety
+   - Confirms no Gmail API call.
+   - Confirms no email send.
+   - Confirms no external write.
+   - Confirms review UI can approve/reject internal action only.
+
+5. Permission controls
+   - Owner/admin can approve or reject proposed internal actions.
+   - Operator/viewer cannot approve support replies.
+   - No role can execute support sending in Phase 12.10.
+
+Endpoints
+---------
+GET  /api/v1/support/qa/status
+GET  /api/v1/support/qa/report
+POST /api/v1/support/qa/report
+
+Safety
+------
+- Report-only.
+- No Gmail OAuth.
+- No Gmail API client.
+- No Gmail external API calls.
+- No gmail.send or gmail.modify scopes.
+- No email sending.
+- No support send executor.
+- No support auto-reply.
+- No action execution.
+- No database migration.
+- No database write.
+- No raw provider payload exposure.
+- No raw ticket payload exposure.
+- No token value exposure.
+
+Health mode
+-----------
+v2-phase-12-10-support-connector-qa

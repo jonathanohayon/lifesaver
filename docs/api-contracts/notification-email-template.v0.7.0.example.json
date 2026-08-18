@@ -1,0 +1,33 @@
+{
+  "version": "0.7.0",
+  "phase": "phase_10_3_email_notification_template",
+  "templateKey": "approval_needed_email",
+  "subject": "[LIFE.SAVER] Approval needed: Approve LinkedIn test post",
+  "preheader": "content_publish is waiting for review. Risk level: high.",
+  "textBody": "LIFE.SAVER approval request\n\nAction title: Approve LinkedIn test post\nAction type: content_publish\nRisk level: high\nReason: Manual approval is required before publishing this LinkedIn post.\nCreated: 2026-07-06T12:00:00.000Z\n\nReview link: https://lifesaveragent.com/actions.html?actionId=11111111-1111-1111-1111-111111111111\n\nSafety note: This template does not include access tokens, refresh tokens, raw payload JSON, rollback payloads, or platform secrets. Email delivery is not enabled in Phase 10.3.",
+  "htmlBody": "<!doctype html>...email-safe HTML body...",
+  "reviewUrl": "https://lifesaveragent.com/actions.html?actionId=11111111-1111-1111-1111-111111111111",
+  "action": {
+    "actionId": "11111111-1111-1111-1111-111111111111",
+    "title": "Approve LinkedIn test post",
+    "actionType": "content_publish",
+    "riskLevel": "high",
+    "reason": "Manual approval is required before publishing this LinkedIn post.",
+    "createdAt": "2026-07-06T12:00:00.000Z",
+    "workspaceName": "Founder Workspace"
+  },
+  "safety": {
+    "templateOnly": true,
+    "sendsEmailInThisPhase": false,
+    "callsExternalEmailProvider": false,
+    "includesActionTitle": true,
+    "includesActionType": true,
+    "includesRiskLevel": true,
+    "includesReason": true,
+    "includesReviewLink": true,
+    "exposesTokensOrSecrets": false,
+    "exposesRawPayloadJson": false,
+    "includesAttachments": false,
+    "includesTrackingPixel": false
+  }
+}

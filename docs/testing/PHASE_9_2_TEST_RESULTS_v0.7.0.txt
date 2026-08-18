@@ -1,0 +1,76 @@
+================================================================================
+LIFE.SAVER v0.7.0 — Phase 9.2 Test Results
+================================================================================
+
+Package:
+lifesaver-v0.7.0-phase-9-2-write-scope-planning.zip
+
+Health mode:
+v2-phase-9-2-write-scope-planning
+
+Primary test command:
+`npm run phase9:write-scope:test`
+
+Actual result:
+
+phase9:write-scope:test — 22 passed, 0 failed
+Selected platform: linkedin
+Required write scope: w_member_social
+Real external writes added: false
+Auto-run enabled: false
+
+Regression command:
+`npm run phase9:platform-plan:test`
+
+Actual result:
+
+phase9:platform-plan:test — 12 passed, 0 failed
+Selected platform: linkedin
+Real external writes added: false
+Auto-run enabled: false
+
+Build command:
+`npm run build`
+
+Actual result:
+PASS — web, api, worker, shared, and config workspace build scripts completed.
+
+Additional regression commands run:
+
+`npm run executor:safe-demo-qa:test`
+Result: executor:safe-demo-qa:test — 28 passed, 0 failed
+
+`npm run policy:tests:test`
+Result: success true, 7 passed, 0 failed
+
+`npm run rules:permission:test`
+Result: ok true, 13 tests passed
+
+`npm run actions:test:backend`
+Result: 4 passed, 0 failed, 1 skipped because DATABASE_URL was not configured in this package test environment.
+
+Checks covered:
+
+- selected platform remains LinkedIn.
+- required future LinkedIn write scope is `w_member_social`.
+- OAuth model is planned as 3-legged authorization code flow.
+- developer portal/app access review is tracked.
+- token expiry/reconnect behavior is planned.
+- programmatic refresh tokens are not assumed.
+- first future publishing lane is member text/link post only.
+- organization posting is not included in first lane.
+- sponsored content is out of scope.
+- media upload is not added in this phase.
+- image/media constraints are documented for later.
+- no real executor is added.
+- no real external write is added.
+- no OAuth route is added.
+- no token storage is added.
+- auto-run remains disabled.
+- health mode is updated.
+
+Safety result:
+PASS — Phase 9.2 is planning-only and does not call LinkedIn or any external platform.
+
+Dependency audit note:
+`npm install --ignore-scripts` reported 3 existing vulnerabilities (1 low, 2 moderate). `npm audit fix` and `npm audit fix --force` were not run.

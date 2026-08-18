@@ -1,0 +1,41 @@
+LIFE.SAVER v0.1.7 — Triple Whale Metrics Sync Skeleton
+
+Purpose:
+This phase prepares the real metrics pipeline without inventing undocumented Triple Whale API fields.
+
+Why this exists:
+The client spec says Triple Whale is the single v1 data source, but we still need official endpoint documentation or a sample response before mapping real fields. Until then, this version proves that the secure app workflow is correct.
+
+What v0.1.7 proves:
+1. Admin must be logged in.
+2. Triple Whale key must already be stored encrypted.
+3. Backend decrypts the key server-side only.
+4. Backend creates a raw_payload JSONB object.
+5. Backend creates normalized_metrics JSONB.
+6. Backend stores the row in metrics_snapshots.
+7. Backend logs system events.
+8. Dashboard /metrics can read from the latest stored snapshot.
+
+What v0.1.7 does NOT do:
+- It does not call a guessed Triple Whale endpoint.
+- It does not claim the demo numbers are real Triple Whale metrics.
+- It does not write data back to Triple Whale or ad platforms.
+- It does not post, send, refund, change ad budgets, or modify campaigns.
+
+Real sync upgrade requirements:
+- Triple Whale API endpoint URL for Summary metrics.
+- Required request parameters/date range format.
+- Example API response payload.
+- Explanation of metric fields for revenue, orders, AOV, ad spend, ROAS, conversion rate, and attribution.
+
+Endpoint added:
+POST /api/v1/refresh-metrics
+POST /api/v1/triple-whale/refresh-metrics
+
+Tables used:
+- connected_accounts
+- metrics_snapshots
+- system_events
+
+Status after validated sync:
+connected_accounts.status = connected_sync_skeleton

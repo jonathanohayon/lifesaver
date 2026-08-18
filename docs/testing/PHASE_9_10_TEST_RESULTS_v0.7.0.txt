@@ -1,0 +1,47 @@
+LIFE.SAVER v0.7.0 — Phase 9.10 Controlled Live Test
+Testing Results
+
+Package:
+lifesaver-v0.7.0-phase-9-10-controlled-live-test.zip
+
+Expected health mode:
+v2-phase-9-10-controlled-live-test
+
+Install command run:
+npm install --ignore-scripts
+
+Install result:
+- Completed.
+- npm reported 3 existing dependency audit findings: 1 low, 2 moderate.
+- npm audit fix and npm audit fix --force were not run.
+
+Commands run:
+npm run phase9:controlled-live-test:test
+npm run phase9:rollback:test
+npm run phase9:content-caps:test
+npm run phase9:real-publish:test
+npm run phase9:result-tracking:test
+npm run build
+
+Results:
+phase9:controlled-live-test — 22 passed, 0 failed
+content-publish:rollback:test — 31 passed, 0 failed
+phase9:content-caps:test — 22 passed, 0 failed
+content-real:publish:test — 36 passed, 0 failed
+content-publish:result-logs:test — 18 passed, 0 failed
+build — passed
+
+What Phase 9.10 tests cover:
+- Status summary health mode.
+- Required explicit founder/client approval phrase.
+- Read-only report endpoint safety assumptions.
+- Pass report with one successful publish result.
+- Not-ready state when database/action evidence is missing.
+- Fail state when action type/status/approval/result data is invalid.
+- Exactly one successful publish result requirement.
+- No failed publish result requirement.
+- Platform post ID and published time evidence.
+- Token and raw response safety.
+
+Important:
+The automated tests do not publish to LinkedIn. They test report logic and safety boundaries only. The actual controlled live post requires a real environment, connected LinkedIn token, explicit founder/client approval, and temporary feature-flag enablement.

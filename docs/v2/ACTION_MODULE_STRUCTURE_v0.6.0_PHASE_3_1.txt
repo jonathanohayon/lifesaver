@@ -1,0 +1,174 @@
+LIFE.SAVER V2 — PHASE 3.1 ACTION MODULE STRUCTURE
+Version: v0.6.0
+Phase: 3.1
+Status: Backend module structure only
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 3 starts the Approval Queue Backend.
+
+Phase 3.1 creates a clean backend module structure for V2 actions so later phases can add list, detail, approve, reject, cancel, and create-proposed-action APIs without placing action logic randomly across the project.
+
+This phase is intentionally structural. It does not execute actions and does not expose approval endpoints.
+
+================================================================================
+FILES ADDED / CONFIRMED
+================================================================================
+
+apps/api/src/modules/actions/actions.types.ts
+- TypeScript action domain types.
+- Includes action types, statuses, risk levels, policy decisions, action rows, events, results, and list filters.
+
+apps/api/src/modules/actions/actions.repository.ts
+- Workspace-safe repository foundation from Phase 2.8.
+- Contains queries that scope actions by workspace_id and active workspace membership.
+- Admin monitoring functions return redacted overview rows only.
+
+apps/api/src/modules/actions/actions.validation.ts
+- New Phase 3.1 validation constants and helper functions.
+- Defines supported action types, statuses, risk levels, and list-filter parsing foundation.
+- Defines role/risk approval helper logic for future approval endpoints.
+
+apps/api/src/modules/actions/actions.service.ts
+- New Phase 3.1 service layer.
+- Provides safe module status and approval-role helper functions.
+- Keeps business rules out of the controller.
+
+apps/api/src/modules/actions/actions.controller.ts
+- New Phase 3.1 controller layer.
+- Currently exposes only a safe module-status response.
+
+apps/api/src/modules/actions/actions.routes.ts
+- New Phase 3.1 route layer.
+- Registers GET /api/v1/actions/module-status.
+- List/detail/approve/reject/cancel routes are intentionally not added yet.
+
+apps/api/src/routes/api-v1.ts
+- Registers actionsRouter behind authRequired.
+
+================================================================================
+SAFE TEST ENDPOINT
+================================================================================
+
+GET /api/v1/actions/module-status
+
+Purpose:
+- Confirm the actions module is wired into the backend.
+- Confirm action types/statuses/risk levels are available.
+- Confirm the system still says no executors or approval endpoints are active.
+
+Authentication:
+- Required.
+
+This endpoint does not:
+- list customer actions
+- expose payload_json
+- approve actions
+- reject actions
+- cancel actions
+- queue actions
+- execute actions
+- call external platforms
+
+================================================================================
+WHY THIS STRUCTURE MATTERS
+================================================================================
+
+V2 gives LIFE.SAVER future operator capability. That means the backend must be organized before dangerous power is added.
+
+A clean module structure gives us:
+
+1. Types in one place
+2. Database queries in one repository layer
+3. Business rules in one service layer
+4. HTTP request/response handling in one controller layer
+5. Routes in one route file
+6. Validation constants and schemas in one validation file
+
+This avoids mixing approval, execution, policy, and database logic together.
+
+================================================================================
+APPROVAL POWER IS STILL DISABLED
+================================================================================
+
+Phase 3.1 does not add:
+
+- GET /api/v1/actions list endpoint
+- GET /api/v1/actions/:id detail endpoint
+- POST /api/v1/actions create endpoint
+- POST /api/v1/actions/:id/approve
+- POST /api/v1/actions/:id/reject
+- POST /api/v1/actions/:id/cancel
+- executor registry
+- sandbox executor
+- real executor
+- social posting
+- support sending
+- ad budget changes
+- campaign pause
+- external write connectors
+- auto-run rules
+
+================================================================================
+ROLE MODEL FOUNDATION
+================================================================================
+
+Default role rules for future approval endpoints:
+
+owner
+- Can view workspace actions.
+- Can approve low, medium, high, and critical future actions.
+- Critical approvals should still use strong confirmation UI.
+
+admin
+- Can view workspace actions.
+- Can approve low, medium, and high future actions.
+- Cannot approve critical actions by default.
+
+member
+- Can view workspace actions.
+- Cannot approve or execute by default.
+
+viewer
+- Read-only.
+
+super_admin
+- May monitor redacted system status.
+- Should not approve customer actions by default.
+- Should never see raw secrets.
+
+================================================================================
+NON-NEGOTIABLE SAFETY RULES
+================================================================================
+
+1. V1 remains read + advise + draft only.
+2. Approved does not mean executed.
+3. Auto-approved does not mean executed.
+4. Executed status requires future executor result confirmation.
+5. Every customer action query must be workspace-scoped.
+6. Every workspace action query must verify authenticated workspace membership.
+7. Admin monitoring must remain redacted.
+8. Payloads must never contain API keys, tokens, passwords, .env values, or payment secrets.
+9. No external write connector is active in this phase.
+10. Phase 3.1 must not accidentally introduce action execution.
+
+================================================================================
+NEXT PHASE
+================================================================================
+
+Phase 3.2 — List Actions API
+
+That phase should add:
+- GET /api/v1/actions
+- status/type/risk filters
+- pagination
+- workspace scoping
+- summary response only, without full payload_json
+
+Do not add approve/reject/cancel yet in Phase 3.2.
+
+================================================================================
+END
+================================================================================

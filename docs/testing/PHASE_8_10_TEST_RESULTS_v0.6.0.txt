@@ -1,0 +1,47 @@
+LIFE.SAVER v0.6.0 Phase 8.10 — Safe Demo QA Test Results
+
+Package:
+lifesaver-v0.6.0-phase-8-10-safe-demo-qa.zip
+
+Main deliverable:
+Sandbox executor QA report.
+
+Flow tested:
+Draft -> Proposed Action -> Approval -> Sandbox Execution -> Result Log
+
+Main new command:
+npm run executor:safe-demo-qa:test
+
+Expected main result:
+executor:safe-demo-qa:test — 28 passed, 0 failed
+
+Regression commands to run:
+npm run build
+npm run executor:safe-demo-qa:test
+npm run executor:rollback-simulation:test
+npm run executor:failure-simulation:test
+npm run executor:result-logs:test
+npm run executor:sandbox-lifecycle:test
+npm run executor:sandbox-ads:test
+npm run executor:sandbox-support:test
+npm run executor:sandbox-content:test
+npm run executor:registry:test
+npm run executor:interface:test
+npm run executor:pause:test
+npm run policy:tests:test
+npm run rules:permission:test
+npm run actions:test:backend
+npm run client:test-checklist
+npm run security:check
+npm run env:check
+
+Safety expected:
+- No real executors.
+- No external writes.
+- No content publishing.
+- No support sending.
+- No real ads API calls.
+- No real rollback.
+- No auto-run execution.
+
+Local security/env warnings are expected when real .env, DATABASE_URL, and production secrets are absent.

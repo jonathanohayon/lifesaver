@@ -1,0 +1,42 @@
+{
+  "statusEndpoint": "GET /api/v1/support/write-scope/status",
+  "checklistEndpoint": "GET /api/v1/support/write-scope/checklist",
+  "previewEndpoint": "POST /api/v1/support/write-scope/preview",
+  "statusResponse": {
+    "ok": true,
+    "data": {
+      "phase": "V2 Phase 13.1 — Write Scope Setup",
+      "healthMode": "v2-phase-13-1-write-scope-setup",
+      "deliverable": "support_write_scope_checklist",
+      "selectedConnector": "gmail",
+      "checklistOnly": true,
+      "sendScopeRequestedNow": false,
+      "gmailSendExecutorAdded": false,
+      "emailSendingAdded": false,
+      "autoReplyAdded": false,
+      "requiredFutureScope": "https://www.googleapis.com/auth/gmail.send",
+      "nextStep": "Phase 13.2 — Support send action payload and final pre-send validation."
+    }
+  },
+  "previewRequest": {
+    "readOnlyConnectorStable": true,
+    "oauthConsentUpdated": true,
+    "founderApprovedSendScope": true,
+    "encryptedTokenStorageReady": true,
+    "proposedActionApprovalRequired": true,
+    "noAutoReply": true,
+    "noBroadMailScope": true,
+    "supportPrivacySafeguardsActive": true,
+    "escalationRulesActive": true
+  },
+  "previewResponse": {
+    "ok": true,
+    "data": {
+      "eligibleForFutureSendExecutorBuild": true,
+      "riskLevel": "low",
+      "missingGates": [],
+      "warnings": [],
+      "safeSummary": "All planning gates are marked ready for a future approved-only support send executor build. This phase still does not send email."
+    }
+  }
+}

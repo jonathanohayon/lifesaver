@@ -1,0 +1,61 @@
+LIFE.SAVER v0.5.4 Deployment Note
+Customer-Ready Domain + Production Launch Preparation
+
+WHAT THIS VERSION ADDS
+v0.5.4 adds a protected launch readiness layer for preparing LIFE.SAVER to become available to a private customer through real domains.
+It does not deploy the domain automatically. It prepares the code, configuration model, documentation, and readiness checks.
+
+SURFACE MODEL
+1. Public website
+   Domain: mydomain.com
+   Purpose: public marketing page, feature explanation, login/start buttons.
+
+2. Customer app
+   Domain: app.mydomain.com
+   Purpose: customer login, onboarding, dashboard, settings, Triple Whale connection, AI chat, briefs, drafts, team members.
+
+3. Internal admin
+   Domain: admin.mydomain.com
+   Purpose: LIFE.SAVER team/admin monitoring, logs, workspace/user status, connection status, readiness checks.
+
+4. Backend API
+   Domain: api.mydomain.com
+   Purpose: auth, permissions, encrypted customer connected accounts, Triple Whale read-only sync, Claude server-side, briefs, drafts, admin APIs, worker APIs.
+
+5. Worker
+   Domain: none
+   Purpose: private background process for metrics refresh, Daily Brief, Weekly Summary, and logged internal tasks.
+
+NEW READINESS CHECK
+The protected endpoint GET /api/v1/launch-readiness reports:
+- local customer testing readiness
+- production customer traffic readiness
+- configured public/app/admin/api/worker URLs
+- production env template
+- HTTPS/domain/CORS/auth/database/secret/debug/worker checks
+- customer flow
+- admin flow
+- launch blockers
+- v1 safety rules
+
+IMPORTANT READINESS RULE
+A successful local test does not mean the app is production-ready.
+Production customer access requires:
+- NODE_ENV=production
+- separate production Supabase database
+- strong production secrets
+- stable APP_ENCRYPTION_KEY
+- HTTPS domains
+- CORS locked to real domains
+- dashboard/chat auth required
+- debug routes disabled
+- worker protected by WORKER_SHARED_SECRET
+- .env excluded from GitHub/ZIPs
+
+PRIVATE BETA RECOMMENDATION
+For the first customer, use CUSTOMER_ACCESS_MODE=private-beta, not customer-ready.
+Public signup, billing, email verification, password reset, and abuse protection can be added later after the private customer flow is stable.
+
+NO EXTERNAL ACTIONS
+v0.5.4 does not add any write/action-taking AI tools.
+LIFE.SAVER remains read + advise + draft only.

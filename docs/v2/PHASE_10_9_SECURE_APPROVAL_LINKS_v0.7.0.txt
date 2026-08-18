@@ -1,0 +1,48 @@
+# LIFE.SAVER v0.7.0 — Phase 10.9 Secure Approval Links
+
+## Goal
+
+Notification links from email or in-app notifications should open the LIFE.SAVER application and exact action detail review screen.
+The link itself must not approve, reject, execute, publish, rollback, send, or mutate anything.
+
+## Secure link rule
+
+A valid approval link may:
+- open /actions.html
+- include actionId
+- include source
+- include linkMode=review_only
+- include a safe notificationKey
+- require login
+- open the action detail drawer after authentication
+
+A valid approval link must not:
+- target /api/v1/actions/:id/approve
+- target /api/v1/actions/:id/reject
+- target /api/v1/actions/:id/execute-content-publish
+- target rollback endpoints
+- include approve/reject/execute/publish/rollback query parameters
+- include tokens, secrets, raw payloads, rollback payloads, or credentials
+
+## User flow
+
+1. Founder receives notification.
+2. Founder clicks review link.
+3. If not logged in, the app opens login and stores only a safe returnTo path.
+4. After login, the app opens actions.html with the exact action detail drawer.
+5. Founder must still click the in-app Approve or Reject button separately.
+6. The email link itself does not approve anything.
+
+## Added implementation
+
+- notification-secure-approval-links model/types/controller/routes/tests
+- safe secure approval link preview/status endpoints
+- front-end block for mutating deep-link parameters
+- login returnTo hardening for approval/execution keywords
+- email template reviewUrl hardening
+- shared secure approval link contract
+
+## Safety status
+
+This phase is link-behavior only.
+It does not send emails, call Slack, call external providers, approve actions, execute actions, publish LinkedIn content, or change notification delivery behavior.

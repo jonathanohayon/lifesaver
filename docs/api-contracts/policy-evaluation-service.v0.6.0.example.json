@@ -1,0 +1,32 @@
+{
+  "version": "0.6.0",
+  "phase": "V2 Phase 6.7 Policy Conflict Resolution",
+  "functionName": "evaluateActionPolicy",
+  "returns": {
+    "decision": "ask | auto_approve | block",
+    "reason": "Human-readable policy decision explanation.",
+    "matched_policy_id": "policy_uuid_or_null",
+    "cap_status": "not_applicable_no_policy_match | no_caps_defined | caps_ok | cap_exceeded | cap_usage_unavailable | blocked_by_pause_or_emergency | database_unavailable",
+    "conflictSummary": {
+      "reasonCode": "ask_rule_wins",
+      "priorityOrder": [
+        "master_pause",
+        "block_rule",
+        "hard_cap_exceeded",
+        "ask_rule",
+        "auto_approve_rule"
+      ],
+      "matchedCandidateCount": 2,
+      "winningCandidate": {
+        "policyId": "policy_ask_example",
+        "policyName": "Ask before support reply",
+        "decision": "ask",
+        "capStatus": "no_caps_defined",
+        "priority": 100
+      }
+    }
+  },
+  "executorEnabled": false,
+  "externalWritesEnabled": false,
+  "autoRunTriggered": false
+}

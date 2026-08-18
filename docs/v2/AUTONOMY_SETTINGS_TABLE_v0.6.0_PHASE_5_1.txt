@@ -1,0 +1,140 @@
+LIFE.SAVER V2 — PHASE 5.1 AUTONOMY SETTINGS TABLE
+Version: v0.6.0
+Phase: 5.1
+Deliverable: autonomy_settings migration
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 5 begins the Master Pause Switch foundation.
+
+The Master Pause Switch is a non-negotiable V2 safety layer. Before LIFE.SAVER can
+run any future action automatically, every workspace needs durable pause controls
+that future policy and executor services can check.
+
+Phase 5.1 only creates storage for those controls.
+
+It does not add pause/resume APIs, UI switches, policy enforcement, executor
+enforcement, auto-approval, queueing, or real-world execution.
+
+================================================================================
+TABLE CREATED
+================================================================================
+
+Migration:
+- database/migrations/013_create_autonomy_settings_table.sql
+
+Table:
+- autonomy_settings
+
+Fields:
+- workspace_id
+- pause_all_autonomy
+- pause_content_actions
+- pause_support_actions
+- pause_ads_actions
+- updated_by
+- updated_at
+
+================================================================================
+FIELD DEFINITIONS
+================================================================================
+
+workspace_id
+- UUID primary key.
+- References workspaces(id).
+- One row per workspace.
+- Ensures autonomy controls are scoped to the correct customer/workspace.
+
+pause_all_autonomy
+- Boolean.
+- Default false.
+- Future policy/executor layers must treat true as a global autonomy stop.
+- When true, no autonomous execution should be allowed.
+
+pause_content_actions
+- Boolean.
+- Default false.
+- Future content publishing autonomy must be blocked when true.
+
+pause_support_actions
+- Boolean.
+- Default false.
+- Future support reply send autonomy must be blocked when true.
+
+pause_ads_actions
+- Boolean.
+- Default false.
+- Future ad budget/campaign control autonomy must be blocked when true.
+
+updated_by
+- UUID nullable.
+- References users(id).
+- Records who last updated autonomy settings when known.
+
+updated_at
+- Timestamp with timezone.
+- Defaults to now().
+- Future APIs must update this on every pause/resume change.
+
+================================================================================
+SAFETY BOUNDARY
+================================================================================
+
+This migration is storage-only.
+
+It does not:
+- execute actions
+- queue actions
+- approve actions
+- reject actions
+- cancel actions
+- publish content
+- send support replies
+- change ad spend
+- pause campaigns
+- refund orders
+- edit products
+- write to Triple Whale
+- write to Shopify, Meta, Google, TikTok, Snapchat, Gmail, or any external platform
+
+V1/V2 current safety remains:
+- READ + ADVISE + DRAFT + INTERNAL APPROVAL/REJECTION ONLY
+
+================================================================================
+FUTURE PHASE USAGE
+================================================================================
+
+Phase 5.2 will use pause_all_autonomy as the global pause state.
+Phase 5.3 will use category pause flags for content/support/ads.
+Phase 5.4 will add read/update pause APIs.
+Phase 5.5 will add the Master Pause UI.
+Phase 5.6 and 5.7 will enforce pause checks inside executors and policy logic.
+
+Future executor rule:
+- Even if an action was approved earlier, active pause must block execution.
+
+================================================================================
+MIGRATION STRATEGY
+================================================================================
+
+This migration is additive and non-destructive.
+
+It does not:
+- drop tables
+- rename columns
+- alter existing V1 tables destructively
+- delete data
+- modify secrets
+
+Before applying to production:
+1. Backup the database.
+2. Confirm DATABASE_URL points to the intended environment.
+3. Confirm APP_ENCRYPTION_KEY remains stable.
+4. Run migrations first in local/staging.
+5. Run production migration only after approval.
+
+================================================================================
+END
+================================================================================

@@ -1,0 +1,48 @@
+LIFE.SAVER v0.7.0 — Phase 13.6 No Bulk Sends
+============================================
+
+Purpose:
+Add a central support bulk-send guard.
+
+Roadmap rule implemented:
+- No bulk sending without explicit approval.
+
+Current package behavior:
+- The current Gmail support send executor remains single-recipient only.
+- One approved support_reply_send action may continue only when it targets one recipient, one ticket, one imported thread, and one outgoing message.
+- Bulk-like sends are blocked before Gmail credentials are loaded or Gmail is called.
+
+Blocked bulk-like shapes:
+- recipientCount > 1.
+- threadCount > 1.
+- ticketCount > 1.
+- messageCount > 1.
+- CC/BCC.
+- attachments.
+- bulk_mode / send_all.
+- audience segment / mailing list.
+- template batch sends.
+
+Important safety boundary:
+Explicit bulk approval metadata is recognized only as a future planning concept. This phase still blocks bulk sends because a safe bulk executor has not been designed, scoped, capped, tested, or approved.
+
+Endpoints:
+- GET  /api/v1/support/bulk-send-guard/status
+- GET  /api/v1/support/bulk-send-guard/example
+- POST /api/v1/support/bulk-send-guard/preview
+
+Main files:
+- apps/api/src/modules/support/support-bulk-send-guard.types.ts
+- apps/api/src/modules/support/support-bulk-send-guard.model.ts
+- apps/api/src/modules/support/support-bulk-send-guard.controller.ts
+- apps/api/src/modules/support/support-bulk-send-guard.routes.ts
+- apps/api/src/modules/support/support-bulk-send-guard-tests.ts
+
+Executor integration:
+- apps/api/src/modules/support/support-send-executor.model.ts
+- apps/api/src/modules/support/support-send-executor.types.ts
+
+No database migration required.
+No Gmail API call added by the guard.
+No email send added by the guard.
+No raw provider payload/token/MIME returned.

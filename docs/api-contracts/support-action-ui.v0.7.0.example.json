@@ -1,0 +1,58 @@
+{
+  "statusEndpoint": "GET /api/v1/support/action-ui/status",
+  "exampleEndpoint": "GET /api/v1/support/action-ui/example",
+  "previewEndpoint": "POST /api/v1/support/action-ui/preview",
+  "previewRequest": {
+    "ticketId": "ticket_ship_123",
+    "threadId": "gmail_thread_ship_123",
+    "actionId": "action_support_reply_123",
+    "actionStatus": "proposed",
+    "customerEmail": "customer@example.com",
+    "subject": "Where is my order?",
+    "bodySnippet": "Hi, my order has not arrived yet. Can you please check the tracking?",
+    "suggestedReply": "Hello, thanks for reaching out. I can help check your order status and tracking details.",
+    "category": "shipping",
+    "confidenceScore": 0.88,
+    "sensitiveFlag": false,
+    "escalationRequired": false,
+    "riskLevel": "medium"
+  },
+  "previewResponseShape": {
+    "valid": true,
+    "deliverable": "support_action_ui",
+    "selectedConnector": "gmail",
+    "actionType": "support_reply_send",
+    "ticket": {
+      "ticketId": "ticket_ship_123",
+      "threadId": "gmail_thread_ship_123",
+      "customerEmailHint": "cu***@example.com",
+      "subjectPreview": "Where is my order?",
+      "bodySnippetPreview": "Hi, my order has not arrived yet. Can you please check the tracking?",
+      "category": "shipping",
+      "confidenceScore": 0.88,
+      "sensitiveFlag": false,
+      "escalationRequired": false
+    },
+    "reviewControls": {
+      "actionId": "action_support_reply_123",
+      "actionStatus": "proposed",
+      "approveEnabled": true,
+      "rejectEnabled": true,
+      "approveRequiresConfirmation": true,
+      "rejectRequiresReason": true,
+      "canSendEmail": false,
+      "canExecuteSupportSend": false
+    },
+    "safety": {
+      "browserSafeOnly": true,
+      "usesExistingInternalApprovalEndpoints": true,
+      "approveRejectCanExecuteAction": false,
+      "emailSent": false,
+      "gmailApiCalled": false,
+      "supportSendExecutorAdded": false,
+      "supportAutoReplyAdded": false,
+      "rawProviderPayloadReturned": false,
+      "rawTicketPayloadReturned": false
+    }
+  }
+}

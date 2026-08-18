@@ -1,0 +1,83 @@
+{
+  "phase": "phase_11_7_daily_action_digest",
+  "healthMode": "v2-phase-11-7-daily-action-digest",
+  "deliverable": "content_action_digest",
+  "digestDate": "2026-07-06T23:59:00.000Z",
+  "timezone": "UTC",
+  "scope": {
+    "workspaceScoped": true,
+    "contentOnly": true,
+    "supportedPlatform": "linkedin",
+    "supportedChannel": "linkedin_member_feed"
+  },
+  "counts": {
+    "totalInputActions": 3,
+    "published": 1,
+    "waitingForApproval": 1,
+    "failed": 1,
+    "ignoredNonContentActions": 0
+  },
+  "published": [
+    {
+      "actionId": "act_content_published_preview",
+      "title": "LinkedIn founder update",
+      "actionType": "content_publish",
+      "platform": "linkedin",
+      "channel": "linkedin_member_feed",
+      "riskLevel": "low",
+      "status": "executed",
+      "timestamp": "2026-07-06T10:15:00.000Z",
+      "reason": "Published after the content matched approved style, risk stayed low, and final validation passed.",
+      "safeLinkAvailable": true,
+      "permalink": "https://www.linkedin.com/feed/update/urn:li:share:1234567890"
+    }
+  ],
+  "waitingForApproval": [
+    {
+      "actionId": "act_content_waiting_preview",
+      "title": "Discount campaign announcement",
+      "actionType": "content_publish",
+      "platform": "linkedin",
+      "channel": "linkedin_member_feed",
+      "riskLevel": "medium",
+      "status": "proposed",
+      "timestamp": "2026-07-06T11:00:00.000Z",
+      "reason": "Waiting because the discount claim needs founder approval before publishing.",
+      "safeLinkAvailable": false
+    }
+  ],
+  "failed": [
+    {
+      "actionId": "act_content_failed_preview",
+      "title": "LinkedIn test post retry",
+      "actionType": "content_publish",
+      "platform": "linkedin",
+      "channel": "linkedin_member_feed",
+      "riskLevel": "low",
+      "status": "failed",
+      "timestamp": "2026-07-06T12:00:00.000Z",
+      "reason": "LinkedIn token expired before execution; reconnect is required.",
+      "safeLinkAvailable": false
+    }
+  ],
+  "dailyBriefSection": {
+    "heading": "Content Actions",
+    "summary": "Content action digest: 1 published, 1 waiting for approval, 1 failed or blocked.",
+    "bulletLines": [
+      "Published: LinkedIn founder update — Published after the content matched approved style, risk stayed low, and final validation passed.",
+      "Waiting for approval: Discount campaign announcement — Waiting because the discount claim needs founder approval before publishing.",
+      "Failed: LinkedIn test post retry — LinkedIn token expired before execution; reconnect is required."
+    ]
+  },
+  "safety": {
+    "digestOnly": true,
+    "doesNotPublish": true,
+    "doesNotApprove": true,
+    "doesNotNotify": true,
+    "externalApiCalled": false,
+    "noDatabaseWrites": true,
+    "rawPayloadNotReturned": true,
+    "tokenNotReturned": true,
+    "secretsNotReturned": true
+  }
+}

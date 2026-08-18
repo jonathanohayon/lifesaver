@@ -1,0 +1,43 @@
+================================================================================
+PHASE 11.2 — CONTENT RISK SCORING
+================================================================================
+
+Goal:
+Score content for:
+- Sensitive terms.
+- Overpromising.
+- Discount claims.
+- Brand mismatch.
+- Platform risk.
+- Compliance concerns.
+
+Deliverable:
+Content risk score function.
+
+Implementation:
+- Added content-risk-score model/types/controller/routes/tests.
+- Added shared content-risk-score contract exports.
+- Mounted endpoints behind auth under /api/v1/content-auto-run.
+- Updated health mode to v2-phase-11-2-content-risk-scoring.
+
+Risk scoring behavior:
+- The score is deterministic.
+- Total score is capped at 100.
+- Risk levels: low, medium, high, critical.
+- Critical or very high scores are blocked by risk score.
+- Lower scores still remain manual-review only until a later phase explicitly adds auto-run gates.
+
+Important safety boundary:
+This phase does not enable auto-run.
+It only prepares one required safety signal for a later narrow content auto-run lane.
+
+No real-world effects:
+- No LinkedIn API call.
+- No publishing.
+- No approval mutation.
+- No execution mutation.
+- No database migration.
+- No database writes.
+- No external writes.
+
+================================================================================

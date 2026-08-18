@@ -1,0 +1,23 @@
+{
+  "version": "0.6.0",
+  "phase": "Phase 7.10 Rules Permission QA",
+  "previewOnly": true,
+  "persistence": "browser_local_permission_qa_only_no_database_write",
+  "required_tests": {
+    "owner_can_edit": true,
+    "admin_can_edit_if_allowed": true,
+    "viewer_cannot_edit": true,
+    "unauthorized_request_blocked": true
+  },
+  "example_decision": {
+    "role": "viewer",
+    "allowed": false,
+    "code": "VIEWER_CANNOT_EDIT"
+  },
+  "safety": {
+    "policyEditingEndpoints": false,
+    "permissionDatabaseWrites": false,
+    "externalWrites": false,
+    "executorRan": false
+  }
+}

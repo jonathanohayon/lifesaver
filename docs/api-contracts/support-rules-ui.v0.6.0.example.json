@@ -1,0 +1,43 @@
+{
+  "version": "0.6.0",
+  "phase": "Phase 7.4 Support Rules UI",
+  "previewOnly": true,
+  "persistence": "browser_local_preview_only_no_database_write",
+  "action_type": "support_reply_send",
+  "scope": {
+    "platform": "support_inbox",
+    "channel": "support",
+    "category": "faq"
+  },
+  "support_rules": {
+    "ticket_category": "faq",
+    "confidence_threshold": 0.9,
+    "auto_reply_allowed": false,
+    "escalation_categories": ["refund", "cancellation", "complaint", "payment_issue"],
+    "max_replies_per_day": 10,
+    "sensitive_ticket_exclusions": ["medical_or_health", "legal_or_compliance", "payment_or_card_data"],
+    "approval_required_above_risk_level": "medium"
+  },
+  "conditions_json": {
+    "match": "all",
+    "conditions": [
+      { "field": "category", "operator": "equals", "value": "faq" },
+      { "field": "confidence_score", "operator": "confidence_above", "value": 0.9 },
+      { "field": "risk_level", "operator": "risk_below", "value": "medium" }
+    ]
+  },
+  "decision": "ask",
+  "caps_json": {
+    "max_support_auto_replies_per_day": 10
+  },
+  "enabled": false,
+  "safety": {
+    "databaseWritesAttempted": false,
+    "policyEndpointCalled": false,
+    "executorRan": false,
+    "supportSent": false,
+    "emailSent": false,
+    "helpdeskUpdated": false,
+    "externalWritesAttempted": false
+  }
+}

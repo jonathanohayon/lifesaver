@@ -1,0 +1,24 @@
+# Rule History / Policy Audit — v0.6.0 Phase 7.9
+
+Purpose:
+Give the founder a clear audit-style view of rule previews and recent decisions before database-backed policy audit persistence is enabled.
+
+Required fields shown:
+- Created by
+- Updated by
+- Disabled by
+- Last triggered
+- Recent decisions
+
+Implementation:
+- UI section inside `/rules.html`.
+- Uses localStorage previews from Phase 7.2 through Phase 7.8.
+- Generates a browser-local audit preview JSON.
+- Provides copy/save/reset controls for local audit preview only.
+
+Safety:
+No policy rows are created.
+No audit rows are written.
+No policy editing endpoint is added.
+No executor is run.
+No external write is performed.

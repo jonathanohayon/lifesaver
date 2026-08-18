@@ -1,0 +1,42 @@
+LIFE.SAVER v0.6.0 Phase 7.8 Pause Integration Display
+
+Package:
+lifesaver-v0.6.0-phase-7-8-pause-integration-display
+
+Tests run successfully for this phase:
+- npm run build
+- npm run rules:pause-integration:test — 11 passed
+- npm run rules:simulation:test — 11 passed
+- npm run rules:caps:test — 13 passed
+- npm run rules:ads:test — 12 passed
+- npm run rules:support:test — 12 passed
+- npm run rules:content:test — 11 passed
+- npm run rules:wizard:test — 11 passed
+- npm run rules:layout:test — 16 passed
+- npm run policy:tests:test — 7 passed
+- npm run policy:dry-run:test
+- npm run policy:decision-records:test
+- npm run policy:conflict-resolution:test
+- npm run policy:cap-validation:test
+- npm run policy:evaluator:test
+- npm run policy:scope-matching:test
+- npm run policy:condition-operators:test
+- npm run policy:default-ask:test
+- npm run policy:schema:test
+- npm run policy:pause:test
+- npm run executor:pause:test
+- npm run actions:test:backend
+- npm run client:test-checklist
+- npm run security:check
+- npm run env:check
+
+Key Phase 7.8 checks:
+- Pause Integration Display exists on /rules.html.
+- Global pause warning text exists.
+- Category pause display exists for content/support/ads.
+- Unknown status uses conservative fallback.
+- Simulation preview includes live pause display status.
+- No policy writes or external writes are enabled.
+
+Local security/env note:
+security:check and env:check can show expected local warnings when no production .env, DATABASE_URL, or real secrets are present.

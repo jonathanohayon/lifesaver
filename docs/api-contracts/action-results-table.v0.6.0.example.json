@@ -1,0 +1,84 @@
+{
+  "version": "0.6.0",
+  "phase": "2.6",
+  "name": "action_results_table_contract",
+  "safety": {
+    "addsExecutor": false,
+    "addsExternalWrites": false,
+    "v1ModeStillReadAdviseDraftOnly": true,
+    "notes": "This contract documents future executor result storage only. It does not execute actions."
+  },
+  "table": "action_results",
+  "fields": {
+    "id": "uuid primary key",
+    "action_id": "uuid references actions(id)",
+    "workspace_id": "uuid references workspaces(id)",
+    "executor_name": "text",
+    "external_id": "text nullable",
+    "external_url": "text nullable, http/https only",
+    "result_status": "pending | success | failed | blocked | skipped | rollback_success | rollback_failed",
+    "result_summary": "text nullable",
+    "error_message": "text nullable",
+    "rollback_supported": "boolean",
+    "rollback_payload": "json object",
+    "metadata_json": "json object",
+    "created_at": "timestamp with time zone",
+    "updated_at": "timestamp with time zone"
+  },
+  "allowedResultStatuses": [
+    "pending",
+    "success",
+    "failed",
+    "blocked",
+    "skipped",
+    "rollback_success",
+    "rollback_failed"
+  ],
+  "exampleSandboxSuccess": {
+    "action_id": "00000000-0000-0000-0000-000000000000",
+    "workspace_id": "11111111-1111-1111-1111-111111111111",
+    "executor_name": "sandbox_content_executor",
+    "external_id": "sandbox_post_123",
+    "external_url": "https://example.invalid/sandbox/post/sandbox_post_123",
+    "result_status": "success",
+    "result_summary": "Sandbox content publish simulation completed. No external platform was contacted.",
+    "error_message": null,
+    "rollback_supported": true,
+    "rollback_payload": {
+      "rollback_type": "sandbox_unpublish",
+      "sandbox_external_id": "sandbox_post_123"
+    },
+    "metadata_json": {
+      "mode": "sandbox",
+      "externalWritePerformed": false
+    }
+  },
+  "exampleBlocked": {
+    "action_id": "00000000-0000-0000-0000-000000000000",
+    "workspace_id": "11111111-1111-1111-1111-111111111111",
+    "executor_name": "ads_budget_executor",
+    "external_id": null,
+    "external_url": null,
+    "result_status": "blocked",
+    "result_summary": "Execution blocked by master pause switch.",
+    "error_message": "MASTER_PAUSE_ACTIVE",
+    "rollback_supported": false,
+    "rollback_payload": {},
+    "metadata_json": {
+      "policyDecision": "block",
+      "pauseState": "pause_all_autonomy"
+    }
+  },
+  "forbiddenStoredData": [
+    "api_key",
+    "access_token",
+    "refresh_token",
+    "password",
+    "DATABASE_URL",
+    "CLAUDE_API_KEY",
+    "TRIPLE_WHALE_API_KEY",
+    "APP_ENCRYPTION_KEY",
+    "WORKER_SHARED_SECRET",
+    "payment_card_data"
+  ]
+}

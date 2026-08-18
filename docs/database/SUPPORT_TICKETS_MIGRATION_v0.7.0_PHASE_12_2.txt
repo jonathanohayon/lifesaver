@@ -1,0 +1,45 @@
+LIFE.SAVER v0.7.0 — Phase 12.2 Database Migration
+
+Migration:
+- database/migrations/020_create_support_tickets.sql
+
+Table:
+- support_tickets
+
+Purpose:
+- Store normalized support tickets imported from read-only Gmail messages.
+
+Safety:
+- Additive migration only.
+- Does not drop, rename, truncate, or rewrite existing data.
+- Does not send email.
+- Does not modify Gmail.
+- Does not create support reply actions.
+
+Important columns:
+- workspace_id
+- provider
+- external_thread_id
+- external_message_id
+- from_email_hint
+- from_name_hint
+- subject
+- snippet
+- received_at
+- status
+- priority
+- category
+- sentiment
+- labels_json
+- raw_provider_payload_json
+- imported_by
+- imported_at
+- updated_at
+
+Uniqueness:
+- workspace_id + provider + external_message_id
+
+Raw payload rule:
+- raw_provider_payload_json is for provider payload separation only.
+- It must never contain OAuth tokens, Authorization headers, passwords, API keys, or secrets.
+- It is not returned by the browser-safe API responses.

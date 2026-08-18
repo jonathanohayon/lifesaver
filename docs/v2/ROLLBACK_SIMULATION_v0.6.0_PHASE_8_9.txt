@@ -1,0 +1,22 @@
+# LIFE.SAVER v0.6.0 — Phase 8.9 Rollback Simulation
+
+## Goal
+Simulate rollback after sandbox execution.
+
+## Deliverable
+Rolled_back action state tested.
+
+## Lifecycle
+proposed -> approved -> executing -> executed -> rollback_requested -> executing -> rolled_back
+
+## Supported sandbox action types
+- content_publish
+- support_reply_send
+- ad_budget_adjust
+- ad_pause
+
+## Result log preview
+Rollback simulation produces a safe action_results-style preview with result_status=rollback_success when rollback succeeds.
+
+## Safety
+No external platform is called. No real rollback is performed. All rollback behavior is sandbox-only and uses fake sandbox IDs/URLs from previous sandbox execution.

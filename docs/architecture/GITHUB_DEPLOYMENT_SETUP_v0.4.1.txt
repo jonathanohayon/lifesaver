@@ -1,0 +1,14 @@
+LIFE.SAVER v0.4.1 — GitHub + Deployment Setup Architecture Note
+
+This version does not change the core business logic. It prepares the codebase for professional source control and deployment.
+
+Key decisions:
+- GitHub private repo becomes source of truth for code.
+- .env stays local/hosting-only and is never committed.
+- GitHub Actions runs build/security checks without real secrets.
+- Deployment is split into API, web, worker, and database.
+- Supabase production database should be separate from development database.
+- v1 remains read + advise + draft only.
+
+Next architecture milestone:
+- v0.4.3 Production Database + Environment Separation.

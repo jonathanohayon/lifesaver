@@ -1,0 +1,24 @@
+{
+  "phase": "phase_11_7_daily_action_digest",
+  "healthMode": "v2-phase-11-7-daily-action-digest",
+  "enabled": true,
+  "deliverable": "content_action_digest",
+  "purpose": "daily_brief_content_action_digest",
+  "reports": [
+    "what_was_published",
+    "why_it_was_published",
+    "what_is_waiting_for_approval",
+    "what_failed"
+  ],
+  "safety": {
+    "digestOnly": true,
+    "doesNotPublish": true,
+    "doesNotApprove": true,
+    "doesNotNotify": true,
+    "externalApiCalled": false,
+    "noDatabaseWrites": true,
+    "rawPayloadNotReturned": true,
+    "tokenNotReturned": true,
+    "secretsNotReturned": true
+  }
+}

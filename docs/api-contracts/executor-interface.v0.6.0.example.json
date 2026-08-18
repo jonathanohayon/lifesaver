@@ -1,0 +1,32 @@
+{
+  "version": "0.6.0",
+  "phase": "V2 Phase 8.1 Executor Interface",
+  "deliverable": "Executor TypeScript interface",
+  "requiredMethods": [
+    "validate",
+    "execute",
+    "rollback",
+    "summarizeResult"
+  ],
+  "safety": {
+    "sandboxExecutorImplemented": false,
+    "realExecutorImplemented": false,
+    "executorRegistered": false,
+    "externalConnectorsAdded": false,
+    "externalWritesEnabled": false,
+    "autoRunEnabled": false
+  },
+  "exampleContext": {
+    "version": "0.6.0",
+    "phase": "v0.6.0 Phase 8.1 Executor Interface",
+    "workspaceId": "00000000-0000-0000-0000-000000000001",
+    "actionId": "00000000-0000-0000-0000-000000000002",
+    "actionType": "content_publish",
+    "riskLevel": "low",
+    "policyDecision": "ask",
+    "payload": {
+      "text": "Proposed Instagram post preview only."
+    }
+  },
+  "liveSite": "https://lifesaveragent.com"
+}

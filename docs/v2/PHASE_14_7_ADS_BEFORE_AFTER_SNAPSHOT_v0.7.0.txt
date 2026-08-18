@@ -1,0 +1,46 @@
+LIFE.SAVER v0.7.0 — Phase 14.7 Ads Before/After Snapshot
+
+Roadmap requirement:
+Before execution, store:
+- current budget
+- campaign status
+- adset status
+- timestamp
+- platform data summary
+
+Deliverable:
+- Before/after audit snapshot
+
+Implementation summary:
+- Adds a before/after snapshot module under `apps/api/src/modules/ads`.
+- Adds additive storage table `ads_action_snapshots` through migration 023.
+- Adds preview/status/report/example endpoints under `/api/v1/ads/before-after-snapshot`.
+- Requires Phase 14.6 manual approval gate before snapshot readiness.
+- Produces a safe before snapshot and after-state preview for future executor audit trails.
+
+Storage contract:
+- `before_execution` snapshot is required before any future provider mutation.
+- `after_execution` snapshot is reserved for future provider result confirmation.
+- Rollback snapshot kinds are reserved for Phase 14.8 planning.
+
+Security and safety:
+- Store safe platform summaries only.
+- Do not store raw provider payloads.
+- Do not store OAuth tokens or request headers.
+- Do not expose raw provider payloads to browser.
+- Do not claim execution from a snapshot alone.
+- Future execution still requires manual approval, pause checks, hard caps, idempotency, result logs, and rollback planning.
+
+Not added:
+- No Meta Ads API client.
+- No Google Ads API client.
+- No OAuth route.
+- No token storage.
+- No write scope request.
+- No campaign pause.
+- No adset pause.
+- No budget mutation.
+- No budget restore.
+- No campaign re-enable.
+- No ads auto-run.
+- No external ad API call.

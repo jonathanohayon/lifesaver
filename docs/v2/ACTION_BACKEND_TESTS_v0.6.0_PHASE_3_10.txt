@@ -1,0 +1,185 @@
+LIFE.SAVER v0.6.0 — Phase 3.10 Backend Tests
+================================================
+
+Purpose
+-------
+Phase 3.10 verifies the V2 approval queue backend foundation created in Phase 3.1 through Phase 3.9.
+
+The test coverage focuses on the internal action backend only:
+- list actions
+- get action detail
+- approve action
+- reject action
+- cancel action
+- invalid transition handling
+- permission denial
+- workspace isolation
+
+This phase does not add executors, real connectors, queue processing, posting, sending, ad changes, refunds, or rollback execution.
+
+New test command
+----------------
+Root command:
+
+npm.cmd run actions:test:backend
+
+Workspace command:
+
+npm.cmd --workspace apps/api run actions:test:backend
+
+Test runner file
+----------------
+apps/api/src/modules/actions/actions.backend-tests.ts
+
+How the test runner works
+-------------------------
+The runner has two layers:
+
+1. Offline safety tests
+   These run even when DATABASE_URL is missing.
+   They validate:
+   - action list query parsing
+   - role permission guard matrix
+   - reject/cancel body alias parsing
+   - safe AppError construction
+
+2. Database integration tests
+   These run only when DATABASE_URL is configured and the environment is safe for local/non-production testing.
+   They create temporary Phase 3.10 test users, workspaces, memberships, and actions.
+   By default, the runner deletes its own temporary test data at the end.
+
+Required safe environment for database integration tests
+--------------------------------------------------------
+The runner refuses production-labelled environments.
+
+Default allowed database test mode:
+- NODE_ENV is not production
+- APP_ENVIRONMENT is not production
+- DATABASE_ENVIRONMENT is not production
+- CUSTOMER_ACCESS_MODE=local-testing
+
+Optional override for intentional staging/non-production database only:
+
+ACTIONS_BACKEND_TEST_ALLOW_NON_PRODUCTION=true
+
+Never use this override against a real customer production database.
+
+Optional debug flag
+-------------------
+To keep temporary test records for manual inspection:
+
+ACTIONS_BACKEND_TEST_KEEP_DATA=true
+
+Default is cleanup enabled.
+
+Database tests covered
+----------------------
+1. List actions
+   - Confirms workspace-scoped list works.
+   - Confirms payload_json is not returned in list response.
+   - Confirms externalWritesEnabled=false.
+
+2. List filters
+   - Confirms action_type and risk_level filtering works.
+
+3. Get action detail
+   - Confirms safe payloadPreview is returned.
+   - Confirms full payload_json is not returned.
+   - Confirms status history is returned.
+
+4. Approve action
+   - Confirms proposed action can become approved.
+   - Confirms approve does not queue or execute.
+   - Confirms external writes remain disabled.
+
+5. Double-click approve protection
+   - Confirms second approval returns alreadyApproved=true safe no-op.
+
+6. Reject action
+   - Confirms proposed action can become rejected.
+   - Confirms reject does not execute.
+
+7. Cancel action
+   - Confirms pre-execution action can become cancelled.
+   - Confirms cancel does not execute or rollback.
+
+8. Invalid transitions
+   - rejected -> approved must fail with ACTION_REJECTED.
+   - executed -> cancel must fail with ACTION_ALREADY_EXECUTED.
+
+9. Permission denial
+   - member cannot approve high-risk action.
+   - admin cannot approve critical action by default.
+
+10. Workspace isolation
+   - workspace A user cannot read workspace B action by ID.
+   - workspace B user cannot list workspace A actions.
+
+Expected successful output shape
+--------------------------------
+The command prints JSON similar to:
+
+{
+  "success": true,
+  "version": "0.6.0",
+  "phase": "3.10",
+  "title": "Phase 3.10 Backend Tests",
+  "databaseConfigured": true,
+  "safeLocalMode": true,
+  "summary": {
+    "passed": 17,
+    "failed": 0,
+    "skipped": 0,
+    "total": 17
+  },
+  "safety": {
+    "externalWritesEnabled": false,
+    "executorEnabled": false,
+    "noPublishing": true,
+    "noSupportSending": true,
+    "noAdSpendChanges": true,
+    "noCampaignPause": true
+  }
+}
+
+Expected output when no DATABASE_URL exists
+-------------------------------------------
+The offline tests still run and database tests are skipped:
+
+{
+  "success": true,
+  "databaseConfigured": false,
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "skipped": 1
+  }
+}
+
+This is acceptable inside a sandbox with no real .env. On the developer machine, copy the working .env first and rerun the command for full database integration coverage.
+
+Safety statement
+----------------
+Phase 3.10 does not execute any real-world action.
+
+No:
+- social publishing
+- support sending
+- ad budget changes
+- campaign pauses
+- refunds
+- product edits
+- Triple Whale writes
+- Shopify writes
+- external platform writes
+- executors
+- queue workers
+- rollback execution
+
+V1 remains READ + ADVISE + DRAFT ONLY.
+
+Next recommended phase
+----------------------
+Phase 4.1 — Approval Page/Panel Placement
+
+END OF PHASE 3.10 BACKEND TESTS

@@ -1,0 +1,55 @@
+LIFE.SAVER v0.7.0 — Phase 14.7 Before/After Snapshot
+Test Results
+
+Package:
+- lifesaver-v0.7.0-phase-14-7-before-after-snapshot.zip
+
+Health mode:
+- v2-phase-14-7-before-after-snapshot
+
+Commands run:
+- npm run phase14:ads-before-after-snapshot:test
+- npm run phase14:ads-manual-approval:test
+- npm run phase14:ads-hard-caps:test
+- npm run phase14:ads-budget-payload:test
+- npm run phase14:ads-action-types:test
+- npm run phase14:ads-write-scope:test
+- npm run phase14:ads-connector-audit:test
+- npm run phase13:support-send-qa:test
+- npm run build
+
+Result:
+- PASS
+
+Phase 14.7 coverage:
+- Required roadmap fields are represented: current_budget, campaign_status, adset_status, timestamp, platform_data_summary.
+- Valid manually approved action produces before snapshot and after-state preview.
+- Missing action blocks snapshot readiness.
+- Proposed/auto-approved ads actions are blocked through Phase 14.6 manual approval gate.
+- Missing before snapshot blocks readiness.
+- Invalid budget blocks readiness.
+- Missing campaign status blocks readiness.
+- Missing platform data summary blocks readiness.
+- Invalid timestamp blocks readiness.
+- force=true is ignored.
+- persist_now=true does not write through preview endpoint.
+- Pause gates in the underlying manual approval input block readiness.
+- Output safety rejects raw token/provider payload fragments.
+
+Safety result:
+- No Meta Ads API client added.
+- No Google Ads API client added.
+- No ad OAuth route added.
+- No ad token storage added.
+- No ad write scope requested.
+- No campaign/adset pause.
+- No budget mutation.
+- No budget restore.
+- No campaign re-enable.
+- No ads auto-run.
+- No external ad API call.
+- No raw token/provider payload returned.
+
+Migration note:
+- `database/migrations/023_create_ads_action_snapshots.sql` is additive.
+- It is not run automatically by this package.

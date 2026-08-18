@@ -1,0 +1,62 @@
+{
+  "version": "action-duplicate-protection/v0.6.0",
+  "phase": "2.7",
+  "status": "rules_defined_schema_extended_no_execution",
+  "fields": {
+    "idempotency_key": {
+      "table": "actions",
+      "type": "text",
+      "nullable": true,
+      "purpose": "Prevents duplicate action rows when the same request is retried inside a workspace.",
+      "uniqueScope": ["workspace_id", "idempotency_key"],
+      "mustNotContain": ["api_keys", "oauth_tokens", "passwords", "raw_env_values", "database_urls"]
+    },
+    "action_hash": {
+      "table": "actions",
+      "type": "text",
+      "nullable": true,
+      "purpose": "Prevents duplicate active action intent before approval/execution.",
+      "uniqueScope": ["workspace_id", "action_hash", "active_statuses_only"],
+      "hashInputShouldInclude": ["action_type", "normalized_safe_payload", "target_platform", "target_external_object", "scheduled_time_when_relevant"],
+      "mustNotContain": ["api_keys", "oauth_tokens", "passwords", "raw_env_values", "database_urls"]
+    }
+  },
+  "activeStatusesProtectedByActionHash": [
+    "proposed",
+    "approval_required",
+    "auto_approved",
+    "approved",
+    "queued",
+    "executing",
+    "executed",
+    "rollback_requested",
+    "rolled_back"
+  ],
+  "inactiveStatusesThatMayBeReplaced": ["rejected", "cancelled", "failed"],
+  "futureCreateProposedActionOrder": [
+    "validate_workspace_and_permission",
+    "validate_action_type",
+    "validate_payload_schema",
+    "generate_or_receive_idempotency_key",
+    "build_action_hash_from_safe_normalized_data",
+    "check_existing_action_by_idempotency_key",
+    "check_existing_active_action_by_action_hash",
+    "insert_action",
+    "insert_action_created_event",
+    "do_not_execute"
+  ],
+  "futureApproveProtectionRules": {
+    "useDatabaseTransaction": true,
+    "lockActionRow": true,
+    "allowedFromStatuses": ["proposed", "approval_required", "auto_approved"],
+    "alreadyApprovedShouldNotExecuteAgain": true,
+    "approvedDoesNotMeanExecuted": true,
+    "executeOnlyAfterFutureExecutorConfirmation": true
+  },
+  "safety": {
+    "externalWritesEnabled": false,
+    "approvalApisEnabled": false,
+    "executorsEnabled": false,
+    "v1Rule": "READ_ADVISE_DRAFT_ONLY"
+  }
+}

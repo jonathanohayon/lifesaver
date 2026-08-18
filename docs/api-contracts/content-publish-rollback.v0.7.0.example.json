@@ -1,0 +1,48 @@
+{
+  "version": "0.7.0",
+  "phase": "v0.7.0_phase_9_9",
+  "healthMode": "v2-phase-9-9-rollback-unpublish",
+  "endpoints": {
+    "status": "GET /api/v1/actions/content-publish-rollback/status",
+    "rollback": "POST /api/v1/actions/:id/rollback-content-publish"
+  },
+  "requestBody": {
+    "reason": "Manual rollback requested because the published caption needs correction.",
+    "force": false
+  },
+  "successResponseShape": {
+    "version": "0.7.0",
+    "phase": "v0.7.0_phase_9_9",
+    "healthMode": "v2-phase-9-9-rollback-unpublish",
+    "executorName": "linkedinContentRollbackExecutor",
+    "status": "rolled_back",
+    "linkedin": {
+      "apiCalled": true,
+      "apiStatus": 204,
+      "externalPostId": "urn:li:share:6844785523593134080",
+      "rawTokenReturned": false
+    },
+    "resultLogStored": true,
+    "statusPath": ["executed", "rollback_requested", "executing", "rolled_back"],
+    "safety": {
+      "manualRollbackRequestRequired": true,
+      "autoRunEnabled": false,
+      "externalWritesAttempted": true,
+      "externalWritesSucceeded": true,
+      "browserReceivesRawToken": false,
+      "rollbackPayloadReturnedToBrowser": false,
+      "batchDeleteSupported": false
+    }
+  },
+  "unsupportedResponseShape": {
+    "status": "rollback_not_supported",
+    "resultLogStored": true,
+    "metadataStored": {
+      "rollback_status": "rollback_not_supported"
+    },
+    "linkedin": {
+      "apiCalled": false,
+      "rawTokenReturned": false
+    }
+  }
+}

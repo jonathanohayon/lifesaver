@@ -1,0 +1,35 @@
+LIFE.SAVER v0.8.2 — Functional Audience Mapping Guidance
+=========================================================
+
+Goal:
+Make the homepage Audience Reach and Revenue Stream mapping states understandable to the founder.
+
+Reason:
+v0.8.1 made Audience Reach functional by deriving values from read-only LIFE.SAVER metrics. However, labels like Pending were too vague. The founder needs to know whether a value is waiting for API data or waiting for metric mapping confirmation.
+
+New display states:
+- Needs Mapping: LIFE.SAVER has some base data, but the specific value cannot be safely shown until a Triple Whale field/path is confirmed.
+- Awaiting Data: the source data is not present yet.
+- Derived: value is calculated from verified read-only metrics.
+- Live: value is directly confirmed from production-ready metrics.
+
+Audience Reach values:
+- Customers: latest orders count.
+- Channels: number of active non-zero paid-media channel spend/attribution entries.
+- Conv.: shown only when conversionRateProductionReady=true.
+- Reach Est.: shown only when conversionRateProductionReady=true, using orders ÷ (conversionRate / 100).
+
+What is required to show real values:
+1. Confirm the correct conversion-rate metric in Triple Whale.
+2. Confirm the metric path from the Summary/pixel/attribution payload.
+3. Validate the value against the Triple Whale UI/export for the same date range.
+4. Store it as normalizedMetrics.conversionRate.
+5. Set normalizedMetrics.conversionRateProductionReady=true only after validation.
+6. For attribution revenue, confirm the correct attribution revenue source and set attributionProductionReady=true in a later mapping phase.
+7. For true followers/reach, build a separate read-only social audience connector later.
+
+Boundary:
+This phase does not add a social connector and does not claim true social followers/reach.
+
+Safety:
+Read-only display/guidance only. No DB migration, no executor call, no external write, no auto-run.

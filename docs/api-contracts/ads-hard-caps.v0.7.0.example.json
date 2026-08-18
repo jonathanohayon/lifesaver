@@ -1,0 +1,46 @@
+{
+  "phase": "phase_14_5_hard_caps_table",
+  "healthMode": "v2-phase-14-5-hard-caps-table",
+  "endpoints": [
+    "GET /api/v1/ads/hard-caps/status",
+    "GET /api/v1/ads/hard-caps/schema",
+    "GET /api/v1/ads/hard-caps/example",
+    "POST /api/v1/ads/hard-caps/preview"
+  ],
+  "examplePreviewRequest": {
+    "caps": {
+      "platform": "global",
+      "account_id": null,
+      "currency": "USD",
+      "max_daily_budget_change": 100,
+      "max_percentage_change": 15,
+      "max_changes_per_day": 3,
+      "always_ask_above_threshold": 25,
+      "emergency_never_exceed_limit": 500,
+      "enabled": true
+    },
+    "usage": {
+      "daily_budget_change_used": 20,
+      "changes_today": 1
+    },
+    "budgetPayload": {
+      "platform": "meta_marketing_api",
+      "account_id": "act_sandbox_example_account",
+      "campaign_id": "campaign_sandbox_example_001",
+      "adset_id": "adset_sandbox_example_001",
+      "current_budget": 100,
+      "proposed_budget": 110,
+      "delta": 10,
+      "percentage_change": 10,
+      "reason": "ROAS improved in read-only context, so this is a small manual-reviewed budget test.",
+      "risk_level": "critical"
+    }
+  },
+  "safety": {
+    "storageOnly": true,
+    "noAdsExecutorAdded": true,
+    "noExternalAdApiCalled": true,
+    "noBudgetChanged": true,
+    "noAdsAutoRunEnabled": true
+  }
+}

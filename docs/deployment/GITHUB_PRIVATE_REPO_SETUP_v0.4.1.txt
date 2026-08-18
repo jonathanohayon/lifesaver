@@ -1,0 +1,62 @@
+LIFE.SAVER v0.4.1 — GitHub Private Repo Setup
+
+PURPOSE
+Move LIFE.SAVER from ZIP-based development to a private GitHub repository while protecting secrets and preserving version history.
+
+RECOMMENDED REPO SETTINGS
+- Repository visibility: Private
+- Default branch: main
+- Require pull requests later when a team exists
+- Enable Dependabot alerts later, but do not blindly apply breaking updates
+- Never upload .env
+- Never upload screenshots containing secrets
+
+LOCAL COMMANDS
+From the project root:
+
+git init
+git status
+
+Check carefully that .env is ignored. It must not be staged.
+
+Then:
+
+git add .
+git status
+git commit -m "v0.4.1 GitHub and deployment setup"
+git branch -M main
+git remote add origin YOUR_PRIVATE_GITHUB_REPO_URL
+git push -u origin main
+git tag v0.4.1
+git push origin v0.4.1
+
+BRANCH STRATEGY
+- main = stable working version
+- dev = active development later
+- feature/* = isolated features
+- hotfix/* = urgent fixes
+
+VERSION TAGS
+Use tags for stable package milestones:
+- v0.4.1
+- v0.4.3
+- v0.5.0
+
+SECRET RULE
+Do not commit:
+- .env
+- API keys
+- database passwords
+- Claude API key
+- Triple Whale API key
+- Supabase service keys
+- production encryption key
+
+SAFE TO COMMIT
+- .env.example
+- .env.production.example
+- .env.github.example
+- docs
+- source code
+- database migrations
+- package-lock.json

@@ -1,0 +1,39 @@
+LIFE.SAVER UI SPEC — ACTION DETAIL DRAWER / MODAL
+Version: v0.6.0 Phase 4.3
+
+DECISION
+
+The action detail view is implemented as a right-side drawer over actions.html.
+This gives the founder a clear review flow without leaving the approval queue.
+
+USER FLOW
+
+1. Founder opens actions.html.
+2. Founder sees action cards.
+3. Founder clicks Detail.
+4. Drawer opens with safe detail review information.
+5. Founder can read proposed content, payload preview, risk, policy, related context, timeline, and results.
+6. Founder closes drawer.
+
+APPROVE/REJECT
+
+Approve and Reject controls remain visible but guarded.
+They are not connected to POST endpoints in Phase 4.3.
+
+ACCESSIBILITY NOTES
+
+- Drawer uses role="dialog" and aria-modal="true".
+- Close button has an aria-label.
+- Escape closes drawer.
+- Focus moves to drawer when opened.
+- Focus returns to previous element when closed.
+
+RESPONSIVE NOTES
+
+- Desktop: right-side drawer.
+- Mobile: full-screen drawer.
+- Key/value grids collapse to one column on small screens.
+
+SAFETY COPY
+
+Every drawer includes safety messaging that no external writes are enabled.

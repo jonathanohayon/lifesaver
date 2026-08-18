@@ -1,0 +1,211 @@
+LIFE.SAVER V2 — Phase 2.8 Workspace + User Scoping
+Version: v0.6.0
+Status: Repository-query foundation only
+Safety mode: V1 remains READ + ADVISE + DRAFT ONLY
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 2.8 makes sure future V2 actions are always scoped to the correct workspace and
+current user before Phase 3 approval APIs are created.
+
+This phase does not add approval endpoints, executors, social posting, support sending,
+ad controls, auto-run rules, or any external write connector.
+
+The deliverable is a workspace-safe repository query foundation that future action APIs
+must use.
+
+================================================================================
+WHY THIS IS NEEDED
+================================================================================
+
+V2 introduces operator-style action records. Even before real execution exists, every
+action row must belong to exactly one workspace and must only be visible to users who
+are active members of that workspace.
+
+Without strict scoping, a future SaaS customer could accidentally see another customer's:
+- proposed content actions
+- support reply actions
+- ad budget actions
+- action events
+- executor results
+- rollback metadata
+
+That must never happen.
+
+================================================================================
+PHASE 2.8 RULES
+================================================================================
+
+1. Every action belongs to one workspace_id.
+2. Customer-facing action queries must filter by workspace_id.
+3. Customer-facing action queries must require an active workspace_members row.
+4. Users only see actions for their current workspace.
+5. Team roles control future approval ability.
+6. Owner/admin can approve normal actions later.
+7. Critical actions should require owner approval until policy phases say otherwise.
+8. Member/viewer cannot approve V2 actions.
+9. Internal admin may monitor redacted action summaries only.
+10. Internal admin monitoring must never expose secrets or full sensitive payloads.
+11. Repository queries must not execute actions.
+12. No external write connector is enabled by this phase.
+
+================================================================================
+FILES ADDED
+================================================================================
+
+Shared permission reference:
+- packages/shared/src/action-workspace-scope.ts
+
+Backend repository reference:
+- apps/api/src/modules/actions/actions.types.ts
+- apps/api/src/modules/actions/actions.repository.ts
+
+API contract/reference:
+- docs/api-contracts/action-workspace-scope.v0.6.0.example.json
+
+Start guide:
+- START_HERE_v0.6.0_PHASE_2_8_WORKSPACE_ACTION_SCOPING.txt
+
+================================================================================
+ROLE RULES
+================================================================================
+
+Workspace owner:
+- view actions
+- create proposed actions later
+- approve normal actions later
+- approve critical actions later
+- manage future policy/rules later
+
+Workspace admin:
+- view actions
+- create proposed actions later
+- approve low/medium/high actions later
+- cannot approve critical actions by default until explicitly allowed later
+
+Workspace member:
+- view actions
+- create proposed draft-style actions later if allowed by service
+- cannot approve or execute actions
+
+Workspace viewer:
+- view actions only
+- cannot create, approve, reject, cancel, or execute actions
+
+Internal super_admin:
+- may monitor redacted action summaries across workspaces
+- must not see raw secrets, raw connector tokens, raw .env values, full customer secrets,
+  or sensitive payload content that is not needed for support/debugging
+
+================================================================================
+WORKSPACE-SAFE QUERY PATTERN
+================================================================================
+
+Every customer-facing query must follow this pattern:
+
+SELECT ...
+FROM actions a
+WHERE a.workspace_id = $workspaceId
+  AND EXISTS (
+    SELECT 1
+    FROM workspace_members wm
+    WHERE wm.workspace_id = a.workspace_id
+      AND wm.user_id = $currentUserId
+      AND COALESCE(wm.status, 'active') = 'active'
+  );
+
+This means even if a developer accidentally passes an action_id from another workspace,
+the query returns nothing.
+
+================================================================================
+REPOSITORY FUNCTIONS ADDED
+================================================================================
+
+getActiveActionWorkspaceMembership({ workspaceId, userId })
+- Confirms the user is an active workspace member.
+- Returns workspace role and platform role.
+
+listWorkspaceActionsForUser({ workspaceId, userId, filters })
+- Lists action summaries only for the current user's workspace.
+- Supports status/action_type/risk filters.
+- Does not return full payload_json in the list response.
+
+getWorkspaceActionForUser({ workspaceId, userId, actionId })
+- Returns one action detail only if the action belongs to the workspace and the user is
+  an active member.
+- Returns payload_json for detail view, not list view.
+
+listWorkspaceActionEventsForUser({ workspaceId, userId, actionId })
+- Returns event timeline for an action only inside the current workspace.
+
+listWorkspaceActionResultsForUser({ workspaceId, userId, actionId })
+- Returns future executor results only inside the current workspace.
+
+listInternalAdminActionMonitorRows(...)
+- Returns redacted cross-workspace monitoring summaries.
+- Does not include payload_json, metadata_json, rollback_payload, connector tokens, or secrets.
+- Must only be called behind a future super_admin guard.
+
+================================================================================
+WHAT THIS PHASE DOES NOT DO
+================================================================================
+
+This phase does not add:
+- GET /api/v1/actions
+- GET /api/v1/actions/:id
+- POST /api/v1/actions/:id/approve
+- POST /api/v1/actions/:id/reject
+- POST /api/v1/actions/:id/cancel
+- approval queue UI
+- sandbox executor
+- real executor
+- social publishing
+- support sending
+- ad budget changes
+- campaign pause
+- automatic approval
+- external platform write-back
+
+Those belong to later phases.
+
+================================================================================
+SECURITY NOTES
+================================================================================
+
+Never trust workspace_id from the browser by itself.
+Use the authenticated user's token/session and then verify workspace_members.
+
+Never show full connector credentials in action payloads, action results, admin monitors,
+or audit logs.
+
+Never return full payload_json in admin-wide monitoring views.
+Use detail views only after workspace membership or explicit internal permission is
+confirmed.
+
+Never let repository functions execute actions. Repositories only read/write database
+records. Execution belongs to a later executor layer.
+
+================================================================================
+QA CHECKLIST
+================================================================================
+
+Build checks:
+- npm.cmd run build
+- npm.cmd run client:test-checklist
+- npm.cmd run security:check
+- npm.cmd run env:check
+
+Manual future checks after Phase 3 APIs:
+- Owner can view own workspace actions.
+- Admin can view own workspace actions.
+- Member can view own workspace actions.
+- Viewer can view own workspace actions.
+- User cannot view another workspace action by guessing action_id.
+- Member/viewer cannot approve actions.
+- Internal admin monitoring returns redacted summaries only.
+
+================================================================================
+END
+================================================================================

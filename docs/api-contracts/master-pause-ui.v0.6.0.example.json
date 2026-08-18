@@ -1,0 +1,25 @@
+{
+  "version": "0.6.0",
+  "phase": "V2 Phase 5.5 Pause Switch UI",
+  "screen": "settings.html",
+  "endpointsUsed": {
+    "status": "GET /api/v1/autonomy/status",
+    "pause": "POST /api/v1/autonomy/pause",
+    "resume": "POST /api/v1/autonomy/resume"
+  },
+  "uiFields": [
+    "currentPauseState",
+    "lastUpdatedBy",
+    "lastUpdatedAt",
+    "emergencySafeMode",
+    "optionalReason",
+    "masterPauseButton",
+    "categoryPauseButtons"
+  ],
+  "safety": {
+    "executesActions": false,
+    "autoApprovesActions": false,
+    "writesExternally": false,
+    "resumeExecutesWaitingActions": false
+  }
+}

@@ -1,0 +1,25 @@
+SUPABASE SETUP GUIDE FOR LIFE.SAVER
+
+Simple explanation:
+Supabase gives LIFE.SAVER a hosted PostgreSQL database. It is like the database part of WordPress/MySQL, but for this standalone app.
+
+Recommended usage:
+- Development: create a free Supabase project named lifesaver-dev.
+- Production later: create a separate project named lifesaver-prod.
+
+Steps:
+1. Create a Supabase account.
+2. Create a new project: lifesaver-dev.
+3. Go to Project Settings > Database.
+4. Find the connection string / URI.
+5. Copy the connection string into your local .env file as DATABASE_URL.
+6. For Supabase, set DATABASE_SSL=true.
+7. Run: npm.cmd run db:status
+8. If connected, run: npm.cmd run db:migrate
+9. Open Supabase Table Editor to confirm tables were created.
+
+Important:
+- Never paste the connection string in chat screenshots sent publicly.
+- Never commit .env to GitHub.
+- Use lifesaver-dev for testing only.
+- Use lifesaver-prod only for live client data.

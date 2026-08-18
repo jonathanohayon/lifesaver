@@ -1,0 +1,52 @@
+================================================================================================
+LIFE.SAVER v0.7.0 — PHASE 10.7 QUIET HOURS ENFORCEMENT
+================================================================================================
+
+Purpose:
+Avoid sending approval notifications during founder quiet hours unless the notification is critical.
+
+Definition of critical in this phase:
+- triggerType is action_failed, OR
+- priority is urgent, OR
+- riskLevel is critical.
+
+Non-critical behavior:
+If quiet hours are enabled and active, in-app/email notification candidates are marked delayed and
+receive a delayedUntil timestamp. This prepares later delivery phases to defer actual delivery.
+
+Critical behavior:
+Critical notifications may bypass quiet hours and are marked with criticalOverride=true.
+
+Channels covered:
+- in_app candidate
+- email candidate
+- slack remains planned later and disabled
+
+Important:
+This phase enforces the decision model only. It does not send notifications. It does not create
+notification delivery rows. It does not call an external provider. It does not approve, reject,
+publish, rollback, or execute any action.
+
+New API endpoints:
+- GET /api/v1/notifications/quiet-hours/status
+- GET /api/v1/notifications/quiet-hours/preview
+
+Implementation files:
+- apps/api/src/modules/notifications/notification-quiet-hours.types.ts
+- apps/api/src/modules/notifications/notification-quiet-hours.model.ts
+- apps/api/src/modules/notifications/notification-quiet-hours.service.ts
+- apps/api/src/modules/notifications/notification-quiet-hours.controller.ts
+- apps/api/src/modules/notifications/notification-quiet-hours.routes.ts
+- apps/api/src/modules/notifications/notification-quiet-hours-tests.ts
+- packages/shared/src/notification-quiet-hours.ts
+
+Integration points:
+- Notification trigger decisions now include quietHoursDelivery metadata.
+- Approval reminder decisions now include quietHoursDelivery metadata.
+- Notification API router mounts quiet-hours status/preview.
+
+Security notes:
+- No raw action payload is returned.
+- No token, OAuth credential, Authorization header, or secret is returned.
+- Quiet-hours links cannot approve or execute actions.
+- Delivery remains disabled in this phase.

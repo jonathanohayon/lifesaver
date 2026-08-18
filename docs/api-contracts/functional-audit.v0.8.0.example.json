@@ -1,0 +1,33 @@
+{
+  "module": "functional-audit",
+  "version": "0.8.0",
+  "healthMode": "v2-functional-0-8-0-audit",
+  "basePath": "/api/v1/orchestrator/functional-audit",
+  "endpoints": [
+    { "method": "GET", "path": "/status", "description": "Returns v0.8.0 audit module status and safety flags." },
+    { "method": "GET", "path": "/report", "description": "Returns all mapped functional surfaces with current status and recommended next steps." },
+    { "method": "GET", "path": "/map", "description": "Returns surfaces grouped by domain." },
+    { "method": "GET", "path": "/checklist", "description": "Returns functional audit checklist and v0.8.1 readiness items." },
+    { "method": "GET", "path": "/example", "description": "Returns an example preview result." },
+    { "method": "POST", "path": "/preview", "description": "Evaluates reviewed surface keys without creating actions or calling executors." }
+  ],
+  "previewRequestExample": {
+    "checkedSurfaceKeys": ["dashboard_kpis", "approval_queue", "rules_ui", "memory_management"],
+    "completedManualChecks": ["mobile_smoke_test", "health_endpoint_checked"],
+    "notes": ["No external writes requested."]
+  },
+  "safety": {
+    "auditOnly": true,
+    "noDatabaseMigration": true,
+    "noActionCreation": true,
+    "noActionApproval": true,
+    "noExecutorCall": true,
+    "noAutoRun": true,
+    "noExternalConnectorCall": true,
+    "noContentPublishing": true,
+    "noSupportSending": true,
+    "noAdsMutation": true,
+    "noClaudeCallFromModule": true,
+    "noRawSecretsReturned": true
+  }
+}

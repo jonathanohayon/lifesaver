@@ -1,0 +1,52 @@
+================================================================================
+LIFE.SAVER — Content Media Storage Plan
+v0.7.0 Phase 9.5
+================================================================================
+
+No database migration is included in Phase 9.5.
+
+Planned future storage design:
+
+Private object storage bucket:
+- content-media-assets
+
+Object key pattern:
+- workspace/{workspace_id}/content-media/{asset_id}/{safe_file_name}
+
+Future metadata table candidate:
+- content_media_assets
+
+Potential fields:
+- id
+- workspace_id
+- uploaded_by_user_id
+- provider
+- bucket
+- object_key
+- original_file_name
+- safe_file_name
+- mime_type
+- size_bytes
+- checksum_sha256
+- asset_kind
+- image_width_pixels
+- image_height_pixels
+- video_duration_seconds
+- alt_text
+- status
+- created_at
+- updated_at
+- deleted_at
+
+Security requirements for the future implementation:
+- workspace scoped rows only
+- private storage only
+- short-lived signed preview URLs only
+- no permanent public URLs
+- no LinkedIn upload URLs exposed to browser
+- no raw tokens or credentials in metadata rows
+- audit event for upload/delete/replacement
+
+Reason no migration is added now:
+Phase 9.5 is the media handling flow and validation phase. It intentionally does not
+create an upload endpoint, storage writer, or LinkedIn media upload client.

@@ -1,0 +1,36 @@
+{
+  "package_name": "lifesaver-v0.7.0-phase-12-1-choose-support-connector.zip",
+  "version": "0.7.0",
+  "phase": "V2 Phase 12.1 — Choose Support Connector",
+  "health_mode": "v2-phase-12-1-choose-support-connector",
+  "deliverable": "selected_support_connector_plan",
+  "selected_connector": "gmail",
+  "selected_connector_label": "Gmail",
+  "selected_initial_mode": "read_only_support_ticket_import",
+  "first_supported_object": "gmail_message_as_support_ticket",
+  "scope_plan": {
+    "oauth_flow": "google_3_legged_oauth_authorization_code",
+    "initial_scopes": ["https://www.googleapis.com/auth/gmail.readonly"],
+    "future_scopes_not_requested_yet": [
+      "https://www.googleapis.com/auth/gmail.send",
+      "https://www.googleapis.com/auth/gmail.modify"
+    ],
+    "restricted_scopes": true,
+    "app_verification_required_before_production": true,
+    "production_security_assessment_likely_if_restricted_data_stored": true,
+    "token_storage": "future_encrypted_connector_storage_only",
+    "token_exposure_allowed_in_browser": false
+  },
+  "safety": {
+    "planning_only": true,
+    "gmail_api_client_added": false,
+    "oauth_routes_added": false,
+    "token_storage_added": false,
+    "email_read_added": false,
+    "email_send_added": false,
+    "support_draft_action_conversion_added": false,
+    "auto_reply_added": false,
+    "external_api_called": false,
+    "no_secrets_in_browser": true
+  }
+}

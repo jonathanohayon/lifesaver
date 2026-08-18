@@ -1,0 +1,47 @@
+{
+  "version": "0.7.0",
+  "phase": "phase_13_9_follow_up_rollback_handling",
+  "healthMode": "v2-phase-13-9-follow-up-rollback-handling",
+  "deliverable": "support_rollback_policy",
+  "endpoints": {
+    "status": "GET /api/v1/support/rollback-policy/status",
+    "example": "GET /api/v1/support/rollback-policy/example",
+    "preview": "POST /api/v1/support/rollback-policy/preview"
+  },
+  "inputExample": {
+    "resultStatus": "success",
+    "externalMessageId": "gmail_msg_123",
+    "externalThreadId": "gmail_thread_123",
+    "sentAt": "2026-07-08T12:45:00.000Z",
+    "ticketId": "ticket_123",
+    "ticketCategory": "refund",
+    "confidenceScore": 0.64,
+    "issueReason": "refund_or_payment",
+    "customerEmail": "customer@example.com"
+  },
+  "outputMeaning": {
+    "canUndoEmail": false,
+    "rollbackMeans": [
+      "draft_correction",
+      "draft_apology_follow_up",
+      "mark_for_human_review"
+    ],
+    "createsActionAutomatically": false,
+    "sendsEmail": false,
+    "callsGmail": false,
+    "manualApprovalRequiredForFollowUp": true
+  },
+  "safety": {
+    "noGmailApiCall": true,
+    "noEmailSent": true,
+    "noUnsendAttempted": true,
+    "noMessageDeleteAttempted": true,
+    "autoSendEnabled": false,
+    "bulkSendEnabled": false,
+    "rawTokenReturned": false,
+    "rawMimeReturned": false,
+    "providerPayloadReturned": false,
+    "rawTicketPayloadReturned": false,
+    "noDatabaseMigrationRequired": true
+  }
+}

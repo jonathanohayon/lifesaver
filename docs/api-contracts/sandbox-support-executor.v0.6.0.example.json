@@ -1,0 +1,33 @@
+{
+  "version": "0.6.0",
+  "phase": "V2 Phase 8.4 Sandbox Support Executor",
+  "executorName": "sandboxSupportExecutor",
+  "actionType": "support_reply_send",
+  "mode": "sandbox",
+  "validate": {
+    "ok": true,
+    "externalWritesAllowed": false
+  },
+  "executeResult": {
+    "ok": true,
+    "status": "executed",
+    "result": {
+      "sandbox_success": true,
+      "fake_external_reply_id": "sandbox-reply-ticket-1024-00000000-0000-0000-0000-000000000404",
+      "fake_thread_permalink": "https://sandbox.lifesaveragent.com/support/zendesk/thread-2048/sandbox-reply-ticket-1024-00000000-0000-0000-0000-000000000404",
+      "external_helpdesk_called": false,
+      "external_email_sent": false,
+      "simulated_only": true
+    },
+    "externalWritesAttempted": false,
+    "externalWritesSucceeded": false,
+    "rollbackSupported": true
+  },
+  "safety": {
+    "supportReplySent": false,
+    "emailHelpdeskApiCalled": false,
+    "externalWritesEnabled": false,
+    "autoRunEnabled": false,
+    "realExecutorImplemented": false
+  }
+}

@@ -1,0 +1,57 @@
+LIFE.SAVER v0.7.0 — PHASE 9.9 CONTENT ROLLBACK / UNPUBLISH
+
+Goal:
+If the selected platform supports delete/unpublish, add rollback behavior. If rollback cannot safely be performed, log rollback_not_supported.
+
+Selected platform:
+LinkedIn.
+
+LinkedIn support decision:
+LinkedIn Posts API supports deleting a single post with:
+DELETE /rest/posts/{encoded ugcPostUrn|shareUrn}
+
+Expected success:
+HTTP 204 No Content.
+
+Batch delete:
+Not supported.
+
+LIFE.SAVER behavior:
+1. User manually requests rollback for one executed content_publish action.
+2. Backend verifies current user is owner/admin.
+3. Backend verifies the action is executed and belongs to the workspace.
+4. Backend finds the latest successful LinkedIn publish result.
+5. Backend verifies external_id is a safe LinkedIn post URN:
+   - urn:li:share:{id}
+   - urn:li:ugcPost:{id}
+6. Backend verifies LinkedIn token exists, is not expired, and includes w_member_social.
+7. Backend moves action through rollback lifecycle.
+8. Backend calls LinkedIn DELETE only if all checks pass and CONTENT_PUBLISH_ROLLBACK_EXECUTOR_ENABLED=true.
+9. Backend stores rollback result logs.
+
+Successful lifecycle:
+executed -> rollback_requested -> executing -> rolled_back
+
+Failure lifecycle:
+executed -> rollback_requested -> executing -> failed
+
+Unsupported behavior:
+If no successful publish result exists, if external post ID is missing, or if the post ID is not a safe LinkedIn share/ugcPost URN, LIFE.SAVER stores:
+result_status=skipped
+metadata_json.rollback_status=rollback_not_supported
+
+No LinkedIn API call happens in unsupported cases.
+
+Security:
+- Raw access token is server-only.
+- Raw refresh token is server-only.
+- Authorization header is never returned.
+- Rollback payload is never returned to browser.
+- Raw LinkedIn response body is not stored.
+- Only safe rollback summaries are stored.
+
+Environment:
+CONTENT_PUBLISH_ROLLBACK_EXECUTOR_ENABLED=false
+
+This flag must remain false except during an explicitly approved controlled test.
+

@@ -1,0 +1,37 @@
+LIFE.SAVER v0.5.3 Architecture Note
+Team Users + Workspace Permissions Foundation
+
+Main decision:
+Billing should not be added before workspace roles exist.
+This version adds the first safe roles and team management layer.
+
+Role model:
+- owner: protected workspace owner. Full control. Transfer is future audited workflow.
+- admin: can manage workspace profile, Triple Whale connection, and team foundation.
+- member: can use dashboard/chat/drafts foundation, but cannot manage connection/settings.
+- viewer: read-only dashboard-style access foundation.
+
+Security model:
+- Every team request uses the authenticated token workspace_id.
+- Frontend does not submit arbitrary workspace IDs.
+- Backend verifies active workspace_members rows before listing or managing members.
+- Owner role is protected.
+- Self-removal and self-role-change are blocked in v0.5.3.
+- Last-owner removal is blocked.
+
+Data model:
+- No new migration.
+- Existing users table stores people.
+- Existing workspace_members table stores workspace membership and role.
+- Existing system_events table logs team actions.
+
+Invite limitation:
+- v0.5.3 does not send email invitations yet.
+- If the email does not exist, a placeholder user is created with status invited and no password_hash.
+- Future version should add invite tokens, email sending, password setup, and acceptance flow.
+
+External action rule:
+Team management is internal LIFE.SAVER app data only.
+No external platform action is triggered.
+No email is automatically sent.
+No Triple Whale write-back occurs.

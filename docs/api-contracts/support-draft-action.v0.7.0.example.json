@@ -1,0 +1,39 @@
+{
+  "phase": "V2 Phase 12.5 — Draft Reply Action",
+  "healthMode": "v2-phase-12-5-draft-reply-action",
+  "endpoints": {
+    "status": "GET /api/v1/support/draft-actions/status",
+    "example": "GET /api/v1/support/draft-actions/example",
+    "preview": "POST /api/v1/support/draft-actions/preview",
+    "create": "POST /api/v1/support/draft-actions/create"
+  },
+  "requestExample": {
+    "ticketId": "ticket_123",
+    "threadId": "gmail_thread_123",
+    "customerEmail": "customer@example.com",
+    "subject": "Where is my order?",
+    "draftReplyBody": "Hello, thank you for reaching out. I can help check the order status for you.",
+    "category": "shipping",
+    "confidenceScore": 0.86,
+    "sensitiveFlag": false,
+    "escalationRequired": false,
+    "sourceDraftId": "draft_support_123"
+  },
+  "safePreviewFields": {
+    "actionType": "support_reply_send",
+    "approvalRequired": true,
+    "policyDecision": "ask",
+    "emailSent": false,
+    "gmailApiCalled": false,
+    "externalWriteEnabled": false,
+    "autoReplyEnabled": false
+  },
+  "safety": {
+    "createsProposedActionOnly": true,
+    "sendsEmail": false,
+    "callsGmailApi": false,
+    "addsSupportSendExecutor": false,
+    "addsSupportAutoReply": false,
+    "returnsRawProviderPayload": false
+  }
+}

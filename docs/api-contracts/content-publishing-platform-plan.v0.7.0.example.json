@@ -1,0 +1,38 @@
+{
+  "package": "lifesaver-v0.7.0-phase-9-1-choose-first-platform.zip",
+  "version": "0.7.0",
+  "phase": "V2 Phase 9.1 \u2014 Choose First Platform",
+  "health_mode": "v2-phase-9-1-choose-first-platform",
+  "selected_platform": "linkedin",
+  "selected_platform_label": "LinkedIn",
+  "selected_initial_author_type": "member",
+  "selected_initial_content_type": "text_link_post",
+  "manual_approval_required_for_future_publish": true,
+  "real_external_writes_added": false,
+  "real_executor_added": false,
+  "oauth_routes_added": false,
+  "token_storage_added": false,
+  "auto_run_enabled": false,
+  "external_platform_called": false,
+  "future_api_family": "LinkedIn Share / UGC Posts",
+  "future_phase_9_2_scope": [
+    "OAuth flow planning",
+    "write scope checklist",
+    "token expiry and refresh planning",
+    "publishing permission checklist",
+    "media upload limitation review"
+  ],
+  "required_future_gates_before_publish": [
+    "manual approval",
+    "workspace scoping",
+    "permission guard",
+    "master pause off",
+    "content pause off",
+    "emergency safe mode off",
+    "policy decision not blocked",
+    "hard caps not exceeded",
+    "idempotency check",
+    "result log write",
+    "safe error handling"
+  ]
+}

@@ -1,0 +1,47 @@
+LIFE.SAVER DATABASE NOTE — AUTONOMY SETTINGS TABLE
+Version: v0.6.0
+Phase: 5.1
+
+Migration file:
+- database/migrations/013_create_autonomy_settings_table.sql
+
+Created table:
+- autonomy_settings
+
+Purpose:
+- Store workspace-scoped Master Pause and category pause controls.
+
+Columns:
+- workspace_id UUID PRIMARY KEY REFERENCES workspaces(id) ON DELETE CASCADE
+- pause_all_autonomy BOOLEAN NOT NULL DEFAULT FALSE
+- pause_content_actions BOOLEAN NOT NULL DEFAULT FALSE
+- pause_support_actions BOOLEAN NOT NULL DEFAULT FALSE
+- pause_ads_actions BOOLEAN NOT NULL DEFAULT FALSE
+- updated_by UUID REFERENCES users(id) ON DELETE SET NULL
+- updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+
+Indexes:
+- idx_autonomy_settings_updated_by
+- idx_autonomy_settings_any_pause
+
+Safety:
+- Storage only.
+- No pause API yet.
+- No UI switch yet.
+- No executor yet.
+- No external write.
+- No destructive schema change.
+
+Expected migration command:
+
+npm.cmd run db:migrate
+
+Expected first run:
+
+Applying migration: 013_create_autonomy_settings_table.sql
+Applied migration: 013_create_autonomy_settings_table.sql
+
+Expected repeat run:
+
+Skipping already applied migration: 013_create_autonomy_settings_table.sql
+No new migrations to apply. Database is up to date.

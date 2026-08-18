@@ -1,0 +1,52 @@
+LIFE.SAVER V2 — Phase 4.9 Mobile Approval UX
+Version: v0.6.0
+Phase: 4.9
+Status: Completed as safe UI/mobile polish
+
+Goal
+----
+Make the approval queue practical for a founder reviewing actions from a phone.
+
+Required Checks
+---------------
+1. Buttons large enough.
+2. Modal readable.
+3. No horizontal overflow.
+4. One-tap approval visible after the confirmation modal is open.
+5. Rejection reason easy to enter.
+
+Implemented Decisions
+---------------------
+- actions.html remains the dedicated approval queue page.
+- Action cards use larger tap targets on mobile.
+- Approve/reject/detail controls stack on small screens.
+- Approve and reject confirmation modal footers become sticky at the bottom on mobile.
+- Final Approve / Final Reject controls are full-width on mobile.
+- Rejection reason select and note textarea use mobile-friendly sizing.
+- Detail drawer, approve modal, and reject modal use full viewport height on phone screens.
+- Horizontal overflow is intentionally constrained by responsive grids and word wrapping.
+
+Safety Boundary
+---------------
+Phase 4.9 does not add executors, queueing, rollback execution, content publishing, support sending, ad spend changes, campaign pause, refunds, product edits, or external writes.
+
+Approval and rejection still call the existing backend endpoints only to update internal LIFE.SAVER action status and write action_events.
+
+Testing Notes
+-------------
+Test at desktop width, tablet width, and phone width. Recommended browser widths:
+- 390px
+- 414px
+- 430px
+- 768px
+- 1024px
+
+Pass Conditions
+---------------
+- No horizontal scrollbar appears on actions.html.
+- Action card buttons are easy to tap.
+- Approve modal is readable and the Final Approve button remains visible at the bottom.
+- Reject modal is readable and rejection reason can be selected easily.
+- Detail drawer closes cleanly.
+- Polling still pauses while modals/drawer are open.
+- No external write happens.

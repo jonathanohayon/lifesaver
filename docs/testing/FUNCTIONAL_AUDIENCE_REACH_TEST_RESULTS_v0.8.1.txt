@@ -1,0 +1,32 @@
+LIFE.SAVER v0.8.1 — Functional Audience Reach Test Results
+
+Commands run in packaging workspace:
+- npm run phase-functional:0-8-1:test
+- node --check apps/web/src/assets/js/audience-reach.js
+- node --check apps/api/dist/modules/audience-reach/audience-reach.model.js
+- node --check apps/api/dist/modules/audience-reach/audience-reach.controller.js
+- node --check apps/api/dist/modules/audience-reach/audience-reach.routes.js
+- node scripts/build-web-static.mjs
+
+Expected output:
+- audience-reach-check — 40 passed, 0 failed
+- audience-reach-tests — 34 passed, 0 failed
+- Static web build completed
+
+Manual QA checklist:
+- Open homepage.
+- Audience Reach should not show “Static Demo Module”.
+- Audience Reach should not show “DEMO” badge.
+- Audience Reach status should show LIVE, DERIVED, SAFE, or PENDING depending on metrics readiness.
+- Customers should come from latest orders count.
+- Reach Est. should show Pending unless conversion rate is production-ready.
+- Channels should come from channel spend/attribution entries.
+- Conv. should show confirmed conversion rate only when production-ready.
+- No horizontal overflow on mobile.
+- No social connector call occurs.
+- No external write occurs.
+
+Local commands for Muhammad:
+npm.cmd install
+npm.cmd run phase-functional:0-8-1:test
+npm.cmd run build

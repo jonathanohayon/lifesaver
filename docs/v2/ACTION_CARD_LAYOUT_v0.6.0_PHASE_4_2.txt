@@ -1,0 +1,163 @@
+LIFE.SAVER V2 — PHASE 4.2 ACTION CARD LAYOUT
+Version: v0.6.0
+Phase: 4.2 — Action Card Layout
+Status: Completed as safe UI component foundation
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 4.2 creates the first reusable Approval Queue action card component for
+LIFE.SAVER V2.
+
+The component is designed for the dedicated actions.html page selected in Phase 4.1.
+It gives the founder a clear visual card for each proposed/internal action without
+adding real execution, publishing, sending, ad changes, or external writes.
+
+================================================================================
+ACTION CARD MUST SHOW
+================================================================================
+
+Each action card shows:
+
+1. Action title
+2. Action type
+3. Status
+4. Risk level
+5. Platform / channel hint
+6. Created time
+7. Short reason / summary
+8. Approve button
+9. Reject button
+10. Safe footer note
+
+================================================================================
+FILES ADDED
+================================================================================
+
+Web UI:
+- apps/web/src/actions.html
+- apps/web/src/assets/css/actions.css
+- apps/web/src/assets/js/action-card.js
+- apps/web/src/assets/js/actions.js
+
+Shared reference:
+- packages/shared/src/action-card-layout.ts
+
+Docs/contracts:
+- docs/v2/ACTION_CARD_LAYOUT_v0.6.0_PHASE_4_2.txt
+- docs/ui/ACTION_CARD_COMPONENT_v0.6.0_PHASE_4_2.txt
+- docs/api-contracts/action-card-component.v0.6.0.example.json
+- START_HERE_v0.6.0_PHASE_4_2_ACTION_CARD_LAYOUT.txt
+
+Build:
+- scripts/build-web-static.mjs now treats actions.html as a required static page.
+
+Navigation:
+- Dashboard navigation now includes Actions.
+- Settings/Admin/related topbars include Actions where applicable.
+
+================================================================================
+DATA SOURCE
+================================================================================
+
+The actions.html page reads:
+
+GET /api/v1/actions
+
+Then it safely reads detail previews per action using:
+
+GET /api/v1/actions/:id
+
+This is done so the UI can show a platform/channel hint and short reason without
+exposing full payload_json.
+
+================================================================================
+SAFETY BOUNDARY
+================================================================================
+
+Phase 4.2 is UI-only.
+
+It does NOT enable:
+- UI approval execution
+- UI rejection execution
+- confirmation modal
+- reject reason modal
+- queueing
+- sandbox executor
+- real executor
+- content publishing
+- support reply sending
+- ad budget adjustment
+- campaign pause
+- refund
+- product edit
+- rollback execution
+- external platform write
+
+The Approve and Reject buttons are visible because the card layout needs them, but
+they are intentionally guarded in the browser until Phase 4.5 and Phase 4.6 add the
+proper confirmation/rejection modal flows.
+
+================================================================================
+BUTTON BEHAVIOR IN THIS PHASE
+================================================================================
+
+Approve button:
+- visible
+- styled
+- contains action id
+- aria-disabled=true
+- click is intercepted with a safety message
+- does not call POST /api/v1/actions/:id/approve
+
+Reject button:
+- visible
+- styled
+- contains action id
+- aria-disabled=true
+- click is intercepted with a safety message
+- does not call POST /api/v1/actions/:id/reject
+
+Reason:
+Phase 4.5 requires an approval confirmation modal before UI approval is enabled.
+Phase 4.6 requires a reject-with-reason modal before UI rejection is enabled.
+
+================================================================================
+COMMON TESTING STEPS
+================================================================================
+
+1. Copy the working .env into the new package.
+2. Run:
+   npm.cmd install
+   npm.cmd run build
+   npm.cmd run db:status
+   npm.cmd run db:migrate
+   npm.cmd run actions:test:backend
+   npm.cmd run client:test-checklist
+   npm.cmd run security:check
+   npm.cmd run env:check
+
+3. Start backend/frontend:
+   npm.cmd run dev:api
+   npm.cmd run dev:web
+
+4. Seed local actions if needed:
+   npm.cmd run db:seed:actions:local
+
+5. Open:
+   http://localhost:3000/actions.html
+
+6. Confirm:
+   - page loads
+   - login state is shown
+   - action cards appear
+   - title/type/status/risk/platform/created/reason appear
+   - approve/reject buttons are visible
+   - clicking approve/reject does NOT call approval/rejection endpoints yet
+   - safety note appears
+   - filters work
+
+================================================================================
+END
+================================================================================

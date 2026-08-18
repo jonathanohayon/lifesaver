@@ -1,0 +1,60 @@
+# LIFE.SAVER V2 — Phase 8.1 Executor Interface
+
+## Phase
+
+Phase 8.1 — Executor Interface
+
+## Purpose
+
+Phase 8 starts the mock/sandbox executor layer so LIFE.SAVER can eventually test the full V2 action flow without touching external platforms.
+
+Phase 8.1 is intentionally limited to a TypeScript interface. It creates the contract that future sandbox and real executors must follow.
+
+## Required methods
+
+Every future executor must implement:
+
+1. `validate(context)`
+   - Checks whether the action payload is structurally safe for this executor.
+   - Must not touch external platforms.
+   - Must not perform writes.
+   - Must return warnings/errors clearly.
+
+2. `execute(context)`
+   - Runs the executor behavior for the selected mode.
+   - In future sandbox phase, this should create a mock/sandbox result only.
+   - Real external execution is not enabled in Phase 8.1.
+
+3. `rollback(context, result)`
+   - Defines rollback contract shape.
+   - In Phase 8.1 it is a contract only.
+   - Future sandbox rollback can simulate reversal.
+   - Future real rollback must require strong safety gates.
+
+4. `summarizeResult(result)`
+   - Converts technical executor result into a safe founder/admin-readable summary.
+   - Must not expose secrets.
+   - Must clearly state if no external write happened.
+
+## Files
+
+- `apps/api/src/modules/executors/executor.interface.ts`
+- `apps/api/src/modules/executors/executor.interface-tests.ts`
+- `packages/shared/src/executor-interface.ts`
+
+## Safety status
+
+Phase 8.1 does not register any executor.
+Phase 8.1 does not execute any action.
+Phase 8.1 does not create a sandbox executor yet.
+Phase 8.1 does not create a real executor.
+Phase 8.1 does not connect to external platforms.
+Phase 8.1 does not write to external platforms.
+
+## Current live environment note
+
+The current live Render site is:
+
+`https://lifesaveragent.com`
+
+Localhost testing is still useful before deployment, but future instructions should also consider the live Render site.

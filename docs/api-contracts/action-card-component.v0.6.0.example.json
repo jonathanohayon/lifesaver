@@ -1,0 +1,46 @@
+{
+  "version": "0.6.0",
+  "phase": "V2 Phase 4.2 Action Card Layout",
+  "component": "approval_queue_action_card",
+  "sourceEndpoints": [
+    "GET /api/v1/actions",
+    "GET /api/v1/actions/:id"
+  ],
+  "cardFields": {
+    "title": "Fixture: Proposed Instagram post",
+    "actionType": "content_publish",
+    "status": "proposed",
+    "riskLevel": "low",
+    "platform": "instagram",
+    "createdAt": "2026-06-29T20:00:00.000Z",
+    "shortReason": "Draft an approved-style Instagram caption for founder review.",
+    "policyDecision": "ask",
+    "approvalRequired": true
+  },
+  "controls": {
+    "approveButton": {
+      "visible": true,
+      "enabled": false,
+      "reason": "Phase 4.5 approval confirmation modal is required before enabling UI approval."
+    },
+    "rejectButton": {
+      "visible": true,
+      "enabled": false,
+      "reason": "Phase 4.6 reject-with-reason modal is required before enabling UI rejection."
+    },
+    "detailLink": {
+      "visible": true,
+      "enabled": true,
+      "note": "Phase 4.3 will replace this with detail drawer/modal behavior."
+    }
+  },
+  "safety": {
+    "returnsFullPayloadJson": false,
+    "externalWritesEnabled": false,
+    "canExecute": false,
+    "canPublish": false,
+    "canSendSupportReply": false,
+    "canChangeAdSpend": false,
+    "canPauseCampaign": false
+  }
+}

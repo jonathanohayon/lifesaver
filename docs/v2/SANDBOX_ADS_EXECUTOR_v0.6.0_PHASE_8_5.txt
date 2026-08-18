@@ -1,0 +1,25 @@
+# Sandbox Ads Executor — v0.6.0 Phase 8.5
+
+Purpose: simulate ad budget/pause actions without touching external platforms.
+
+Implemented sandbox handlers:
+
+- sandboxAdsBudgetExecutor for ad_budget_adjust
+- sandboxAdsPauseExecutor for ad_pause
+
+Returns:
+
+- fake_before_state
+- fake_after_state
+- sandbox_success
+
+Safety:
+
+- No real Meta Ads API call.
+- No real Google Ads API call.
+- No real TikTok Ads API call.
+- No real Snapchat Ads API call.
+- No real budget change.
+- No real campaign/adset/ad pause.
+- No external writes.
+- Not wired to auto-run.

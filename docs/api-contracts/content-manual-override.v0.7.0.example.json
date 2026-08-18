@@ -1,0 +1,47 @@
+{
+  "status_endpoint": "GET /api/v1/content-auto-run/manual-override/status",
+  "preview_endpoint": "GET /api/v1/content-auto-run/manual-override/preview",
+  "disable_endpoint": "POST /api/v1/content-auto-run/manual-override/disable",
+  "disable_request_example": {
+    "reason": "Founder wants to stop content auto-run before reviewing today's actions."
+  },
+  "disable_response_shape": {
+    "phase": "phase_11_9_manual_override",
+    "healthMode": "v2-phase-11-9-manual-override",
+    "deliverable": "manual_override_control",
+    "decision": "content_auto_run_disabled",
+    "operation": "disable",
+    "autonomyPauseStored": true,
+    "auditEventStored": true,
+    "autonomyUpdate": {
+      "operation": "pause",
+      "scope": "content",
+      "execution": {
+        "queued": false,
+        "executed": false,
+        "executorEnabled": false,
+        "externalWritesEnabled": false
+      }
+    },
+    "safety": {
+      "manualOverrideOnly": true,
+      "disablesContentAutoRunOnly": true,
+      "doesNotPublish": true,
+      "doesNotApprove": true,
+      "doesNotExecute": true,
+      "externalApiCalled": false,
+      "tokenNotReturned": true,
+      "rawPayloadNotReturned": true,
+      "rollbackPayloadNotReturned": true
+    }
+  },
+  "forbidden_response_fields": [
+    "access_token",
+    "refresh_token",
+    "authorization",
+    "payload_json",
+    "raw_payload",
+    "rollback_payload",
+    "encrypted_token"
+  ]
+}

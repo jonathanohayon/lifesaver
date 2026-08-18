@@ -1,0 +1,38 @@
+================================================================================
+DATABASE — notification_preferences
+================================================================================
+
+Migration:
+018_create_notification_preferences.sql
+
+Table:
+notification_preferences
+
+Purpose:
+Stores workspace-level preferences for future approval notifications.
+
+Important:
+This migration is additive only. It creates a new table and indexes. It does not modify, delete, rename, or rewrite existing data.
+
+Columns:
+- workspace_id
+- in_app_enabled
+- email_enabled
+- slack_enabled
+- quiet_hours_enabled
+- quiet_hours_start
+- quiet_hours_end
+- quiet_hours_timezone
+- approval_escalation_minutes
+- repeat_escalation_minutes
+- max_escalations
+- updated_by
+- metadata
+- created_at
+- updated_at
+
+Slack safety:
+slack_enabled is constrained to FALSE in Phase 10.1. Slack delivery is planned later.
+
+Delivery safety:
+No notification send table, email provider, Slack provider, or worker job is added in this phase.

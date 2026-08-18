@@ -1,0 +1,71 @@
+{
+  "version": "0.6.0",
+  "phase": "2.1",
+  "externalWritesEnabled": false,
+  "actionTypes": [
+    {
+      "type": "content_publish",
+      "category": "content",
+      "label": "Content Publish",
+      "defaultRiskLevel": "medium",
+      "approvalRequiredByDefault": true,
+      "realWriteAllowedInThisPhase": false
+    },
+    {
+      "type": "support_reply_send",
+      "category": "support",
+      "label": "Support Reply Send",
+      "defaultRiskLevel": "medium",
+      "approvalRequiredByDefault": true,
+      "realWriteAllowedInThisPhase": false
+    },
+    {
+      "type": "ad_budget_adjust",
+      "category": "ads",
+      "label": "Ad Budget Adjust",
+      "defaultRiskLevel": "high",
+      "approvalRequiredByDefault": true,
+      "realWriteAllowedInThisPhase": false
+    },
+    {
+      "type": "ad_pause",
+      "category": "ads",
+      "label": "Ad Pause",
+      "defaultRiskLevel": "high",
+      "approvalRequiredByDefault": true,
+      "realWriteAllowedInThisPhase": false
+    },
+    {
+      "type": "research_task",
+      "category": "research",
+      "label": "Research Task",
+      "defaultRiskLevel": "low",
+      "approvalRequiredByDefault": false,
+      "realWriteAllowedInThisPhase": false
+    },
+    {
+      "type": "dev_task",
+      "category": "dev",
+      "label": "Dev Task",
+      "defaultRiskLevel": "low",
+      "approvalRequiredByDefault": false,
+      "realWriteAllowedInThisPhase": false
+    },
+    {
+      "type": "notification_send",
+      "category": "notification",
+      "label": "Notification Send",
+      "defaultRiskLevel": "low",
+      "approvalRequiredByDefault": false,
+      "realWriteAllowedInThisPhase": false
+    },
+    {
+      "type": "rollback_action",
+      "category": "rollback",
+      "label": "Rollback Action",
+      "defaultRiskLevel": "inherits_original_or_higher",
+      "approvalRequiredByDefault": true,
+      "realWriteAllowedInThisPhase": false
+    }
+  ]
+}

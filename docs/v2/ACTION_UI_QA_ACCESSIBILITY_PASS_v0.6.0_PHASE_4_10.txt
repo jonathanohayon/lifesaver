@@ -1,0 +1,98 @@
+LIFE.SAVER V2 — Phase 4.10 UI QA + Accessibility Pass
+Version: v0.6.0
+Status: Completed as safe UI quality/accessibility polish
+
+PURPOSE
+Phase 4.10 finalizes the Approval Queue UI pass before moving beyond Phase 4.
+The goal is to make actions.html safer, clearer, and easier to use by checking:
+
+- Loading states.
+- Empty states.
+- Error states.
+- Focus states.
+- Keyboard support.
+- Text readability.
+- No broken layout.
+
+WHAT CHANGED
+- Added a skip link so keyboard users can jump to the approval queue.
+- Added visible focus states for buttons, links, selects, textareas, dialogs, and the skip link.
+- Added dialog aria-describedby support for detail, approval, and rejection dialogs.
+- Added focus trapping inside the active drawer/modal while it is open.
+- Added aria-busy handling on the actions list during loading.
+- Added a UI QA + Accessibility panel on actions.html.
+- Improved readability with safer line-height and overflow wrapping.
+- Improved responsive overflow safety for payload previews, long titles, and key/value content.
+- Added reduced-motion support for users who prefer less animation.
+
+LOADING STATE
+The action list now marks itself busy while actions are loading:
+- actionsList aria-busy=true during fetch.
+- actionsList aria-busy=false after load/error/auth stop.
+- Loading card remains visible during non-silent manual loads.
+
+EMPTY STATE
+When no actions match the current filters, actions.html shows a clear empty card.
+The empty card explains that the user can run local fixtures for testing:
+- npm.cmd run db:seed:actions:local
+
+ERROR STATE
+When the API is unavailable, auth fails, or the response is invalid, the UI shows a safe error state.
+The error does not expose secrets, tokens, raw payload_json, database URLs, API keys, or raw environment values.
+
+FOCUS STATES
+The UI now includes high-visibility focus states for:
+- navigation links;
+- action card buttons;
+- status filter buttons;
+- advanced select filters;
+- approve/reject note fields;
+- modals and drawer;
+- skip link.
+
+KEYBOARD SUPPORT
+Keyboard users can:
+- Tab through navigation and filters;
+- activate filter buttons;
+- open detail drawer;
+- open approve confirmation modal;
+- open reject-with-reason modal;
+- close open dialogs with Escape;
+- remain inside the active drawer/modal while it is open.
+
+TEXT READABILITY
+The UI uses safer line-height and overflow wrapping for:
+- action descriptions;
+- proposed content previews;
+- detail drawer paragraphs;
+- risk warnings;
+- key/value details;
+- payload preview JSON.
+
+NO BROKEN LAYOUT
+The UI includes extra responsive safeguards for:
+- long action titles;
+- long campaign/ticket IDs;
+- payload preview JSON;
+- small phone widths;
+- sticky modal footers;
+- reduced horizontal overflow.
+
+SAFETY BOUNDARY
+Phase 4.10 is still UI-only polish.
+It does not add:
+- executor registry;
+- sandbox executor;
+- real executor;
+- social/content publishing;
+- support reply sending;
+- ad spend changes;
+- campaign pausing;
+- rollback execution;
+- external platform writes;
+- auto-run rules.
+
+Approval and rejection still record internal LIFE.SAVER status only through the already-built safe backend endpoints.
+
+NEXT PHASE
+Phase 4 is now complete. The next recommended step is to review Phase 4 end-to-end, then move to Phase 5 — Master Pause Switch.

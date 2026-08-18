@@ -1,0 +1,47 @@
+================================================================================
+PHASE 12.5 — DRAFT REPLY ACTION
+================================================================================
+
+Goal:
+Support draft becomes proposed support_reply_send action.
+
+Deliverable:
+Support draft-to-action flow.
+
+What was added:
+- Support draft validation model.
+- Browser-safe support draft preview.
+- support_reply_send action payload builder.
+- Proposed action creation endpoint.
+- Strict no-send safety metadata.
+- Deterministic risk selection using ticket classification/category/sensitive flags.
+
+Endpoint contract:
+- GET  /api/v1/support/draft-actions/status
+- GET  /api/v1/support/draft-actions/example
+- POST /api/v1/support/draft-actions/preview
+- POST /api/v1/support/draft-actions/create
+
+Create behavior:
+- Validates ticket_id, thread_id, and reply body.
+- Builds a support_reply_send payload.
+- Calls the existing createProposedAction service.
+- Stores an internal proposed action for review.
+- Keeps policy_decision=ask and approvalRequired=true.
+- Logs metadata showing email_sent=false and gmail_api_called=false.
+
+Risk behavior:
+- sensitive or escalation => critical
+- refund/cancellation/payment_issue/complaint => high
+- normal support drafts => medium
+
+Safety boundary:
+- No Gmail API client.
+- No Gmail external API calls.
+- No email sending.
+- No support send executor.
+- No support auto-reply.
+- No raw provider payload returned.
+- No token or secret exposure.
+
+================================================================================

@@ -1,0 +1,21 @@
+LIFE.SAVER UI Decision — Approval Queue Placement — v0.6.0 Phase 4.1
+================================================================================
+
+Decision:
+Use a dedicated actions.html page as the primary Approval Queue UI, with a small dashboard preview panel.
+
+Primary:
+- actions.html
+
+Secondary:
+- dashboard preview panel on index.html
+
+Not primary:
+- settings.html
+- admin.html
+
+Reason:
+Approval decisions need focus, context, risk warnings, confirmation modals, history, and mobile-friendly space. The dashboard should alert the founder, but the dedicated actions page should handle actual review.
+
+Safety:
+Phase 4.1 is a placement decision only. It adds no external writes and no executor.

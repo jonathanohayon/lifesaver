@@ -1,0 +1,40 @@
+================================================================================
+LIFE.SAVER v0.7.0 — PHASE 11.4 ALLOWED CHANNELS/TIMES
+================================================================================
+
+Goal:
+Auto-publish candidates may only pass future auto-run review when the requested platform, channel, and local time are explicitly allowed.
+
+This is still a read-only safety gate. It does not enable auto-run.
+
+Default restriction profile:
+- Platform: linkedin
+- Channel: linkedin_member_feed
+- Time window: 09:00–18:00
+- Days: all
+
+Supported checks:
+1. actionType must be content_publish.
+2. platform must be in allowedPlatforms.
+3. channel must be in allowedChannels.
+4. time must be inside at least one allowedWindow.
+5. time windows must be valid HH:mm values.
+6. cross-midnight windows are supported.
+7. timezone is used to evaluate local publishing time.
+
+Decision values:
+- allowed_for_future_auto_run_review
+- blocked_platform_not_allowed
+- blocked_channel_not_allowed
+- blocked_outside_time_window
+- blocked_invalid_time_window
+- blocked_invalid_action_type
+
+Important:
+Even when this check returns allowed_for_future_auto_run_review, Phase 11.4 does not publish. Later Phase 11 gates still need to combine style, risk, caps, pause, approval policy, token, and executor safety before any narrow auto-run path can be considered.
+
+Security:
+The output must never include raw payload JSON, access tokens, refresh tokens, authorization headers, encrypted token values, rollback payloads, or secrets.
+
+No database migration is required.
+================================================================================

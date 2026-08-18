@@ -1,0 +1,59 @@
+{
+  "version": "0.6.0",
+  "phase": "V2 Phase 6.1 Policy Table Schema",
+  "migration": "015_create_policies_table.sql",
+  "table": "policies",
+  "columns": [
+    "id",
+    "workspace_id",
+    "name",
+    "action_type",
+    "conditions_json",
+    "decision",
+    "caps_json",
+    "priority",
+    "enabled",
+    "created_by",
+    "updated_by",
+    "created_at",
+    "updated_at"
+  ],
+  "allowedDecisions": ["ask", "auto_approve", "block"],
+  "allowedActionTypes": [
+    "content_publish",
+    "support_reply_send",
+    "ad_budget_adjust",
+    "ad_pause",
+    "research_task",
+    "dev_task",
+    "notification_send",
+    "rollback_action"
+  ],
+  "examplePolicyRecord": {
+    "id": "uuid",
+    "workspace_id": "workspace uuid",
+    "name": "Ask before publishing Instagram content",
+    "action_type": "content_publish",
+    "conditions_json": {
+      "platform": "instagram",
+      "risk_level_max": "low"
+    },
+    "decision": "ask",
+    "caps_json": {
+      "max_posts_per_day": 2
+    },
+    "priority": 100,
+    "enabled": true,
+    "created_by": "user uuid",
+    "updated_by": "user uuid",
+    "created_at": "ISO timestamp",
+    "updated_at": "ISO timestamp"
+  },
+  "safety": {
+    "storageOnly": true,
+    "policyEvaluatorAdded": false,
+    "autoApprovalEnabled": false,
+    "executorEnabled": false,
+    "externalWritesEnabled": false
+  }
+}

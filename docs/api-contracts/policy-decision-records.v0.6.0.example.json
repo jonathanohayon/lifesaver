@@ -1,0 +1,26 @@
+{
+  "version": "0.6.0",
+  "phase": "V2 Phase 6.8 Policy Decision Records",
+  "storage": {
+    "table": "actions",
+    "snapshotColumn": "policy_decision_snapshot_json",
+    "evaluatedAtColumn": "policy_evaluated_at"
+  },
+  "exampleSnapshotSummary": {
+    "present": true,
+    "decision": "ask",
+    "reason": "No enabled policy rule exists for this workspace/action type, so default ask applies.",
+    "matched_policy_id": null,
+    "cap_status": "not_applicable_no_policy_match",
+    "evaluatedAt": "2026-07-05T00:00:00.000Z",
+    "recordedAt": "2026-07-05T00:01:00.000Z"
+  },
+  "executorEnabled": false,
+  "externalWritesEnabled": false,
+  "safety": {
+    "rawSecretsStored": false,
+    "rawPayloadStored": false,
+    "autoRunTriggered": false,
+    "externalWritesAttempted": false
+  }
+}

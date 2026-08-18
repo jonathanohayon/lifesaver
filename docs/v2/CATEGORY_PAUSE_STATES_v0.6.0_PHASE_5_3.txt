@@ -1,0 +1,67 @@
+LIFE.SAVER v0.6.0 — Phase 5.3 Category Pause States
+
+Purpose
+-------
+Define category-level pause settings for V2 autonomy. This phase extends the Master Pause foundation by allowing specific classes of future autonomy to be paused independently.
+
+Categories
+----------
+1. Content
+   - Controls future content publishing autonomy.
+   - Action type: content_publish.
+
+2. Support
+   - Controls future support reply/send autonomy.
+   - Action type: support_reply_send.
+
+3. Ads
+   - Controls future ad control autonomy.
+   - Action types: ad_budget_adjust, ad_pause.
+
+4. Research
+   - Controls future proactive research-task autonomy.
+   - Action type: research_task.
+
+5. Dev
+   - Controls future developer/task automation autonomy.
+   - Action type: dev_task.
+
+Backend behavior in Phase 5.3
+-----------------------------
+- pause_all_autonomy remains the strongest safety control.
+- If pause_all_autonomy is true, no future auto-approval or executor execution is allowed for any category.
+- If a category pause flag is true, no future auto-approval or executor execution is allowed for that category.
+- Existing proposed actions remain reviewable.
+- Safe new proposed actions may still be created, but they are forced to approval_required=true and policy_decision=ask when their category is paused.
+- The createProposedAction audit metadata records the category and pause decision.
+
+Storage
+-------
+The existing autonomy_settings table already stores:
+- pause_content_actions
+- pause_support_actions
+- pause_ads_actions
+
+Phase 5.3 adds the missing category flags through an additive migration:
+- pause_research_actions
+- pause_dev_actions
+
+Safety boundary
+---------------
+Phase 5.3 does not add:
+- pause/resume API
+- pause switch UI
+- policy auto-approval
+- executor registry
+- sandbox executor
+- real executor
+- queueing actions for execution
+- content publishing
+- support sending
+- ad budget changes
+- campaign pause
+- rollback execution
+- external platform writes
+
+Current product safety remains:
+READ + ADVISE + DRAFT + INTERNAL APPROVAL/REJECTION/CANCELLATION ONLY.

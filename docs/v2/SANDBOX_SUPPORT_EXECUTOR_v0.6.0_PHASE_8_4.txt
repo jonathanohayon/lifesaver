@@ -1,0 +1,62 @@
+LIFE.SAVER V2 Phase 8.4 — Sandbox Support Executor
+==================================================
+
+Goal:
+Simulate sending a support reply.
+
+Important:
+No real email/helpdesk API call.
+
+Deliverable:
+Sandbox support executor.
+
+Implementation:
+- `sandboxSupportExecutor`
+- action type: `support_reply_send`
+- mode: sandbox
+- realExternalWriteEnabled: false
+- sandboxOnly: true
+
+Interface methods:
+- validate(context)
+- execute(context)
+- rollback(context, result)
+- summarizeResult(result)
+
+Valid payload requirements:
+- action type is support_reply_send
+- payload action_type is support_reply_send
+- ticket_id is present
+- thread_id is present
+- reply_body is present
+- payload does not include secret-like values
+
+Sandbox execute result includes:
+- sandbox_success
+- fake_external_reply_id
+- fake_thread_permalink
+- support_provider
+- ticket_id
+- thread_id
+- category
+- confidence_score
+- reply_preview
+- simulated_only
+- external_helpdesk_called=false
+- external_email_sent=false
+
+Safety boundaries:
+- no Gmail API call
+- no Zendesk API call
+- no Gorgias API call
+- no Help Scout API call
+- no email sending
+- no helpdesk write
+- no external write
+- no action runner endpoint
+- no auto-run
+
+Registry state after Phase 8.4:
+- content_publish has sandboxContentExecutor implementation
+- support_reply_send has sandboxSupportExecutor implementation
+- ads/research/dev/notification/rollback handlers remain mapping-only

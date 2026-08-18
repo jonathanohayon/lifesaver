@@ -1,0 +1,66 @@
+{
+  "success": true,
+  "version": "0.6.0",
+  "phase": "3.10",
+  "title": "Phase 3.10 Backend Tests",
+  "databaseConfigured": true,
+  "safeLocalMode": true,
+  "summary": {
+    "passed": 17,
+    "failed": 0,
+    "skipped": 0,
+    "total": 17
+  },
+  "tests": [
+    {
+      "name": "database: list actions",
+      "status": "pass",
+      "message": "Workspace-scoped list endpoint returned summary-only proposed actions."
+    },
+    {
+      "name": "database: get action detail",
+      "status": "pass",
+      "message": "Detail endpoint returned safe payload preview and status history."
+    },
+    {
+      "name": "database: approve action",
+      "status": "pass",
+      "message": "Approve endpoint service changed internal status only and did not execute."
+    },
+    {
+      "name": "database: reject action",
+      "status": "pass",
+      "message": "Reject endpoint service changed internal status only and did not execute."
+    },
+    {
+      "name": "database: cancel action",
+      "status": "pass",
+      "message": "Cancel endpoint service changed internal status only and did not execute."
+    },
+    {
+      "name": "database: invalid transition rejected -> approved",
+      "status": "pass",
+      "message": "Received expected safe error code ACTION_REJECTED."
+    },
+    {
+      "name": "database: permission denial member approve",
+      "status": "pass",
+      "message": "Received expected safe error code APPROVAL_FORBIDDEN."
+    },
+    {
+      "name": "database: workspace isolation user membership required",
+      "status": "pass",
+      "message": "Received expected safe error code ACTION_WORKSPACE_FORBIDDEN."
+    }
+  ],
+  "safety": {
+    "externalWritesEnabled": false,
+    "executorEnabled": false,
+    "noPublishing": true,
+    "noSupportSending": true,
+    "noAdSpendChanges": true,
+    "noCampaignPause": true,
+    "cleanupDefault": true,
+    "note": "These tests verify backend action list/detail/approve/reject/cancel behaviour and guards. They do not call external platforms and do not enable executors."
+  }
+}

@@ -1,0 +1,73 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
+const root = process.cwd();
+const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
+let passed = 0;
+function check(name, condition) {
+  if (!condition) throw new Error(`active-platform-conversion-check failed: ${name}`);
+  passed += 1;
+}
+
+const index = read('apps/web/src/index.html');
+const mainJs = read('apps/web/src/assets/js/main.js');
+const audienceJs = read('apps/web/src/assets/js/audience-reach.js');
+const versionJs = read('apps/web/src/assets/js/lifesaver-version.js');
+const mobileShell = read('apps/web/src/assets/js/lifesaver-mobile-shell.js');
+const dashboardCss = read('apps/web/src/assets/css/dashboard.css');
+const health = read('apps/api/src/modules/health/health.controller.ts');
+const audienceModel = read('apps/api/src/modules/audience-reach/audience-reach.model.ts');
+const audienceTypes = read('apps/api/src/modules/audience-reach/audience-reach.types.ts');
+const audienceTests = read('apps/api/src/modules/audience-reach/audience-reach-tests.ts');
+const tripleWhaleMapper = read('apps/api/src/modules/triple-whale/triple-whale.mapper.ts');
+const metricsService = read('apps/api/src/modules/metrics/metrics.service.ts');
+const metricsTypes = read('apps/api/src/modules/metrics/metrics.types.ts');
+const platformTests = read('apps/api/src/modules/triple-whale/active-platform-conversion-tests.ts');
+const pkg = JSON.parse(read('package.json'));
+const apiPkg = JSON.parse(read('apps/api/package.json'));
+
+check('root version is at least 0.8.3', ['0.8.3','0.8.4'].includes(pkg.version));
+check('api version is at least 0.8.3', ['0.8.3','0.8.4'].includes(apiPkg.version));
+check('phase-functional 0.8.3 script exists', Boolean(pkg.scripts['phase-functional:0-8-3:test']));
+check('frontend version is at least 0.8.3', versionJs.includes("version: '0.8.3'") || versionJs.includes("version: '0.8.4'"));
+check('mobile shell fallback version is at least 0.8.3', mobileShell.includes("version: '0.8.3'") || mobileShell.includes("version: '0.8.4'"));
+check('frontend health mode updated', versionJs.includes('v2-functional-0-8-3-active-platform-conversion') || versionJs.includes('v2-functional-0-8-4-conversion-reach-source'));
+check('health version updated', health.includes("version: '0.8.3'") || health.includes("version: '0.8.4'"));
+check('health mode updated', health.includes("mode: 'v2-functional-0-8-3-active-platform-conversion'") || health.includes("mode: 'v2-functional-0-8-4-conversion-reach-source'"));
+check('audience model version updated', audienceModel.includes("AUDIENCE_REACH_VERSION = '0.8.3'") || audienceModel.includes("AUDIENCE_REACH_VERSION = '0.8.4'"));
+check('audience model health mode updated', audienceModel.includes('v2-functional-0-8-3-active-platform-conversion') || audienceModel.includes('v2-functional-0-8-4-conversion-reach-source'));
+check('audience safety includes platform-only guard', audienceModel.includes('activePlatformConversionOnly: true'));
+check('audience model shows awaiting conversion data', audienceModel.includes('Awaiting GA Data') || audienceModel.includes('Awaiting Sessions'));
+check('audience model shows awaiting reach data', audienceModel.includes('Awaiting Conv.') || audienceModel.includes('Awaiting Sessions'));
+check('audience model blocks divide by zero', audienceModel.includes('zero conversion must never be used') || audienceModel.includes('never use a zero conversion rate') || audienceModel.includes('blocksZeroConversionReachMath'));
+check('audience model exposes Platform Conv. Value', audienceModel.includes('Platform Conv. Value'));
+check('audience types include activePlatformConversion metric', audienceTypes.includes('activePlatformConversion'));
+check('metrics types include platform conversion fields', metricsTypes.includes('platformConversionValue') && metricsTypes.includes('platformConversionSources'));
+check('triple whale mapper defines active platform aliases', tripleWhaleMapper.includes('PLATFORM_CONVERSION_ALIASES'));
+check('triple whale mapper maps facebook conversion value', tripleWhaleMapper.includes('facebookConversionValue'));
+check('triple whale mapper maps snapchat conversion value', tripleWhaleMapper.includes('snapchatConversionValue'));
+check('triple whale mapper ignores inactive zero platform values', tripleWhaleMapper.includes('Zero/inactive platforms are ignored'));
+check('triple whale mapper avoids double-counting Meta via priority aliases', tripleWhaleMapper.includes('findTripleWhaleMetricByAliasPriority'));
+check('metrics service hydrates existing snapshots from metricCatalog', metricsService.includes('hydratePlatformConversionFromMapping'));
+check('metrics service uses active platform labels', metricsService.includes('Meta') && metricsService.includes('Snapchat'));
+check('metrics service falls back from zero stored attribution to metricCatalog values', metricsService.includes('existingValue > 0 ? existingValue : catalogValue'));
+check('homepage label changed from Attrib to Platform Conv.', index.includes('PLATFORM CONV.'));
+check('homepage no longer claims Attribution Needs Mapping in revenue panel', !index.includes('Core Live / Attribution Needs Mapping'));
+check('main dashboard uses platform conversion value', mainJs.includes('platformConversionText'));
+check('main dashboard displays awaiting conversion data', mainJs.includes('Awaiting GA Data') || mainJs.includes('Awaiting Sessions'));
+check('main dashboard writes metricStreamAttribution from platformValue', mainJs.includes("setText('metricStreamAttribution', platformValue)"));
+check('audience JS displays platform conversion in note', audienceJs.includes('Platform Conv. Value'));
+check('audience JS fallback uses awaiting reach text', audienceJs.includes('Awaiting Conv.') || audienceJs.includes('Awaiting Sessions'));
+check('audience JS has no external social API calls', !/graph\.facebook|instagram|tiktok\.com|linkedin|googleads|meta\.com/i.test(audienceJs));
+check('audience JS has no writes', !/method:\s*['"]POST|method:\s*['"]PATCH|method:\s*['"]DELETE/i.test(audienceJs));
+check('platform tests assert Meta + Snapchat', platformTests.includes("['Meta', 'Snapchat']"));
+check('platform tests assert Google auto-includes later', platformTests.includes("['Meta', 'Snapchat', 'Google']"));
+check('audience tests expect current functional version', audienceTests.includes("'0.8.3'") || audienceTests.includes("'0.8.4'"));
+check('CSS includes mapping guidance note', dashboardCss.includes('.ls-audience-note'));
+check('source mapper exists', fs.existsSync(path.join(root, 'apps/api/src/modules/triple-whale/triple-whale.mapper.ts')));
+check('dist mapper exists', fs.existsSync(path.join(root, 'apps/api/dist/modules/triple-whale/triple-whale.mapper.js')));
+check('dist platform tests exist', fs.existsSync(path.join(root, 'apps/api/dist/modules/triple-whale/active-platform-conversion-tests.js')));
+check('README current phase updated', read('README.txt').includes('v0.8.3') || read('README.txt').includes('v0.8.4'));
+check('CHANGELOG current phase updated', read('CHANGELOG.txt').includes('v0.8.3') || read('CHANGELOG.txt').includes('v0.8.4'));
+
+console.log(`active-platform-conversion-check — ${passed} passed, 0 failed`);

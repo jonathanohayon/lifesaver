@@ -1,0 +1,44 @@
+# LIFE.SAVER v0.7.0 — Phase 13.3 Manual Approval First
+
+## Purpose
+
+Phase 13.3 makes the first support-send version strict: every support reply send must be manually approved by the founder/admin before Gmail can be called.
+
+## Deliverable
+
+All support sends are approval-gated.
+
+## New module
+
+- `support-manual-approval-gate`
+
+## New endpoints
+
+- `GET /api/v1/support/manual-approval-gate/status`
+- `GET /api/v1/support/manual-approval-gate/example`
+- `POST /api/v1/support/manual-approval-gate/preview`
+
+## Manual approval requirements
+
+The support send executor can become eligible only when all of these are true:
+
+1. The action type is `support_reply_send`.
+2. The action status is `approved`.
+3. The action has an `approved_at` timestamp.
+4. A recorded approval event exists.
+5. The approval event has an actor user.
+6. Auto-send is not requested.
+7. Force does not bypass approval.
+
+## Executor integration
+
+The existing `gmailManualApprovedSupportReplyExecutor` now calls the Phase 13.3 manual approval gate before it moves an action to executing or calls Gmail.
+
+If the manual approval gate fails, the executor returns a blocked result and stores safe block metadata only.
+
+## Safety notes
+
+Phase 13.3 does not add Gmail OAuth, token storage changes, auto-reply, new send permissions, raw MIME exposure, or database migrations.
+
+The support send executor remains default-off behind `SUPPORT_SEND_EXECUTOR_ENABLED=false`.
+

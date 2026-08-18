@@ -1,0 +1,57 @@
+LIFE.SAVER v0.4.1 — Production Deployment Checklist
+
+BEFORE DEPLOYMENT
+[ ] Create private GitHub repo
+[ ] Confirm .env is not committed
+[ ] Create production Supabase project
+[ ] Rotate development DB password if reused
+[ ] Generate strong AUTH_TOKEN_SECRET
+[ ] Generate strong WORKER_SHARED_SECRET
+[ ] Decide APP_ENCRYPTION_KEY strategy before connecting production Triple Whale key
+[ ] Add production domains
+[ ] Add ALLOWED_ORIGINS without localhost
+[ ] Add NODE_ENV=production
+[ ] Add DATABASE_SSL=true
+[ ] Add DASHBOARD_REQUIRE_AUTH=true
+[ ] Add CHAT_REQUIRE_AUTH=true
+[ ] Disable debug routes
+
+API DEPLOYMENT
+[ ] Build succeeds
+[ ] Start command works
+[ ] /api/v1/health returns ok
+[ ] /api/v1/database/status connected true
+[ ] /api/v1/security/status shows no critical production failures
+
+WEB DEPLOYMENT
+[ ] Static build succeeds
+[ ] App loads over HTTPS
+[ ] Login page loads
+[ ] Dashboard calls production API
+[ ] No mixed-content HTTP calls
+
+WORKER DEPLOYMENT
+[ ] Worker service starts
+[ ] Worker shared secret configured
+[ ] Worker status command works
+[ ] One-off daily/weekly jobs work in staging
+[ ] Scheduled worker remains disabled until intentionally enabled
+
+DATA SOURCE
+[ ] Triple Whale key connected from customer settings
+[ ] Summary probe succeeds
+[ ] Core metrics productionReady true
+[ ] Attribution remains pending unless confirmed
+
+SECURITY
+[ ] No raw secrets in logs
+[ ] No raw API keys in browser
+[ ] Raw payload previews redacted
+[ ] Admin protected
+[ ] Rate limits active
+[ ] HTTPS active
+
+FINAL
+[ ] Document production environment variables
+[ ] Save deployment notes
+[ ] Tag release

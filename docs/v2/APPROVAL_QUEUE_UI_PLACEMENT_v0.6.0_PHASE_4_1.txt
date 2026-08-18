@@ -1,0 +1,248 @@
+LIFE.SAVER v0.6.0 — Phase 4.1 Approval Page / Panel Placement
+================================================================================
+
+Purpose
+-------
+Phase 4 begins the Approval Queue UI work.
+
+The goal of Phase 4.1 is to decide where the founder reviews proposed LIFE.SAVER V2 actions before we build detailed action cards, modals, approval buttons, rejection reasons, filters, or mobile UX.
+
+This phase is a planning / placement decision only.
+It does not add an executor, does not publish content, does not send support replies, does not adjust ad spend, and does not perform any external write.
+
+================================================================================
+UI PLACEMENT DECISION
+================================================================================
+
+Approved decision:
+
+1. Primary approval queue location:
+   Dedicated page: actions.html
+
+2. Secondary dashboard placement:
+   Dashboard preview panel showing the most urgent pending actions.
+
+3. Admin placement:
+   Super Admin may monitor approval queue health later, but must only see redacted monitoring data by default.
+
+4. Settings placement:
+   Settings should not be the primary approval queue.
+   Settings may later contain autonomy rules, notification preferences, and connector permissions.
+
+================================================================================
+WHY DEDICATED ACTIONS PAGE IS BEST
+================================================================================
+
+A dedicated actions.html page gives the founder a focused approval workspace.
+
+It is better than only placing approvals on the dashboard because:
+- approval decisions need full context;
+- risk level must be clearly visible;
+- payload previews need enough space;
+- approve/reject/cancel confirmation flows need clean modals;
+- later filters and mobile review need their own layout;
+- it avoids crowding the existing ecommerce metrics dashboard.
+
+The dashboard should still have a small preview panel so the founder can quickly see:
+- pending approvals;
+- high-risk actions;
+- failed actions;
+- items requiring attention.
+
+But the founder should click through to actions.html before making detailed decisions.
+
+================================================================================
+FINAL UI SURFACE MODEL
+================================================================================
+
+Customer App:
+
+- dashboard / index.html
+  Purpose:
+  - core ecommerce metrics;
+  - Daily Brief;
+  - Weekly Summary;
+  - LIFE.SAVER chat;
+  - small Approval Queue preview panel later.
+
+- actions.html
+  Purpose:
+  - main approval queue;
+  - action list;
+  - filters;
+  - detail drawer/modal;
+  - approve confirmation;
+  - reject reason;
+  - cancel flow;
+  - result/status timeline later.
+
+- settings.html
+  Purpose:
+  - workspace profile;
+  - Triple Whale connection;
+  - team members;
+  - future autonomy rules / policy controls;
+  - future notification preferences.
+
+- admin.html
+  Purpose:
+  - internal platform monitoring;
+  - launch readiness;
+  - security status;
+  - worker status;
+  - redacted approval queue health later.
+
+================================================================================
+PHASE 4.1 DOES NOT BUILD THESE YET
+================================================================================
+
+The following are intentionally deferred:
+
+- action card component;
+- action detail drawer/modal;
+- approval confirmation modal;
+- reject-with-reason modal;
+- status filters;
+- live polling;
+- mobile approval UX;
+- full accessibility pass.
+
+These belong to later Phase 4 sub-phases.
+
+================================================================================
+SAFETY RULES FOR FUTURE ACTIONS UI
+================================================================================
+
+The UI must never imply that approval means immediate execution until the executor phase exists.
+
+For now, action approval remains internal only:
+- it changes LIFE.SAVER action status;
+- it logs an action event;
+- it does not queue execution;
+- it does not publish;
+- it does not send;
+- it does not adjust ad spend;
+- it does not pause campaigns;
+- it does not refund;
+- it does not edit products;
+- it does not call external write APIs.
+
+Recommended UI wording for Phase 4.5 later:
+
+"Approve internal action status only. Execution is disabled in this build."
+
+When real executors are introduced later, the modal wording must clearly state:
+- what platform will be affected;
+- whether execution happens immediately;
+- what the risk level is;
+- which policy/cap allowed or blocked the action;
+- how rollback works, if available.
+
+================================================================================
+DASHBOARD PREVIEW GUIDELINES
+================================================================================
+
+The dashboard preview should be small and calm.
+
+Recommended preview fields:
+- number of pending actions;
+- highest risk pending action;
+- newest proposed action title;
+- link to actions.html;
+- status message if no actions need review.
+
+The dashboard preview should not show full payloads.
+It should not include final approval buttons in the first UI pass.
+The safest first version should use a "Review Actions" link.
+
+================================================================================
+ACTIONS PAGE GUIDELINES
+================================================================================
+
+actions.html should be the full review surface.
+
+Future page sections:
+
+1. Header
+   - "Action Approval Queue"
+   - short safety note
+   - refresh button
+
+2. Summary cards
+   - Pending approval
+   - High risk
+   - Approved internal status
+   - Failed / cancelled later
+
+3. Filters
+   - status
+   - action type
+   - risk level
+
+4. Action list
+   - safe list response from GET /api/v1/actions
+   - no full raw payload_json in list view
+
+5. Detail drawer/modal
+   - safe payloadPreview from GET /api/v1/actions/:id
+   - statusHistory
+   - resultSummary
+   - approve/reject/cancel actions later
+
+================================================================================
+ADMIN MONITORING GUIDELINES
+================================================================================
+
+Super Admin can monitor system health later, but should not act as the normal founder approval UI.
+
+Admin views must stay redacted:
+- no raw payload_json by default;
+- no raw API keys;
+- no OAuth tokens;
+- no connector secrets;
+- no customer private details unless necessary and permissioned.
+
+Super Admin may later see counts such as:
+- actions proposed today;
+- pending approvals;
+- failed actions;
+- high-risk actions;
+- execution disabled/enabled status;
+- master pause status.
+
+================================================================================
+PERMISSION EXPECTATIONS
+================================================================================
+
+Future UI must reflect the backend permission guard:
+
+owner:
+- can view actions;
+- can approve low/medium/high/critical;
+- can reject;
+- can cancel.
+
+admin:
+- can view actions;
+- can approve low/medium/high;
+- cannot approve critical by default;
+- can reject;
+- can cancel.
+
+member:
+- can view actions;
+- cannot approve/reject/cancel by default.
+
+viewer:
+- view only.
+
+super_admin:
+- redacted monitoring only.
+
+================================================================================
+NEXT PHASE
+================================================================================
+
+Next: Phase 4.2 — Action Card Layout
+
+That phase should define and/or build the first action card component structure for actions.html and/or dashboard preview.

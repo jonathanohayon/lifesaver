@@ -1,0 +1,42 @@
+LIFE.SAVER v0.7.0 — Phase 14.2 Ads Write-Scope Checklist
+
+Purpose:
+Document the permissions and operational requirements for future ads-control connectors before building any real ad API client.
+
+Platforms covered:
+1. Meta Marketing API
+2. Google Ads API
+
+Checklist categories:
+- Account permission
+- OAuth
+- App review / developer verification
+- Least privilege
+- Encrypted token storage
+
+Boundary:
+Triple Whale remains the read-only performance intelligence source. Direct platform APIs are required later for real control actions such as campaign pause, ad set/ad group pause, budget adjustment, budget restore, and before/after platform snapshots.
+
+Safety:
+- No ad API client added.
+- No OAuth route added.
+- No token storage added.
+- No write scope requested.
+- No campaign paused.
+- No budget changed.
+- No ads auto-run enabled.
+- No external ad API called.
+- No raw tokens, app credentials, or raw provider payloads returned.
+- No database migration required.
+
+Required before any future ads executor:
+- Manual approval gate.
+- Master pause and ads pause enforcement.
+- Emergency safe mode.
+- Hard caps.
+- Idempotency / duplicate execution protection.
+- Workspace-scoped account mapping.
+- Encrypted token storage.
+- Before/after snapshots.
+- Result logs.
+- Rollback/re-enable planning.

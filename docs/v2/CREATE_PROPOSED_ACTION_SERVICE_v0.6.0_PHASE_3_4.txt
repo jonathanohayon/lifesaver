@@ -1,0 +1,259 @@
+LIFE.SAVER v0.6.0
+Phase 3.4 — Create Proposed Action Service
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 3.4 adds the internal createProposedAction service.
+
+Goal:
+Allow trusted LIFE.SAVER backend modules to create proposed V2 actions safely.
+
+Intended future callers:
+- draft_content
+- draft_support_reply
+- future ad tools
+- worker/proactive scheduler
+- internal system modules
+
+This phase does not add a public action-creation endpoint.
+This phase does not approve actions.
+This phase does not execute actions.
+This phase does not call external platforms.
+
+V1 safety remains unchanged:
+READ + ADVISE + DRAFT ONLY.
+
+================================================================================
+SERVICE
+================================================================================
+
+File:
+apps/api/src/modules/actions/actions.service.ts
+
+Exported function:
+createProposedAction(input)
+
+Main behavior:
+1. Validate database is configured.
+2. Validate workspace id.
+3. Validate action type.
+4. Validate action title.
+5. Validate payload_json.action_type matches action_type.
+6. Validate required payload data fields for the action type.
+7. Reject forbidden secret-like payload fields.
+8. Default risk level when missing.
+9. Default approval_required to true.
+10. Default policy_decision to ask.
+11. Generate or accept idempotency_key.
+12. Generate or accept action_hash.
+13. Check duplicate by idempotency_key/action_hash.
+14. Insert proposed action row.
+15. Insert action_created event.
+16. Return a safe summary result.
+
+================================================================================
+INPUT SHAPE
+================================================================================
+
+CreateProposedActionInput:
+
+- workspaceId: string
+- createdByUserId?: string | null
+- actionType: ActionType
+- title: string
+- description?: string | null
+- payloadJson: Record<string, unknown>
+- riskLevel?: low | medium | high | critical
+- approvalRequired?: boolean
+- policyDecision?: not_evaluated | ask | auto_approve | block
+- idempotencyKey?: string | null
+- actionHash?: string | null
+- source?: string
+- reason?: string | null
+- metadata?: Record<string, unknown>
+
+================================================================================
+DEFAULTS
+================================================================================
+
+Status:
+- proposed
+
+Approval:
+- approval_required defaults to true
+
+Policy:
+- policy_decision defaults to ask
+
+Risk defaults:
+- content_publish: low
+- support_reply_send: medium
+- ad_budget_adjust: high
+- ad_pause: high
+- research_task: low
+- dev_task: medium
+- notification_send: low
+- rollback_action: high
+
+================================================================================
+DUPLICATE PROTECTION
+================================================================================
+
+The service uses Phase 2.7 duplicate protection fields:
+- idempotency_key
+- action_hash
+
+Duplicate check order:
+1. Same workspace + same idempotency_key.
+2. Same workspace + same active action_hash.
+3. Insert action only if no duplicate is found.
+4. If a database race hits a unique index, the service safely re-checks and returns the existing action.
+
+Result fields:
+- created: true/false
+- duplicateDetected: true/false
+- duplicateReason: none | idempotency_key | action_hash
+
+This protects against:
+- AI/tool retries
+- browser retries
+- worker retries
+- repeated draft-to-action conversion
+- future double-submit scenarios
+
+================================================================================
+PAYLOAD SAFETY
+================================================================================
+
+payloadJson must not include secret-like keys, including:
+- api_key
+- access_token
+- refresh_token
+- password
+- secret
+- authorization
+- cookie
+- database_url
+- DATABASE_URL
+- CLAUDE_API_KEY
+- TRIPLE_WHALE_API_KEY
+- APP_ENCRYPTION_KEY
+- WORKER_SHARED_SECRET
+
+If these appear anywhere inside payloadJson, the service rejects the request.
+
+================================================================================
+REQUIRED PAYLOAD FIELDS
+================================================================================
+
+content_publish:
+- platform
+- caption
+
+support_reply_send:
+- ticket_id
+- thread_id
+- reply_body
+
+ad_budget_adjust:
+- platform
+- campaign_id
+- current_budget
+- proposed_budget
+- change_amount
+- currency
+
+ad_pause:
+- platform
+- target_level
+- target_id
+- current_status
+- proposed_status
+- reason
+
+research_task:
+- question
+- objective
+
+dev_task:
+- task_summary
+- area
+
+notification_send:
+- channel
+- recipient_user_id
+- message
+
+rollback_action:
+- original_action_id
+- rollback_type
+- reason
+
+================================================================================
+EVENT LOGGING
+================================================================================
+
+When a new action is created, the service inserts one action_events row:
+
+- event_type: action_created
+- from_status: null
+- to_status: proposed
+- message: safe creation note
+- metadata_json:
+  - phase: 3.4
+  - source
+  - service: createProposedAction
+  - external_write_enabled: false
+  - executor_enabled: false
+  - approval_api_enabled: false
+
+The event is an audit record only. It does not execute anything.
+
+================================================================================
+WHAT THIS PHASE DOES NOT ADD
+================================================================================
+
+Phase 3.4 does not add:
+- POST /api/v1/actions
+- approve endpoint
+- reject endpoint
+- cancel endpoint
+- queue endpoint
+- executor registry
+- sandbox executor
+- real executor
+- content publishing
+- support sending
+- ad budget changes
+- campaign pause
+- external write connectors
+- auto-run rules
+
+================================================================================
+FUTURE INTEGRATION NOTES
+================================================================================
+
+Later, draft_content can call createProposedAction with action_type content_publish.
+Later, draft_support_reply can call createProposedAction with action_type support_reply_send.
+Later, ad tools can call createProposedAction with action_type ad_budget_adjust or ad_pause.
+Later, proactive scheduler can call createProposedAction when it detects safe proposed work.
+
+All of these must still create proposed internal actions first.
+They must not execute real-world changes in this phase.
+
+================================================================================
+NEXT PHASE
+================================================================================
+
+Phase 3.5 — Approve Action Endpoint
+
+The next phase should add:
+- POST /api/v1/actions/:id/approve
+- role checks
+- lifecycle transition rules
+- action_events approved event
+
+Important:
+Approval in Phase 3.5 should still not execute anything unless a later executor phase explicitly enables execution.

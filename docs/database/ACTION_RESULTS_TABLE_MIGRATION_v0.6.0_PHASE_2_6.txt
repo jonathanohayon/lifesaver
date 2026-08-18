@@ -1,0 +1,218 @@
+LIFE.SAVER v0.6.0 — Phase 2.6 Action Results Table Migration
+================================================================
+
+Purpose
+-------
+Phase 2.6 adds the action_results table so LIFE.SAVER can safely store the result of a future executor run.
+
+This is a V2 foundation migration only.
+It does not add any executor.
+It does not publish content.
+It does not send support replies.
+It does not change ad budgets.
+It does not pause campaigns.
+It does not write back to Triple Whale or any external platform.
+
+Why this table is needed
+------------------------
+In V2, an action will eventually move through this safe path:
+
+1. Action is created.
+2. Policy is evaluated.
+3. Founder approves it or a rule allows it.
+4. Executor attempts the action.
+5. Executor result is recorded.
+6. LIFE.SAVER reports success, failure, blocked state, skipped state, or rollback result.
+
+The action_results table is where step 5 will be stored.
+
+Table created
+-------------
+Migration file:
+
+database/migrations/011_create_action_results_table.sql
+
+Table:
+
+action_results
+
+Core fields
+-----------
+- id
+- action_id
+- workspace_id
+- executor_name
+- external_id
+- external_url
+- result_status
+- result_summary
+- error_message
+- rollback_supported
+- rollback_payload
+- metadata_json
+- created_at
+- updated_at
+
+Roadmap fields covered
+----------------------
+The roadmap requested:
+
+- action_id
+- executor_name
+- external_id
+- external_url
+- result_status
+- result_summary
+- error_message
+- rollback_supported
+- rollback_payload
+
+The migration also adds:
+
+- id: primary key for safe table operations.
+- workspace_id: workspace-scoped querying and future isolation.
+- metadata_json: safe extra metadata for future sandbox/real executors.
+- created_at / updated_at: audit timestamps.
+
+Result status values
+--------------------
+Allowed result_status values:
+
+- pending
+- success
+- failed
+- blocked
+- skipped
+- rollback_success
+- rollback_failed
+
+Meaning
+-------
+pending:
+  Result row exists but final executor outcome is not recorded yet.
+
+success:
+  Future executor completed successfully.
+
+failed:
+  Future executor attempted the action but failed.
+
+blocked:
+  Execution was blocked by policy, pause state, missing permission, hard cap, or safety check.
+
+skipped:
+  Execution was intentionally skipped. Example: dry run, duplicate prevention, no-op action.
+
+rollback_success:
+  Future rollback completed successfully.
+
+rollback_failed:
+  Future rollback was attempted but failed.
+
+Rollback handling
+-----------------
+rollback_supported is a boolean.
+rollback_payload is JSONB.
+
+Rules:
+
+- rollback_supported=false means LIFE.SAVER should not promise automatic undo.
+- rollback_payload must be a safe object.
+- rollback_payload must never include raw tokens, API keys, passwords, or secrets.
+- Some platforms cannot truly undo actions. For example, emails usually cannot be unsent. In those cases rollback means follow-up/correction workflow, not actual undo.
+
+Security rules
+--------------
+action_results must never store:
+
+- Claude API key
+- Triple Whale API key
+- OAuth access token
+- OAuth refresh token
+- password
+- raw .env value
+- DATABASE_URL
+- APP_ENCRYPTION_KEY
+- WORKER_SHARED_SECRET
+- full private signed URLs
+- payment/card data
+- unnecessary sensitive customer data
+
+External URL rule
+-----------------
+external_url must be null or begin with http:// or https://.
+
+Important:
+Even if a URL is technically valid, it must not contain secret query parameters, signed private access, or tokens.
+
+Workspace safety
+----------------
+The table includes workspace_id so future APIs can filter results by workspace.
+
+Service logic must verify:
+
+action_results.workspace_id === actions.workspace_id
+
+This migration cannot enforce that cross-table match by itself without more complex triggers.
+That check belongs in repository/service code in later phases.
+
+Relationship to previous tables
+-------------------------------
+Phase 2.3:
+  actions table stores the action intent and lifecycle status.
+
+Phase 2.5:
+  action_events table stores lifecycle event history.
+
+Phase 2.6:
+  action_results table stores future executor outcome details.
+
+What this phase does not do
+---------------------------
+This phase does not add:
+
+- approval queue API
+- executor registry
+- sandbox executor
+- content publishing
+- support sending
+- ad budget adjustment
+- ad pause execution
+- notifications
+- policy engine
+- auto-run rules
+
+Testing commands
+----------------
+After copying your working .env into this package folder, run:
+
+npm.cmd install
+npm.cmd run build
+npm.cmd run db:status
+npm.cmd run db:migrate
+npm.cmd run db:status
+npm.cmd run client:test-checklist
+npm.cmd run security:check
+npm.cmd run env:check
+
+Expected migration output on first run:
+
+Applying migration: 011_create_action_results_table.sql
+Applied migration: 011_create_action_results_table.sql
+
+Expected migration output on second run:
+
+Skipping already applied migration: 011_create_action_results_table.sql
+No new migrations to apply. Database is up to date.
+
+Rollback note
+-------------
+This is an additive migration.
+It does not drop or rename existing tables/columns.
+Do not manually drop the table in production unless a rollback plan and backup are approved.
+
+Recommended next phase
+----------------------
+Phase 2.7 — Idempotency + Duplicate Protection
+
+That phase should define how LIFE.SAVER prevents duplicate execution, double-click approval, repeated executor calls, and repeated action creation.

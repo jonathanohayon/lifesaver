@@ -1,0 +1,217 @@
+LIFE.SAVER V2
+Phase 3.6 — Reject Action Endpoint
+Version: v0.6.0
+Status: Completed as internal approval-queue backend foundation
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 3.6 adds the safe backend endpoint for rejecting proposed V2 actions:
+
+POST /api/v1/actions/:id/reject
+
+The endpoint records a human rejection decision inside LIFE.SAVER only.
+It does not execute, queue, publish, send, spend, pause, refund, edit, or write to any external platform.
+
+This phase is part of the approval queue backend foundation. It gives founders/admins a safe way to say no to a proposed action before future executor phases exist.
+
+================================================================================
+ENDPOINT
+================================================================================
+
+POST /api/v1/actions/:id/reject
+
+Auth:
+- Required
+
+Workspace scope:
+- Required
+- The action must belong to the current workspace.
+- The current user must have an active workspace membership.
+
+Allowed roles:
+- owner
+- admin
+
+Blocked roles:
+- member
+- viewer
+
+Reason:
+- Rejection is a decision gate and should be limited to roles that can manage approval queue decisions.
+
+================================================================================
+REQUEST BODY
+================================================================================
+
+All fields are optional.
+
+Supported reason field names:
+- rejection_reason
+- rejection_note
+- reason
+- note
+
+Example:
+
+{
+  "rejection_reason": "Not on brand for this campaign. Please make it calmer and shorter."
+}
+
+Reason rules:
+- optional
+- trimmed
+- max 1000 characters
+- stored in the action_events message/metadata context only
+- must not contain secrets
+
+================================================================================
+STATUS TRANSITIONS
+================================================================================
+
+Allowed transition:
+
+proposed -> rejected
+approval_required -> rejected
+
+Already rejected:
+
+rejected -> rejected
+
+This returns a safe no-op response:
+- rejected=false
+- alreadyRejected=true
+- no duplicate rejected event
+- no execution
+
+Blocked statuses:
+
+- auto_approved
+- approved
+- cancelled
+- queued
+- executing
+- executed
+- failed
+- rollback_requested
+- rolled_back
+
+Reason:
+- Approved/auto-approved actions have already passed a decision gate. They should use the future cancel flow before execution, not reject flow.
+- Queued/executing/executed actions are beyond simple rejection.
+- Failed/rollback states require their own handling.
+
+================================================================================
+EVENT LOGGING
+================================================================================
+
+When rejection succeeds, the endpoint inserts an action_events row:
+
+- event_type: rejected
+- from_status: previous status
+- to_status: rejected
+- actor_user_id: current user id
+- message: rejection reason or safe default message
+- metadata_json includes:
+  - phase: 3.6
+  - endpoint: POST /api/v1/actions/:id/reject
+  - rejected_by_role
+  - risk_level
+  - rejection_reason_present
+  - execution_enabled=false
+  - queued=false
+  - external_write_enabled=false
+  - double_click_protection=true
+
+================================================================================
+SAFETY GUARANTEE
+================================================================================
+
+This endpoint cannot:
+
+- publish content
+- send support replies
+- change ad spend
+- pause ad campaigns
+- refund orders
+- edit products
+- write to Triple Whale
+- write to Shopify
+- write to Meta
+- write to Google Ads
+- write to TikTok
+- write to Snapchat
+- call any external write connector
+- queue an executor
+- run an executor
+
+Rejected means the action is terminal and should remain visible in history/audit.
+Rejected actions must not be silently deleted.
+
+================================================================================
+RESPONSE SHAPE
+================================================================================
+
+Success response includes:
+
+- version
+- phase
+- workspaceId
+- userRole
+- rejected
+- alreadyRejected
+- action summary
+- transition
+- rejection details
+- execution safety object
+- endpoint safety object
+
+The response confirms:
+
+- executed=false
+- queued=false
+- executorEnabled=false
+- externalWritesEnabled=false
+
+================================================================================
+ERRORS
+================================================================================
+
+Possible safe errors:
+
+- DATABASE_NOT_CONFIGURED
+- ACTION_WORKSPACE_FORBIDDEN
+- ACTION_NOT_FOUND
+- REJECTION_FORBIDDEN
+- ACTION_ALREADY_APPROVED
+- ACTION_AUTO_APPROVED
+- ACTION_CANCELLED
+- ACTION_ALREADY_EXECED_OR_QUEUED
+- ACTION_FAILED
+- ACTION_ROLLBACK_STATE
+- ACTION_NOT_REJECTABLE
+
+================================================================================
+NO DATABASE MIGRATION
+================================================================================
+
+Phase 3.6 does not add a new database migration.
+
+It uses the existing tables:
+
+- actions
+- action_events
+- workspace_members
+
+================================================================================
+NEXT PHASE
+================================================================================
+
+Phase 3.7 — Cancel Action Endpoint
+
+The cancel endpoint will be used for approved/auto_approved/queued actions that should be stopped before execution.
+
+================================================================================
+END
+================================================================================

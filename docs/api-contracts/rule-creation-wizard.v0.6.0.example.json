@@ -1,0 +1,56 @@
+{
+  "phase": "v0.6.0 Phase 7.2 Create Rule Wizard",
+  "ui": "/rules.html#ruleWizardSection",
+  "wizardSteps": [
+    "choose_action_type",
+    "choose_platform_channel",
+    "add_condition",
+    "choose_decision",
+    "set_caps",
+    "review",
+    "save_local_preview"
+  ],
+  "previewOnly": true,
+  "backendPolicyWriteEndpointAdded": false,
+  "examplePreview": {
+    "version": "0.6.0",
+    "phase": "Phase 7.2 Create Rule Wizard",
+    "previewOnly": true,
+    "persistence": "browser_local_preview_only_no_database_write",
+    "workspace_id": "current_workspace_from_session",
+    "name": "Safe content review rule",
+    "action_type": "content_publish",
+    "scope": {
+      "platform": "instagram",
+      "channel": "organic_social"
+    },
+    "conditions_json": {
+      "match": "all",
+      "conditions": [
+        {
+          "field": "risk_level",
+          "operator": "risk_below",
+          "value": "medium"
+        }
+      ],
+      "scope": {
+        "platform": "instagram",
+        "channel": "organic_social",
+        "action_type": "content_publish"
+      }
+    },
+    "decision": "ask",
+    "caps_json": {
+      "max_posts_per_day": 3,
+      "max_actions_per_hour": 20
+    },
+    "priority": 50,
+    "enabled": false,
+    "safety": {
+      "databaseWritesAttempted": false,
+      "externalWritesAttempted": false,
+      "executorRan": false,
+      "autoRunTriggered": false
+    }
+  }
+}

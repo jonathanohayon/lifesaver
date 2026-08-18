@@ -1,0 +1,37 @@
+{
+  "phase": "V2 Phase 4.6 Reject With Reason Modal",
+  "ui": {
+    "page": "actions.html",
+    "modalId": "rejectConfirmModal",
+    "endpoint": "POST /api/v1/actions/:id/reject",
+    "allowedReasons": [
+      "not_on_brand",
+      "too_risky",
+      "wrong_timing",
+      "incorrect_data",
+      "needs_edits",
+      "other"
+    ]
+  },
+  "requestExample": {
+    "rejection_reason": "Needs edits. Please make the caption shorter before proposing again."
+  },
+  "expectedSafeResponse": {
+    "success": true,
+    "data": {
+      "rejected": true,
+      "alreadyRejected": false,
+      "action": {
+        "status": "rejected"
+      },
+      "execution": {
+        "executed": false,
+        "queued": false,
+        "executorEnabled": false
+      },
+      "safety": {
+        "externalWritesEnabled": false
+      }
+    }
+  }
+}

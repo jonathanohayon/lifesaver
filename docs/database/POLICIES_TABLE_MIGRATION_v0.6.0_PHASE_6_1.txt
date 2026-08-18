@@ -1,0 +1,88 @@
+LIFE.SAVER Database Note
+Version: v0.6.0
+Phase: 6.1 Policy Table Schema
+Migration: 015_create_policies_table.sql
+
+================================================================================
+SUMMARY
+================================================================================
+
+This migration creates the policies table for the future V2 policy/rules engine.
+
+It is additive and non-destructive.
+
+================================================================================
+COMMAND
+================================================================================
+
+Run after copying the correct .env into the package folder:
+
+npm.cmd run db:status
+npm.cmd run db:migrate
+npm.cmd run db:status
+
+Expected first run:
+
+Applying migration: 015_create_policies_table.sql
+Applied migration: 015_create_policies_table.sql
+
+Expected second run:
+
+Skipping already applied migration: 015_create_policies_table.sql
+No new migrations to apply. Database is up to date.
+
+================================================================================
+CREATED TABLE
+================================================================================
+
+policies
+
+Fields:
+
+- id UUID primary key
+- workspace_id UUID references workspaces(id) on delete cascade
+- name text
+- action_type text
+- conditions_json jsonb
+- decision text
+- caps_json jsonb
+- priority integer
+- enabled boolean
+- created_by UUID references users(id) on delete set null
+- updated_by UUID references users(id) on delete set null
+- created_at timestamptz
+- updated_at timestamptz
+
+================================================================================
+INDEXES
+================================================================================
+
+- idx_policies_workspace_enabled_priority
+- idx_policies_workspace_action_enabled_priority
+- idx_policies_workspace_decision_enabled
+- idx_policies_created_by
+- idx_policies_updated_by
+
+================================================================================
+CONSTRAINTS
+================================================================================
+
+- policy name cannot be blank
+- action_type must match V2 action taxonomy
+- decision must be ask, auto_approve, or block
+- priority must be between 0 and 10000
+- conditions_json must be an object
+- caps_json must be an object
+
+================================================================================
+SAFETY
+================================================================================
+
+No destructive SQL is included.
+No V1 table is dropped.
+No existing production column is renamed.
+No existing row is deleted.
+No executor or external write behavior is enabled.
+
+Backup before production migration remains recommended.
+

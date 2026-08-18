@@ -1,0 +1,11 @@
+{
+  "success": true,
+  "data": {
+    "revenue": 9068,
+    "orders": 142,
+    "aov": 63.86,
+    "adSpend": 3210,
+    "roas": 3.4,
+    "conversionRate": 2.8
+  }
+}

@@ -1,0 +1,57 @@
+LIFE.SAVER v0.3.2 — Worker Scheduler + Automated Briefs
+
+Purpose:
+This version adds the first real worker automation foundation. The worker is a separate process from the API and frontend. It can run one-off commands for testing or cron-style scheduled jobs when intentionally enabled.
+
+What it adds:
+- Internal worker API endpoints protected by WORKER_SHARED_SECRET.
+- Worker status endpoint.
+- Worker job runner endpoint.
+- One-off worker commands for metrics, daily pipeline, weekly pipeline, daily brief only, and weekly summary only.
+- node-cron scheduler foundation.
+- Scheduled jobs remain disabled by default with WORKER_ENABLED=false.
+- System event logging for worker job started/completed/failed.
+
+Internal worker endpoints:
+- GET  /api/v1/worker/status
+- POST /api/v1/worker/run/metrics_refresh
+- POST /api/v1/worker/run/daily_brief
+- POST /api/v1/worker/run/weekly_summary
+- POST /api/v1/worker/run/daily_pipeline
+- POST /api/v1/worker/run/weekly_pipeline
+
+Security:
+- Worker endpoints require x-lifesaver-worker-secret.
+- The worker secret must not be exposed to the browser.
+- Production must use a strong WORKER_SHARED_SECRET.
+- These endpoints are not for customer/frontend use.
+
+V1 safety:
+- Worker jobs refresh read-only Triple Whale metrics.
+- Worker jobs generate internal Daily Brief / Weekly Summary records.
+- Worker jobs do not post content, send email, reply to customers, change campaigns, refund orders, or write to external platforms.
+
+Local testing:
+1. Start API:
+   npm.cmd run dev:api
+
+2. In a second terminal, run one-off status:
+   npm.cmd run worker:status
+
+3. Run one-off daily pipeline:
+   npm.cmd run worker:once:daily
+
+4. Run one-off weekly pipeline:
+   npm.cmd run worker:once:weekly
+
+Scheduled mode:
+Set WORKER_ENABLED=true in .env only when you intentionally want scheduled jobs to run, then start:
+   npm.cmd run dev:worker
+
+Default schedules:
+- WORKER_METRICS_CRON=15 * * * *
+- WORKER_DAILY_BRIEF_CRON=30 8 * * *
+- WORKER_WEEKLY_SUMMARY_CRON=0 9 * * 1
+
+Production reminder:
+The worker should run as a separate process/service from the API. On production hosting, configure API and worker as separate processes with the same DATABASE_URL, APP_ENCRYPTION_KEY, and WORKER_SHARED_SECRET.

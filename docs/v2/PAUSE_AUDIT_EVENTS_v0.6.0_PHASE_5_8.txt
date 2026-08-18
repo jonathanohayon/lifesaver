@@ -1,0 +1,73 @@
+LIFE.SAVER V2 — Phase 5.8 Pause Audit Events
+Version: v0.6.0
+Status: Completed as backend audit logging foundation
+
+PURPOSE
+Log every pause/resume change so the founder and internal team can later answer:
+- Was autonomy paused or resumed?
+- Who changed it?
+- Which scope/category was affected?
+- What reason was provided?
+- What were the before/after pause flags?
+
+EVENT STORAGE
+Pause audit events are stored in the existing system_events table.
+No new destructive migration is required.
+
+EVENT TYPES
+- autonomy_pause_enabled
+- autonomy_pause_disabled
+
+LOGGED FIELDS
+Stored as system_events columns:
+- workspace_id
+- event_type
+- severity
+- message
+- metadata
+- created_at
+
+Stored inside metadata:
+- phase
+- operation: pause/resume
+- scope: all/content/support/ads/research/dev
+- categoryAffected
+- actorUserId
+- reason
+- before pause flags
+- after pause flags
+- safety flags
+
+SAFETY FLAGS
+Every pause audit metadata object confirms:
+- autoApprovalTriggered=false
+- executorTriggered=false
+- externalWriteTriggered=false
+- resumeDoesNotExecuteWaitingActions=true
+
+IMPORTANT BEHAVIOR
+Pausing does not execute anything.
+Resuming does not execute waiting actions.
+Pause/resume APIs only update internal pause settings and log system_events.
+
+NO EXTERNAL WRITES
+Phase 5.8 does not enable:
+- executor registry
+- sandbox executor
+- real executor
+- content publishing
+- support sending
+- ad spend changes
+- campaign pause execution
+- rollback execution
+- auto-run rules
+- external write connectors
+
+QA COMMAND
+npm.cmd run autonomy:audit:test
+
+EXPECTED RESULT
+success=true
+failed=0
+
+END

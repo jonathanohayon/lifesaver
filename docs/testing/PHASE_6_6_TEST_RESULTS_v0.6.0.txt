@@ -1,0 +1,31 @@
+LIFE.SAVER v0.6.0 — Phase 6.6 Test Results
+
+Commands run successfully in clean package:
+- npm run build
+- npm run policy:cap-validation:test
+- npm run policy:evaluator:test
+- npm run policy:scope-matching:test
+- npm run policy:condition-operators:test
+- npm run policy:default-ask:test
+- npm run policy:schema:test
+- npm run policy:pause:test
+- npm run executor:pause:test
+- npm run actions:test:backend
+- npm run client:test-checklist
+- npm run security:check
+- npm run env:check
+
+Key Phase 6.6 results:
+- policy:cap-validation:test passed 14 assertions.
+- policy:evaluator:test passed 13 assertions.
+- Cap validation supports posts/day, support auto-replies/day, ad spend change/day, model cost/day, and actions/hour.
+- Cap exceeded returns block.
+- Cap usage unavailable prevents auto_approve from continuing.
+
+Expected local warnings:
+- security:check and env:check show local-development warnings if .env, DATABASE_URL, or production secrets are not present in the ZIP.
+
+Safety:
+- No executor ran.
+- No external writes were attempted.
+- No auto-run was triggered.

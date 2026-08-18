@@ -1,0 +1,25 @@
+{
+  "version": "0.6.0",
+  "phase": "Phase 7.6 Caps UI",
+  "previewOnly": true,
+  "persistence": "browser_local_preview_only_no_database_write",
+  "workspace_id": "current_workspace_from_session",
+  "name": "Global caps settings preview",
+  "caps_json": {
+    "max_posts_per_day": 3,
+    "max_support_auto_replies_per_day": 10,
+    "max_ad_spend_change_per_day": 25,
+    "max_model_tokens_per_day": 100000,
+    "max_model_cost_per_day": 10,
+    "max_actions_per_hour": 20
+  },
+  "safety": {
+    "localPreviewOnly": true,
+    "databaseWritesAttempted": false,
+    "policyEndpointCalled": false,
+    "capDatabaseSaveAttempted": false,
+    "externalWritesAttempted": false,
+    "executorRan": false,
+    "autoRunTriggered": false
+  }
+}

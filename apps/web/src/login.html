@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LIFE.SAVER — Login / Signup</title>
+<link rel="stylesheet" href="./assets/css/admin.css" />
+<link rel="stylesheet" href="./assets/css/mobile-shell.css" />
+<link rel="stylesheet" href="./assets/css/mobile-release-qa.css" />
+</head>
+<body>
+  <main class="admin-shell auth-shell">
+    <section class="topbar">
+      <div class="brand">
+        <h1>LIFE.SAVER ACCESS</h1>
+        <span>Founder login · Active Platform Conversion · v0.8.3</span>
+      </div>
+      <div class="footer-actions">
+        <a class="btn" href="./landing.html">Public Site</a>
+        <a class="btn" href="./index.html">Founder Dashboard</a>
+        <a class="btn" href="./onboarding.html">Onboarding</a>
+        <a class="btn" href="./surface-access.html">Surfaces</a>
+        <a class="btn" href="./launch-readiness.html">Launch Prep</a>
+        <a class="btn" href="./settings.html">Settings</a>
+        <a class="btn" href="./functional-audit.html">Functional Audit</a>
+        <a class="btn" href="./admin.html">Admin</a>
+      </div>
+    </section>
+
+    <section class="panel auth-panel">
+      <h2>Account Access</h2>
+      <p class="note">v0.8.3 keeps the SaaS-style signup path and adds the completed V2 operator foundation with mobile release QA. Real-world actions remain approval-gated and protected by policies, pause controls, caps, logs, and no-hidden-autonomy safeguards.</p>
+
+      <div class="auth-tabs">
+        <button class="btn primary" type="button" id="showLogin">Existing Login</button>
+        <button class="btn" type="button" id="showSignup">Create Workspace</button>
+      </div>
+
+      <form id="loginForm" class="login-form">
+        <label>
+          <span>Email</span>
+          <input id="email" type="email" autocomplete="username" required />
+        </label>
+        <label>
+          <span>Password</span>
+          <input id="password" type="password" autocomplete="current-password" required />
+        </label>
+        <button class="btn primary" type="submit" id="loginButton">Login</button>
+      </form>
+
+      <form id="signupForm" class="login-form" style="display:none">
+        <label>
+          <span>Your Name</span>
+          <input id="signupFullName" type="text" autocomplete="name" placeholder="Founder name" />
+        </label>
+        <label>
+          <span>Business / Workspace Name</span>
+          <input id="signupWorkspaceName" type="text" placeholder="Example: BudClub" />
+        </label>
+        <label>
+          <span>Email</span>
+          <input id="signupEmail" type="email" autocomplete="email" placeholder="founder@example.com" />
+        </label>
+        <label>
+          <span>Password</span>
+          <input id="signupPassword" type="password" autocomplete="new-password" placeholder="Minimum 10 characters" />
+        </label>
+        <button class="btn primary" type="submit" id="signupButton">Create Workspace</button>
+      </form>
+
+      <div class="note warn" id="loginMessage">Enter your LIFE.SAVER account credentials. Development credentials are not prefilled for security. New SaaS signup is controlled by <strong>SAAS_SIGNUP_ENABLED</strong>.</div>
+    </section>
+  </main>
+
+<script src="./assets/js/runtime-config.js"></script>
+<script src="./assets/js/login.js"></script>
+<script src="./assets/js/lifesaver-version.js"></script>
+<script src="./assets/js/lifesaver-mobile-shell.js"></script>
+</body>
+</html>

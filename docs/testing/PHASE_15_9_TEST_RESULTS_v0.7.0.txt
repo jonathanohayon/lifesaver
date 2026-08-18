@@ -1,0 +1,26 @@
+LIFE.SAVER v0.7.0 — Phase 15.9 Cost Caps + Anomaly Alerts Test Results
+
+Verified commands:
+- npm run phase15:cost-anomaly-hardening:test
+- npm run phase15:daily-action-digest:test
+- npm run phase15:voice-input:test
+- npm run phase15:proactivity-triggers:test
+- npm run phase15:memory-ui:test
+- npm run phase15:tool-routing:test
+- npm run phase14:ads-safety-qa:test
+- npm run build
+
+Coverage:
+- Health mode reports v2-phase-15-9-cost-anomaly-hardening.
+- Model cost/tokens caps evaluate correctly.
+- Executor rate cap evaluates correctly.
+- Notification send cap warning evaluates correctly.
+- Auto-action hourly/daily caps evaluate correctly.
+- Unexpected action volume alert triggers correctly.
+- API failure alert triggers correctly.
+- Cap exceeded alert triggers correctly.
+- Suspicious policy behavior alert triggers correctly.
+- Emergency safe mode blocks via safety gate.
+- force=true is ignored.
+- Secret-like input is blocked.
+- No notification send, action creation, executor call, auto-run, Claude call, or external connector call.

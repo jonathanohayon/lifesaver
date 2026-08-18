@@ -1,0 +1,45 @@
+LIFE.SAVER v0.5.2 Architecture Note
+Customer Settings + Connected Account Ownership
+
+Core decision:
+Claude is platform-owned. Triple Whale is customer/workspace-owned.
+
+Claude API:
+- Controlled by LIFE.SAVER backend/operator.
+- Stored only in backend environment variables or hosting secrets.
+- Never shown to the browser.
+- Customer does not add their own Claude API key in v1.
+- Admin may see connection/usage status later, but never the raw key.
+
+Triple Whale API:
+- Owned by the customer workspace.
+- Added by the customer from Customer Settings.
+- Scoped by authenticated token workspace_id.
+- Encrypted server-side using APP_ENCRYPTION_KEY.
+- Stored in connected_accounts.encrypted_api_key.
+- Browser receives only safe status, key hint, timestamps, and redacted metadata.
+
+New API endpoints:
+- GET /api/v1/customer-settings
+  Returns authenticated customer workspace profile, API ownership model, and allowed settings.
+
+- PATCH /api/v1/customer-settings/workspace-profile
+  Updates workspace name and metadata fields: storeDomain, timezone, currency.
+
+Permission rule:
+- Triple Whale connect/disconnect is restricted to workspace roles owner/admin.
+- This prepares the project for v0.5.3 team permissions.
+
+Database impact:
+- No new migration.
+- Uses existing workspaces.onboarding_metadata added in v0.5.0.
+- Uses existing connected_accounts metadata for ownership/audit markers.
+
+Admin rule:
+- Super Admin monitors connection status and errors.
+- Super Admin does not need raw customer API keys.
+- Connection summaries now include workspace and owner context.
+
+Safety:
+- v0.5.2 remains read, advise, and draft only.
+- No external write/action tools are added.

@@ -1,0 +1,27 @@
+LIFE.SAVER V2 PHASE 15.5 — MEMORY UI
+======================================
+
+Deliverable:
+Memory management UI.
+
+Founder controls:
+- View memory.
+- Edit memory.
+- Delete memory.
+- Approve suggested memory.
+- Disable memory item.
+
+Implementation:
+- /memory.html gives a founder-visible memory management surface.
+- Browser localStorage stores preview memory items under lifesaver_memory_ui_items.
+- API preview endpoint validates memory operations safely.
+- Disabled/archived/deleted memory is marked as not eligible for future prompt use.
+
+Endpoints:
+GET  /api/v1/orchestrator/memory-ui/status
+GET  /api/v1/orchestrator/memory-ui/report
+GET  /api/v1/orchestrator/memory-ui/example
+POST /api/v1/orchestrator/memory-ui/preview
+
+Safety statement:
+Phase 15.5 does not persist changes to the database, does not automatically capture memories, does not inject memory into Claude, does not call specialist tools, does not create actions, does not execute anything, and does not enable auto-run.

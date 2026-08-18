@@ -1,0 +1,40 @@
+LIFE.SAVER v0.3.1 — Drafts UI + Chat Draft Review Panel
+
+Purpose:
+This version makes the draft tools from v0.3.0 visible and usable in the frontend. The backend already had draft endpoints and chat auto-save logic; v0.3.1 adds dashboard/admin review surfaces.
+
+Dashboard changes:
+- Draft Engine now shows live draft counts.
+- Static demo Draft Engine and Support Drafts panels were replaced with approval-only draft UI.
+- Draft Review Panel lists recent saved drafts.
+- Chat-generated draft replies appear after the chat saves them to PostgreSQL.
+- Founder can copy drafts and update status to draft/approved/rejected.
+- Quick draft buttons create content or support reply drafts through protected endpoints.
+
+Admin changes:
+- Super Admin gets a Draft Review / Approval Queue section.
+- Admin can load, copy, create, approve, reject, and reset drafts.
+- Status changes remain internal database updates only.
+
+Security / product safety:
+- No external action is enabled.
+- Approving a draft does not publish or send anything.
+- Support reply drafts are not emailed.
+- Content drafts are not posted.
+- V1 remains read + advise + draft only.
+
+Endpoints used:
+- GET /api/v1/drafts
+- POST /api/v1/drafts/content
+- POST /api/v1/drafts/support-reply
+- PATCH /api/v1/drafts/:id/status
+
+Testing:
+1. Log in at /login.html.
+2. Open dashboard.
+3. Ask chat: “Draft an Instagram post about today’s business performance.”
+4. Confirm Draft Review Panel refreshes and shows the saved draft.
+5. Approve/reject/reset the draft.
+6. Create a quick content draft.
+7. Create a quick support reply draft.
+8. Open Super Admin and verify Draft Review / Approval Queue.

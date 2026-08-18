@@ -1,0 +1,97 @@
+/* LIFE.SAVER v0.8.3 — Mobile Operator UI Release QA
+   Final responsive hardening for settings, admin, support, notifications, launch prep, login, and shared admin pages.
+   Safety: CSS/UI only. No backend behaviour, approval logic, executor logic, or external write path changes. */
+
+:root{
+  --ls-release-touch:44px;
+  --ls-release-radius:16px;
+  --ls-release-gap:12px;
+}
+
+html,body{max-width:100%;overflow-x:hidden;}
+body{touch-action:manipulation;}
+.admin-shell,.support-shell,.notification-shell,.auth-shell{width:100%;max-width:1240px;}
+.panel,.topbar,.note,.mini,.row,.card,.notification-card,.support-error-card,.support-ticket-card{max-width:100%;}
+pre,.raw-preview,.reply-preview,.ops-json,.support-status-table strong,.notification-card strong,.notification-card span{overflow-wrap:anywhere;word-break:break-word;}
+input,select,textarea,button,.btn{min-height:var(--ls-release-touch);}
+.btn{display:inline-flex;align-items:center;justify-content:center;text-align:center;line-height:1.25;border-radius:10px;cursor:pointer;}
+.footer-actions,.sync-actions,.support-controls,.notification-controls,.auth-tabs{align-items:center;}
+.login-form input,.login-form select,.support-action-toolbar input{min-height:var(--ls-release-touch);width:100%;}
+
+.mobile-release-checklist-panel{border-color:rgba(55,224,138,.26);}
+.mobile-release-checklist-grid .note{min-height:120px;}
+
+@media(max-width:1024px){
+  .admin-shell,.support-shell,.notification-shell{gap:14px;}
+  .topbar{border-radius:var(--ls-release-radius);}
+  .panel{border-radius:var(--ls-release-radius);}
+  .grid.four,.grid.three,.grid.two,.notification-summary-grid,.support-summary-grid,.notification-pref-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+  .footer-actions,.sync-actions,.support-controls,.notification-controls{gap:9px;}
+  .support-action-toolbar{grid-template-columns:1fr!important;}
+}
+
+@media(max-width:768px){
+  body{padding:12px;}
+  .admin-shell,.support-shell,.notification-shell,.auth-shell{gap:12px;}
+  .topbar{padding:14px;}
+  .brand h1{font-size:22px;letter-spacing:2.4px;line-height:1.08;}
+  .brand span{font-size:10px;line-height:1.45;letter-spacing:1px;}
+  .grid,.grid.two,.grid.three,.grid.four,.grid.compact,.cards,.notification-summary-grid,.support-summary-grid,.notification-pref-grid,.mobile-release-checklist-grid{grid-template-columns:1fr!important;}
+  .panel{padding:14px;}
+  .value{font-size:20px;line-height:1.18;}
+  .mini strong{font-size:18px;}
+  .row{align-items:flex-start;flex-direction:column;gap:6px;}
+  .footer-actions:not(.ls-mobile-collapsible-menu),.sync-actions,.support-controls,.notification-controls,.auth-tabs{display:grid;grid-template-columns:1fr;align-items:stretch;width:100%;}
+  .footer-actions .btn,.sync-actions .btn,.support-controls .btn,.notification-controls .btn,.auth-tabs .btn,.footer-actions .badge{width:100%;}
+  .notification-hero-panel,.support-hero-panel{align-items:stretch;flex-direction:column;}
+  .notification-column,.support-column{min-height:auto;}
+  .panel-header-row{align-items:stretch;flex-direction:column;}
+  .support-status-table div{align-items:flex-start;flex-direction:column;}
+  .support-status-table strong{text-align:left;}
+  .support-ticket-card{min-height:0;}
+  .support-action-grid{grid-template-columns:1fr!important;}
+  .support-checklist{grid-template-columns:1fr!important;}
+  .notification-card-header{align-items:flex-start;flex-direction:column;}
+  .notification-card-actions{display:grid;grid-template-columns:1fr;width:100%;}
+  .notification-card-actions .btn{width:100%;}
+  .timeline-list .notification-card{margin-left:0;}
+  .timeline-list .notification-card::before,.timeline-list .notification-card::after{display:none;}
+  .auth-panel{max-width:100%;}
+  .auth-shell .topbar .footer-actions{width:100%;}
+  .raw-preview{font-size:11px;max-height:300px;}
+}
+
+@media(max-width:430px){
+  body{padding:10px;}
+  .topbar,.panel{padding:12px;}
+  .brand h1{font-size:19px;letter-spacing:1.8px;}
+  .brand span{font-size:9px;letter-spacing:.9px;}
+  .panel h2{font-size:13px;line-height:1.3;letter-spacing:1.4px;}
+  .note,.mini,.notification-card,.support-error-card,.support-ticket-card,.notification-pref{padding:11px;}
+  .btn,.badge{font-size:11px;padding:10px 12px;white-space:normal;}
+  .value{font-size:18px;}
+  .kicker{font-size:9px;}
+  .login-form{gap:12px;margin:14px 0;}
+}
+
+@media(max-width:390px){
+  body{padding:9px;}
+  .brand h1{font-size:18px;}
+  .panel{padding:11px;}
+  .note{font-size:13px;}
+  .support-pill,.notification-pill{font-size:10px;padding:5px 7px;}
+}
+
+@media(max-width:360px){
+  .brand h1{font-size:17px;letter-spacing:1.4px;}
+  .brand span{font-size:8.5px;}
+  .btn,.badge{font-size:10px;}
+  .value{font-size:17px;}
+}
+
+@media(max-width:320px){
+  body{padding:8px;}
+  .topbar,.panel{padding:10px;}
+  .brand h1{font-size:16px;}
+  .note,.mini,.notification-card,.support-error-card,.support-ticket-card{padding:10px;}
+}

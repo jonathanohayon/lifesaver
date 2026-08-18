@@ -1,0 +1,28 @@
+LIFE.SAVER UI — Action Approve Confirmation Modal
+Version: v0.6.0 Phase 4.5
+
+UI placement:
+- actions.html
+
+User flow:
+1. Founder reviews an action card or detail drawer.
+2. Founder clicks Approve.
+3. Approval confirmation modal opens.
+4. Modal explains what will happen, immediate execution status, affected platform, and risk level.
+5. Founder optionally adds an approval note.
+6. Founder clicks Final Approve.
+7. UI calls POST /api/v1/actions/:id/approve.
+8. UI reloads action cards.
+
+Safety:
+- Opening the modal does not approve.
+- Final approve records internal status only.
+- No executor is enabled.
+- No external writes are possible from this UI phase.
+- Reject remains guarded until Phase 4.6.
+
+Accessibility:
+- Modal uses role="dialog" and aria-modal="true".
+- Close and cancel controls are available.
+- Escape closes the confirmation modal.
+- Mobile layout stacks controls vertically.

@@ -1,0 +1,68 @@
+================================================================================
+LIFE.SAVER v0.7.0 — PHASE 12.1 SELECTED SUPPORT CONNECTOR PLAN
+================================================================================
+
+Purpose:
+Bring support tickets into LIFE.SAVER and later turn support drafts into proposed actions.
+
+Phase 12.1 deliverable:
+Selected support connector plan.
+
+Selected first connector:
+Gmail
+
+Initial mode:
+Read-only support ticket import planning.
+
+Reasoning:
+Gmail is the most practical first support connector because many ecommerce founders already use Gmail or Google Workspace for customer messages. It also gives LIFE.SAVER a straightforward way to model a support thread before building a full helpdesk integration.
+
+Initial future scope:
+https://www.googleapis.com/auth/gmail.readonly
+
+Future scopes not requested in Phase 12.1:
+- https://www.googleapis.com/auth/gmail.send
+- https://www.googleapis.com/auth/gmail.modify
+
+Important Google planning notes:
+- Gmail scopes can be sensitive or restricted depending on the scope.
+- Restricted scopes require Google OAuth verification.
+- If restricted Gmail data is stored or transmitted through LIFE.SAVER servers, a security assessment may be required before production/customer launch.
+
+Normalized support object direction:
+A Gmail message/thread will become a LIFE.SAVER support ticket candidate.
+
+Future normalized fields:
+- external_message_id
+- thread_id
+- from_email_hint
+- subject
+- received_at
+- snippet
+- labels
+- status
+- priority
+- draft_reply_status
+- workspace_id
+
+Future flow:
+1. Import Gmail message as support ticket.
+2. Generate support reply draft.
+3. Create proposed support_reply_send action.
+4. Require founder approval.
+5. Later send only when the roadmap explicitly allows a support send executor.
+
+Deferred connectors:
+- Zendesk
+- Gorgias
+- Help Scout
+- generic helpdesk
+- generic support inbox abstraction
+
+Safety:
+No Gmail API call is added.
+No OAuth route is added.
+No token storage is added.
+No email read is added.
+No email send is added.
+No support auto-reply is added.

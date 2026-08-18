@@ -1,0 +1,34 @@
+LIFE.SAVER v0.6.0
+Phase 7.8 — Pause Integration Display
+
+Goal:
+The founder can clearly see when pause overrides automation from the Rules page.
+
+Required example:
+“Auto-run is currently paused globally.”
+
+Implementation:
+- Adds a read-only Pause Integration Display to apps/web/src/rules.html.
+- Uses the existing autonomy status endpoint for display only.
+- Renders global pause, content pause, support pause, and ads pause state.
+- Shows a high-visibility warning when global pause is active.
+- Shows a category warning when one or more categories are paused.
+- Shows a conservative safe fallback if pause status is unavailable.
+- Adds the live pause display state to the rule simulation preview JSON.
+
+Why this matters:
+Phase 6 defined pause as a high-priority override. Phase 7.8 makes that safety rule visible to the founder before any future automation or executor work exists.
+
+Safety:
+This phase does not create policy rows, edit policies, save caps to the database, pause or resume autonomy, enable rules, enable auto-run, run executors, or write to external platforms.
+
+Files:
+- apps/web/src/rules.html
+- apps/web/src/assets/css/rules.css
+- apps/web/src/assets/js/rules.js
+- apps/api/src/modules/rules/rules.pause-integration-tests.ts
+- docs/api-contracts/pause-integration-display.v0.6.0.example.json
+- docs/testing/PHASE_7_8_TEST_RESULTS_v0.6.0.txt
+
+Next:
+Phase 7.9 — Rule History/Audit.

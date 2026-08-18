@@ -1,0 +1,32 @@
+{
+  "version": "0.6.0",
+  "phase": "V2 Phase 8.5 Sandbox Ads Executor",
+  "budget_executor": {
+    "name": "sandboxAdsBudgetExecutor",
+    "action_type": "ad_budget_adjust",
+    "returns": [
+      "fake_before_state",
+      "fake_after_state",
+      "sandbox_success"
+    ],
+    "external_ads_api_called": false,
+    "external_budget_changed": false
+  },
+  "pause_executor": {
+    "name": "sandboxAdsPauseExecutor",
+    "action_type": "ad_pause",
+    "returns": [
+      "fake_before_state",
+      "fake_after_state",
+      "sandbox_success"
+    ],
+    "external_ads_api_called": false,
+    "external_campaign_paused": false
+  },
+  "safety": {
+    "sandbox_only": true,
+    "auto_run_enabled": false,
+    "external_writes_enabled": false,
+    "real_ad_platform_calls": false
+  }
+}

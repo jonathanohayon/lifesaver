@@ -1,0 +1,79 @@
+LIFE.SAVER v0.1.2 — SaaS/Admin Foundation
+===========================================
+
+Purpose
+-------
+v0.1.2 documents and introduces the control structure required to turn LIFE.SAVER from a single-client dashboard into a future subscription SaaS product.
+
+The app is still local and mock-data based at this stage. This version does not add production authentication, live Triple Whale sync, billing, or real database writes yet. It prepares the admin/tenant thinking before database implementation.
+
+Core Product Direction
+----------------------
+V1 client delivery:
+- One founder.
+- One workspace.
+- One Triple Whale connection.
+- One LIFE.SAVER dashboard.
+- Claude assistant is server-side only.
+- Read, advise, and draft only.
+
+Future SaaS direction:
+- Many users.
+- Many workspaces.
+- Each workspace has its own connected accounts, encrypted API keys, metrics, briefs, drafts, chat history, usage logs, and subscription plan.
+- Super admin can view system health and customer/workspace status without exposing secrets.
+
+Three Application Surfaces
+--------------------------
+1. Public website
+   - Marketing site for selling LIFE.SAVER subscriptions later.
+   - Not required for v1 client delivery.
+
+2. Customer dashboard
+   - Founder sees ecommerce metrics, briefs, weekly summaries, chat, and drafts.
+   - This is the current LIFE.SAVER dashboard.
+
+3. Super admin panel
+   - Internal control area for you/team.
+   - Users, workspaces, connected accounts, sync status, AI usage, billing, system logs, error logs, and support tools.
+   - v0.1.2 introduces a mock admin foundation page at /admin.html and API overview at /api/v1/admin/overview.
+
+Data Isolation Rule
+-------------------
+Every production table that stores customer/business data must include workspace_id before SaaS launch.
+
+Examples:
+- connected_accounts.workspace_id
+- metrics_snapshots.workspace_id
+- chat_history.workspace_id
+- briefs.workspace_id
+- drafts.workspace_id
+- usage_logs.workspace_id
+- system_events.workspace_id where relevant
+
+This protects customer A from ever seeing customer B's data.
+
+Update Philosophy
+-----------------
+WordPress mental model:
+- Plugin files update.
+- Database data remains safe.
+
+LIFE.SAVER model:
+- App code is versioned and deployed.
+- PostgreSQL stores customer data.
+- Database migrations evolve schema safely.
+- Updates must not delete customer data.
+
+v0.1.2 Deliverables
+-------------------
+- /api/v1/admin/overview mock endpoint.
+- /admin.html super admin foundation page.
+- Updated dashboard wording to avoid unsafe automation language.
+- SaaS-ready database schema preview.
+- Admin architecture documentation.
+- Version bumped to 0.1.2.
+
+Next Version
+------------
+v0.1.3 should add real PostgreSQL connection support and a migration runner, then apply the SaaS-ready schema in a development database.

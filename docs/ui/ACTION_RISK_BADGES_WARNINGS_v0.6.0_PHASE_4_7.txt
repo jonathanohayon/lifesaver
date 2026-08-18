@@ -1,0 +1,40 @@
+LIFE.SAVER UI — ACTION RISK BADGES + WARNINGS
+Version: v0.6.0 Phase 4.7
+
+UI placement
+------------
+- Risk guide legend at the top of actions.html.
+- Risk badge in each action card header.
+- Risk alert panel inside high/critical action cards.
+- Risk explanation panel in the action detail drawer.
+- Risk warning boxes inside approve and reject modals.
+
+Risk visual language
+--------------------
+Low:
+- Green tone.
+- Routine review.
+
+Medium:
+- Amber tone.
+- Check brand/data/timing.
+
+High:
+- Orange tone.
+- Business-impact warning.
+
+Critical:
+- Red tone.
+- Founder-level scrutiny.
+
+Critical action examples
+------------------------
+- ad_budget_adjust
+- ad_pause
+- bulk support replies
+- refund-related support replies
+- unusual/sensitive complaints
+
+Safety note
+-----------
+Risk badges guide founder review only. They do not approve, reject, execute, publish, send, spend, pause, refund, or write externally.

@@ -1,0 +1,55 @@
+# LIFE.SAVER v0.7.0 — Phase 10.2 In-App Notification Center
+
+## Goal
+
+Show pending approvals and recent events in a dedicated in-app notification center.
+
+## Delivered
+
+- Browser page: `/notifications.html`
+- API endpoint: `GET /api/v1/notifications/center`
+- Pending approval cards
+- Recent action event timeline
+- Notification preference status snapshot
+- Read-only safety copy
+- Link back to full approval queue
+
+## Pending approval behavior
+
+The center displays actions with:
+
+- `status IN ('proposed', 'approval_required')`
+- `approval_required = true`
+- workspace membership check
+- risk-priority sorting
+
+The UI does not approve or reject directly. It links to the full approval queue so confirmation controls remain centralized.
+
+## Recent event behavior
+
+The center displays recent `action_events` joined to their action summary. It returns browser-safe data only:
+
+- event type
+- from/to status
+- action title/type/status/risk
+- safe message
+- safe metadata preview
+- created time
+
+## Safety
+
+Phase 10.2 does not send email or Slack messages. It does not create notification delivery rows or worker jobs. It does not approve, execute, publish, rollback, or call external services.
+
+The notification center response intentionally excludes:
+
+- full action payload JSON
+- raw LinkedIn OAuth tokens
+- encrypted token values
+- raw external platform responses
+- rollback payloads
+- Authorization headers
+- secret-like metadata keys
+
+## Next phase
+
+Phase 10.3 should be provided by the founder/client roadmap before implementation.

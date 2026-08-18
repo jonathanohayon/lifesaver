@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LIFE.SAVER — Actions Approval Queue</title>
+<link rel="stylesheet" href="./assets/css/admin.css" />
+<link rel="stylesheet" href="./assets/css/actions.css" />
+<link rel="stylesheet" href="./assets/css/mobile-shell.css" />
+<link rel="stylesheet" href="./assets/css/mobile-release-qa.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to approval queue</a>
+  <main class="admin-shell actions-shell" id="main-content" tabindex="-1">
+    <section class="topbar">
+      <div class="brand">
+        <h1>LIFE.SAVER ACTIONS</h1>
+        <span>Approval queue · Active Platform Conversion · v0.8.3</span>
+      </div>
+      <div class="footer-actions">
+        <a class="btn" href="./index.html">← Dashboard</a>
+        <a class="btn" href="./settings.html">Settings</a>
+        <a class="btn" href="./memory.html">Memory</a>
+        <a class="btn" href="./rules.html">Rules</a>
+        <a class="btn" href="./notifications.html">Notifications</a>
+        <a class="btn" href="./functional-audit.html">Functional Audit</a>
+        <a class="btn" href="./admin.html">Super Admin</a>
+        <a class="btn" href="./launch-readiness.html">Launch Prep</a>
+        <a class="btn" href="./login.html">Login</a>
+        <button class="btn" id="logoutBtn" type="button">Logout</button>
+        <span class="badge" id="authState">AUTH CHECKING</span>
+        <span class="badge" id="loadState">ACTIONS READY</span>
+        <span class="badge" id="refreshState">POLLING READY</span>
+      </div>
+    </section>
+
+    <section class="grid four compact">
+      <div class="panel"><div class="kicker">Logged In As</div><div class="value" id="loggedInUser">—</div><small id="loggedInWorkspace">—</small></div>
+      <div class="panel"><div class="kicker">Active Status Filter</div><div class="value green" id="activeStatusLabel">All</div><small>Read-only queue filter.</small></div>
+      <div class="panel"><div class="kicker">Visible Actions</div><div class="value" id="visibleActionCount">0</div><small>Workspace scoped.</small></div>
+      <div class="panel"><div class="kicker">Last Refresh</div><div class="value green" id="lastRefreshTime">—</div><small>Manual + polling.</small></div>
+    </section>
+
+    <section class="panel" id="actionFiltersPanel">
+      <h2>Approval Queue Action Cards</h2>
+      <p class="note">v0.8.3 makes the approval queue phone-ready: mobile action cards, full-screen safe review panels, tap-friendly approve/reject/cancel controls, readable badges, and stacked sandbox result logs. Existing backend approval/executor rules are unchanged.</p>
+
+      
+      <nav class="actions-mobile-command-bar" aria-label="Mobile approval queue shortcuts">
+        <a href="#statusFilterTabs">Statuses</a>
+        <a href="#actionAdvancedFilters">Filters</a>
+        <a href="#actionsList">Action Cards</a>
+        <a href="#actionsMobileSafety">Safety</a>
+      </nav>
+
+      <div class="status-filter-tabs" id="statusFilterTabs" aria-label="Primary status filters">
+        <button class="status-filter-tab is-active" type="button" data-status-filter="">All</button>
+        <button class="status-filter-tab" type="button" data-status-filter="proposed">Proposed</button>
+        <button class="status-filter-tab" type="button" data-status-filter="approved">Approved</button>
+        <button class="status-filter-tab" type="button" data-status-filter="rejected">Rejected</button>
+        <button class="status-filter-tab" type="button" data-status-filter="executed">Executed</button>
+        <button class="status-filter-tab" type="button" data-status-filter="failed">Failed</button>
+        <button class="status-filter-tab" type="button" data-status-filter="cancelled">Cancelled</button>
+        <button class="status-filter-tab" type="button" data-status-filter="rolled_back">Rolled Back</button>
+      </div>
+      <p class="note compact-note" id="statusFilterHelp">Showing all workspace-scoped actions. Filters are read-only. Approval and rejection require confirmation and cannot execute anything.</p>
+      <div class="live-refresh-panel" aria-label="Live refresh controls">
+        <div class="live-refresh-copy">
+          <div class="kicker">Live Refresh</div>
+          <strong id="autoRefreshState">Polling ON</strong>
+          <small id="nextRefreshText">Checking for new actions every 60 seconds. Pauses while modals are open.</small>
+        </div>
+        <div class="live-refresh-controls">
+          <label for="pollingIntervalSelect">
+            <span>Polling interval</span>
+            <select id="pollingIntervalSelect">
+              <option value="60000" selected>60 seconds</option>
+              <option value="45000">45 seconds</option>
+              <option value="30000">30 seconds</option>
+            </select>
+          </label>
+          <button class="btn" id="toggleAutoRefreshBtn" type="button" aria-pressed="true">Pause Auto Refresh</button>
+        </div>
+      </div>
+
+      <div class="mobile-approval-panel" aria-label="Mobile approval UX checks">
+        <div class="mobile-approval-copy">
+          <div class="kicker">Mobile Approval UX</div>
+          <strong>Phone-ready review controls</strong>
+          <small>Large tap targets, full-width modal actions, readable rejection inputs, and overflow-safe drawers for founder review on mobile.</small>
+        </div>
+        <div class="mobile-approval-checks" aria-label="Mobile approval checks">
+          <span>Large buttons</span>
+          <span>Readable modals</span>
+          <span>No horizontal overflow</span>
+          <span>Easy rejection reason</span>
+        </div>
+      </div>
+
+      <div class="ui-qa-panel" aria-label="Approval UI QA and accessibility checks">
+        <div class="ui-qa-copy">
+          <div class="kicker">UI QA + Accessibility</div>
+          <strong>Founder-safe review experience</strong>
+          <small>Loading, empty, error, focus, keyboard, readability, and responsive layout states are now explicitly supported and documented.</small>
+        </div>
+        <div class="ui-qa-checks" aria-label="Approval UI QA checks">
+          <span>Loading states</span>
+          <span>Empty states</span>
+          <span>Error states</span>
+          <span>Focus states</span>
+          <span>Keyboard support</span>
+          <span>Readable text</span>
+          <span>No broken layout</span>
+        </div>
+      </div>
+
+      <div class="risk-guide" aria-label="Risk badge guide">
+        <div class="risk-guide-item risk-low"><span class="risk-dot"></span><strong>Low</strong><small>Routine review</small></div>
+        <div class="risk-guide-item risk-medium"><span class="risk-dot"></span><strong>Medium</strong><small>Check brand/data</small></div>
+        <div class="risk-guide-item risk-high"><span class="risk-dot"></span><strong>High</strong><small>Business impact</small></div>
+        <div class="risk-guide-item risk-critical"><span class="risk-dot"></span><strong>Critical</strong><small>Founder scrutiny</small></div>
+      </div>
+      <div class="actions-toolbar" id="actionAdvancedFilters" aria-label="Advanced action filters">
+        <label>
+          <span>Advanced Status</span>
+          <select id="statusFilter">
+            <option value="">All statuses</option>
+            <option value="proposed">Proposed</option>
+            <option value="approval_required">Approval Required</option>
+            <option value="auto_approved">Auto Approved</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="queued">Queued</option>
+            <option value="executing">Executing</option>
+            <option value="executed">Executed</option>
+            <option value="failed">Failed</option>
+            <option value="rollback_requested">Rollback Requested</option>
+            <option value="rolled_back">Rolled Back</option>
+          </select>
+        </label>
+        <label>
+          <span>Type</span>
+          <select id="typeFilter">
+            <option value="">All types</option>
+            <option value="content_publish">Content Publish</option>
+            <option value="support_reply_send">Support Reply Send</option>
+            <option value="ad_budget_adjust">Ad Budget Adjust</option>
+            <option value="ad_pause">Ad Pause</option>
+            <option value="research_task">Research Task</option>
+            <option value="dev_task">Dev Task</option>
+            <option value="notification_send">Notification Send</option>
+            <option value="rollback_action">Rollback Action</option>
+          </select>
+        </label>
+        <label>
+          <span>Risk</span>
+          <select id="riskFilter">
+            <option value="">All risk levels</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            <option value="critical">Critical</option>
+          </select>
+        </label>
+        <button class="btn primary" id="refreshActionsBtn" type="button">Refresh Actions</button>
+      </div>
+      <div class="note" id="actionsMessage" role="status" aria-live="polite">Loading actions…</div>
+    </section>
+
+    <section class="actions-grid actions-mobile-card-list" id="actionsList" aria-live="polite" aria-busy="true" tabindex="-1">
+      <article class="action-card action-card-loading">
+        <div class="action-card-header"><span class="action-pill">LOADING</span><span class="action-pill risk-medium">SAFE</span></div>
+        <h3>Loading action cards…</h3>
+        <p>Please wait while LIFE.SAVER reads your workspace-scoped approval queue.</p>
+      </article>
+    </section>
+
+    <section class="panel" id="actionsMobileSafety">
+      <h2>v0.8.3 Mobile Actions Safety Boundary</h2>
+      <div class="grid two">
+        <p class="note green-note"><strong>Allowed in this phase:</strong><br>Render status filters, action cards, safe detail drawer, approve/reject/cancel confirmation surfaces, risk badges/warnings, manual refresh, safe 30–60 second polling, mobile UX, and UI QA/accessibility states. Existing backend approval/executor behavior is unchanged.</p>
+        <p class="note warn"><strong>Not allowed yet:</strong><br>No executor polling, no accidental approval, no execution, no publish/send/spend/pause/rollback, and no external platform writes. Keyboard/mobile controls still require final confirmation and only use existing safe internal endpoints.</p>
+      </div>
+    </section>
+  </main>
+
+  <div class="action-detail-overlay" id="actionDetailOverlay" hidden>
+    <aside class="action-detail-drawer" id="actionDetailDrawer" role="dialog" aria-modal="true" aria-labelledby="actionDetailTitle" aria-describedby="actionDetailSubtitle" tabindex="-1">
+      <div class="action-detail-head">
+        <div>
+          <div class="kicker">Action Detail</div>
+          <h2 id="actionDetailTitle">Loading action…</h2>
+          <p id="actionDetailSubtitle">Workspace-scoped safe review drawer</p>
+        </div>
+        <button class="btn" id="closeActionDetailBtn" type="button" aria-label="Close action detail">Close</button>
+      </div>
+      <div class="action-detail-status-row" id="actionDetailBadges"></div>
+      <div class="action-detail-body" id="actionDetailBody">
+        <div class="note">Loading detail…</div>
+      </div>
+      <div class="action-detail-footer">
+        <button class="btn primary" data-action-control="approve" type="button">Approve</button>
+        <button class="btn reject" data-action-control="reject" type="button">Reject</button>
+        <button class="btn cancel" data-action-control="cancel" type="button">Cancel</button>
+        <span class="action-safe-lock">SAFE: Result logs are visible when stored. Sandbox only; no real executor or external write is enabled.</span>
+      </div>
+    </aside>
+  </div>
+
+
+  <div class="approval-confirm-overlay" id="approvalConfirmOverlay" hidden>
+    <div class="approval-confirm-modal" id="approvalConfirmModal" role="dialog" aria-modal="true" aria-labelledby="approvalConfirmTitle" aria-describedby="approvalConfirmSubtitle approvalConfirmMessage" tabindex="-1">
+      <div class="approval-confirm-head">
+        <div>
+          <div class="kicker">Approval Confirmation</div>
+          <h2 id="approvalConfirmTitle">Confirm internal approval</h2>
+          <p id="approvalConfirmSubtitle">Review the safety details before approving.</p>
+        </div>
+        <button class="btn" id="closeApprovalConfirmBtn" type="button" aria-label="Close approval confirmation">Close</button>
+      </div>
+      <div class="approval-confirm-body">
+        <div class="approval-warning">This approval records an internal LIFE.SAVER decision only. It does not publish, send, spend, pause, refund, edit products, or write to any external platform.</div>
+        <div class="approval-confirm-grid">
+          <div class="approval-confirm-item"><span>What will happen</span><strong id="approveWhatHappens">—</strong></div>
+          <div class="approval-confirm-item"><span>Execute immediately?</span><strong id="approveExecutesImmediately">No</strong></div>
+          <div class="approval-confirm-item"><span>Platform affected</span><strong id="approvePlatformAffected">—</strong></div>
+          <div class="approval-confirm-item"><span>Risk level</span><strong id="approveRiskLevel">—</strong></div>
+        </div>
+        <div class="risk-warning-box risk-warning-medium" id="approveRiskWarning"><strong>Risk Review</strong><span>Risk details will load here before final approval.</span></div>
+        <label class="approval-note-label" for="approvalNoteInput">
+          <span>Approval note optional</span>
+          <textarea id="approvalNoteInput" rows="3" maxlength="1000" placeholder="Example: Approved for internal queue review only. No execution requested."></textarea>
+        </label>
+        <p class="note compact-note" id="approvalConfirmMessage">Final approval is protected by workspace permissions and backend status-transition checks.</p>
+      </div>
+      <div class="approval-confirm-footer">
+        <button class="btn" id="cancelApprovalConfirmBtn" type="button">Cancel</button>
+        <button class="btn primary mobile-final-action" id="finalApproveActionBtn" type="button">Final Approve</button>
+        <span class="action-safe-lock">SAFE: Final approve does not execute external actions. Sandbox result logs appear only after approved backend sandbox flow stores them.</span>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="cancel-confirm-overlay" id="cancelConfirmOverlay" hidden>
+    <div class="cancel-confirm-modal" id="cancelConfirmModal" role="dialog" aria-modal="true" aria-labelledby="cancelConfirmTitle" aria-describedby="cancelConfirmSubtitle cancelConfirmMessage" tabindex="-1">
+      <div class="cancel-confirm-head">
+        <div>
+          <div class="kicker">Internal Cancellation</div>
+          <h2 id="cancelConfirmTitle">Cancel action</h2>
+          <p id="cancelConfirmSubtitle">Stop an eligible pre-execution action internally.</p>
+        </div>
+        <button class="btn" id="closeCancelConfirmBtn" type="button" aria-label="Close cancel confirmation">Close</button>
+      </div>
+      <div class="cancel-confirm-body">
+        <div class="cancel-warning">This cancellation is internal to LIFE.SAVER. It does not publish, send, spend, pause, refund, edit products, rollback, or write to any external platform.</div>
+        <div class="cancel-confirm-grid">
+          <div class="cancel-confirm-item"><span>What will happen</span><strong id="cancelWhatHappens">—</strong></div>
+          <div class="cancel-confirm-item"><span>Current status</span><strong id="cancelCurrentStatus">—</strong></div>
+          <div class="cancel-confirm-item"><span>Platform affected</span><strong id="cancelPlatformAffected">—</strong></div>
+          <div class="cancel-confirm-item"><span>Risk level</span><strong id="cancelRiskLevel">—</strong></div>
+        </div>
+        <div class="risk-warning-box risk-warning-medium" id="cancelRiskWarning"><strong>Risk Review</strong><span>Risk details will load here before final cancellation.</span></div>
+        <label class="cancel-reason-label" for="cancelReasonDetails">
+          <span>Cancellation note optional</span>
+          <textarea id="cancelReasonDetails" rows="3" maxlength="1000" placeholder="Example: Founder cancelled this pending action before execution."></textarea>
+        </label>
+        <p class="note compact-note" id="cancelConfirmMessage">Final cancel is protected by workspace permissions and backend status-transition checks.</p>
+      </div>
+      <div class="cancel-confirm-footer">
+        <button class="btn" id="dismissCancelConfirmBtn" type="button">Back</button>
+        <button class="btn cancel mobile-final-action" id="finalCancelActionBtn" type="button">Final Cancel</button>
+        <span class="action-safe-lock">SAFE: Final cancel only changes an eligible internal LIFE.SAVER action status.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="reject-confirm-overlay" id="rejectConfirmOverlay" hidden>
+    <div class="reject-confirm-modal" id="rejectConfirmModal" role="dialog" aria-modal="true" aria-labelledby="rejectConfirmTitle" aria-describedby="rejectConfirmSubtitle rejectConfirmMessage" tabindex="-1">
+      <div class="reject-confirm-head">
+        <div>
+          <div class="kicker">Reject With Reason</div>
+          <h2 id="rejectConfirmTitle">Reject action</h2>
+          <p id="rejectConfirmSubtitle">Capture the founder decision before rejection.</p>
+        </div>
+        <button class="btn" id="closeRejectConfirmBtn" type="button" aria-label="Close reject confirmation">Close</button>
+      </div>
+      <div class="reject-confirm-body">
+        <div class="reject-warning">This rejection records an internal LIFE.SAVER decision only. It does not publish, send, spend, pause, refund, edit products, or write to any external platform.</div>
+        <div class="reject-confirm-grid">
+          <div class="reject-confirm-item"><span>What will happen</span><strong id="rejectWhatHappens">—</strong></div>
+          <div class="reject-confirm-item"><span>Current status</span><strong id="rejectCurrentStatus">—</strong></div>
+          <div class="reject-confirm-item"><span>Platform affected</span><strong id="rejectPlatformAffected">—</strong></div>
+          <div class="reject-confirm-item"><span>Risk level</span><strong id="rejectRiskLevel">—</strong></div>
+        </div>
+        <div class="risk-warning-box risk-warning-medium" id="rejectRiskWarning"><strong>Risk Review</strong><span>Risk details will load here before final rejection.</span></div>
+        <label class="reject-reason-label" for="rejectionReasonSelect">
+          <span>Rejection reason</span>
+          <select id="rejectionReasonSelect">
+            <option value="not_on_brand">Not on brand</option>
+            <option value="too_risky">Too risky</option>
+            <option value="wrong_timing">Wrong timing</option>
+            <option value="incorrect_data">Incorrect data</option>
+            <option value="needs_edits">Needs edits</option>
+            <option value="other">Other</option>
+          </select>
+        </label>
+        <label class="reject-reason-label" for="rejectionReasonDetails">
+          <span>Reason note optional</span>
+          <textarea id="rejectionReasonDetails" rows="3" maxlength="1200" placeholder="Example: Needs edits before I approve this for internal review."></textarea>
+        </label>
+        <p class="note compact-note" id="rejectConfirmMessage">Final reject is protected by workspace permissions and backend status-transition checks.</p>
+      </div>
+      <div class="reject-confirm-footer">
+        <button class="btn" id="cancelRejectConfirmBtn" type="button">Cancel</button>
+        <button class="btn reject mobile-final-action" id="finalRejectActionBtn" type="button">Final Reject</button>
+        <span class="action-safe-lock">SAFE: Final reject does not execute external actions.</span>
+      </div>
+    </div>
+  </div>
+
+<script src="./assets/js/runtime-config.js"></script>
+<script src="./assets/js/action-card.js"></script>
+<script src="./assets/js/actions.js"></script>
+<script src="./assets/js/lifesaver-version.js"></script>
+<script src="./assets/js/lifesaver-mobile-shell.js"></script>
+</body>
+</html>

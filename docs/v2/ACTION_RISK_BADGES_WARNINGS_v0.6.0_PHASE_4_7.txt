@@ -1,0 +1,76 @@
+LIFE.SAVER V2 — PHASE 4.7
+Action Risk Badges + Warnings
+Version: v0.6.0
+
+Purpose
+-------
+Give the founder a clear visual risk signal before approving or rejecting an action.
+
+Risk levels
+-----------
+1. Low
+   - Routine internal proposal.
+   - Still requires founder review.
+
+2. Medium
+   - Requires careful review of brand fit, timing, customer context, and source data.
+
+3. High
+   - High-impact business action.
+   - Review payload, platform, and expected effect carefully.
+
+4. Critical
+   - Founder-level scrutiny required.
+   - Never auto-run without explicit policy, hard caps, pause switch, audit logging, and executor safeguards.
+
+Critical warning triggers
+-------------------------
+The UI highlights critical warnings for:
+- Ad spend changes.
+- Bulk support sends.
+- Refund-related replies.
+- Unusual or sensitive customer complaints.
+
+Implementation
+--------------
+Phase 4.7 adds risk badge UI to:
+- Action cards.
+- Action detail drawer.
+- Approve confirmation modal.
+- Reject-with-reason modal.
+- Risk guide legend on actions.html.
+
+Files changed
+-------------
+- apps/web/src/actions.html
+- apps/web/src/assets/css/actions.css
+- apps/web/src/assets/js/action-card.js
+- apps/web/src/assets/js/actions.js
+- packages/shared/src/action-risk-badges.ts
+- packages/shared/src/index.ts
+
+Safety boundary
+---------------
+This phase is UI-only.
+It does not add executors.
+It does not publish content.
+It does not send support replies.
+It does not change ad spend.
+It does not pause campaigns.
+It does not write to external platforms.
+
+Approval and rejection still only record internal LIFE.SAVER status changes through existing Phase 3 endpoints.
+
+Testing
+-------
+1. Run db:seed:actions:local.
+2. Open actions.html.
+3. Confirm risk badges appear on action cards.
+4. Confirm high/critical warnings appear where applicable.
+5. Open action detail drawer.
+6. Confirm risk explanation includes risk level, critical triggers, and review rule.
+7. Open approve modal.
+8. Confirm risk warning appears before final approval.
+9. Open reject modal.
+10. Confirm risk warning appears before final rejection.
+11. Confirm no external write happens.

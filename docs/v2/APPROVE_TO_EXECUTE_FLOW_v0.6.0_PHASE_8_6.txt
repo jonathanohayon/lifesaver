@@ -1,0 +1,75 @@
+LIFE.SAVER V2 — Phase 8.6 Approve-to-Execute Flow
+==================================================
+
+Goal
+----
+Action moves from proposed to approved to executed using a sandbox executor.
+
+Deliverable
+-----------
+Full sandbox lifecycle.
+
+Implemented lifecycle
+---------------------
+- proposed
+- approved
+- executing
+- executed
+
+Implemented module
+------------------
+- apps/api/src/modules/executors/executor.sandbox-lifecycle.ts
+
+The lifecycle runner resolves a sandbox executor for the action type, validates the payload, executes the sandbox executor, and returns a result storage preview matching the existing action_results table shape.
+
+Supported sandbox action types
+------------------------------
+- content_publish -> sandboxContentExecutor
+- support_reply_send -> sandboxSupportExecutor
+- ad_budget_adjust -> sandboxAdsBudgetExecutor
+- ad_pause -> sandboxAdsPauseExecutor
+
+Unsupported action types
+------------------------
+- research_task
+- dev_task
+- notification_send
+- rollback_action
+
+Unsupported action types are blocked by the lifecycle and do not move status.
+
+Result storage preview
+----------------------
+The lifecycle result includes a preview with:
+- executor_name
+- result_status
+- external_id
+- external_url
+- result_summary
+- rollback_supported
+- rollback_payload
+- metadata_json
+
+Important: this is a safe preview for the lifecycle. It is not a real external ID or real external URL.
+
+Safety rules
+------------
+- Sandbox-only.
+- No social platform API call.
+- No email/helpdesk API call.
+- No ads platform API call.
+- No real budget change.
+- No real campaign pause.
+- No real content publishing.
+- No real support sending.
+- No real rollback execution.
+- No auto-run execution.
+- No external writes.
+
+Founder-facing meaning
+----------------------
+The founder can now test the V2 approval-to-execution shape safely. LIFE.SAVER can show what would happen after approval while proving the result is sandbox-only.
+
+Example wording
+---------------
+"This Instagram content action was approved, executed in sandbox, and produced a fake sandbox post ID. No external platform was called."

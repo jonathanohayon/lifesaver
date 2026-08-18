@@ -1,0 +1,45 @@
+{
+  "statusEndpoint": "GET /api/v1/support/bulk-send-guard/status",
+  "exampleEndpoint": "GET /api/v1/support/bulk-send-guard/example",
+  "previewEndpoint": "POST /api/v1/support/bulk-send-guard/preview",
+  "healthMode": "v2-phase-13-6-no-bulk-sends",
+  "previewRequestExample": {
+    "actionType": "support_reply_send",
+    "provider": "gmail",
+    "recipientCount": 1,
+    "threadCount": 1,
+    "ticketCount": 1,
+    "messageCount": 1,
+    "hasCc": false,
+    "hasBcc": false,
+    "hasAttachments": false,
+    "bulkModeRequested": false,
+    "sendAllRequested": false,
+    "audienceSegmentPresent": false,
+    "templateSendRequested": false
+  },
+  "safeResponseShape": {
+    "allowedToContinue": true,
+    "bulkSendDetected": false,
+    "decision": "single_recipient_send_allowed_to_continue",
+    "safety": {
+      "guardOnly": true,
+      "emailSent": false,
+      "gmailApiCalled": false,
+      "bulkSendSupportedThisPhase": false,
+      "currentExecutorSingleRecipientOnly": true,
+      "rawProviderPayloadReturned": false,
+      "rawTokenReturned": false,
+      "rawMimeReturned": false
+    }
+  },
+  "blockedBulkExample": {
+    "recipientCount": 25,
+    "threadCount": 25,
+    "ticketCount": 25,
+    "bulkModeRequested": true,
+    "expectedDecision": "blocked_bulk_send_requires_explicit_approval",
+    "emailSent": false,
+    "gmailApiCalled": false
+  }
+}

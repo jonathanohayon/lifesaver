@@ -1,0 +1,39 @@
+{
+  "version": "0.6.0",
+  "phase": "V2 Phase 4.5 Approve Confirmation Modal",
+  "page": "actions.html",
+  "modal": {
+    "opensFrom": ["action_card_approve_button", "detail_drawer_approve_button"],
+    "shows": [
+      "what_will_happen",
+      "executes_immediately",
+      "platform_affected",
+      "risk_level",
+      "final_approve_button"
+    ],
+    "approvableStatuses": ["proposed", "approval_required", "auto_approved"],
+    "finalApproveEndpoint": "POST /api/v1/actions/:id/approve",
+    "requestBody": {
+      "approval_note": "Approved from Phase 4.5 confirmation modal. No execution requested."
+    }
+  },
+  "expectedApproveResponseSafety": {
+    "execution.executed": false,
+    "execution.queued": false,
+    "execution.executorEnabled": false,
+    "safety.externalWritesEnabled": false
+  },
+  "notEnabled": [
+    "one_click_approval",
+    "reject_with_reason_modal",
+    "executor_registry",
+    "sandbox_executor",
+    "real_executor",
+    "content_publishing",
+    "support_sending",
+    "ad_budget_changes",
+    "campaign_pause",
+    "external_writes",
+    "rollback_execution"
+  ]
+}

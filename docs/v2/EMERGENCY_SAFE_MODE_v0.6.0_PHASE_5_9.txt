@@ -1,0 +1,27 @@
+LIFE.SAVER V2 — Phase 5.9 Emergency Safe Mode
+
+Goal
+Add a backend emergency override using EMERGENCY_SAFE_MODE=true.
+
+When active
+- All future executor execution is blocked.
+- Policy evaluation must never auto-approve.
+- Admin overview returns an emergencySafeMode warning object.
+- Admin page shows a visible warning banner.
+- Proposed actions may still be reviewed internally.
+- Disabling emergency safe mode does not execute waiting actions.
+
+Environment variables
+EMERGENCY_SAFE_MODE=false
+EMERGENCY_SAFE_MODE_REASON=Emergency safe mode is active. All executor execution is blocked.
+
+Safety boundary
+This phase does not add executors, external write connectors, auto-run rules, publishing, support sending, ad spend changes, campaign pauses, rollback execution, refunds, or product edits.
+
+Testing
+npm.cmd run emergency:safe-mode:test
+npm.cmd run executor:pause:test
+npm.cmd run policy:pause:test
+
+Expected
+All tests pass. If EMERGENCY_SAFE_MODE=true, executor/policy paths must fail closed and admin must surface the warning.

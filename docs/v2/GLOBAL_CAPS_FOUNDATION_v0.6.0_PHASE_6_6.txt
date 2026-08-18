@@ -1,0 +1,35 @@
+LIFE.SAVER v0.6.0 — Phase 6.6 Global Caps Foundation
+
+Purpose:
+Add cap validation logic to the V2 policy/rules foundation before any executor or auto-run feature exists.
+
+Supported caps:
+- max_posts_per_day
+- max_support_auto_replies_per_day
+- max_ad_spend_change_per_day
+- max_model_cost_per_day
+- max_actions_per_hour
+
+Files:
+- apps/api/src/modules/policies/policy.cap-validation.ts
+- apps/api/src/modules/policies/policy.cap-validation-tests.ts
+- apps/api/src/modules/policies/policy.evaluator.ts
+- apps/api/src/modules/policies/policy.repository.ts
+- packages/shared/src/policy-cap-validation.ts
+
+Policy evaluator integration:
+- If no policy matches: default ask applies and cap_status is not_applicable_no_policy_match.
+- If a matched policy has no caps: cap_status is no_caps_defined.
+- If caps exist and usage is available: cap_status is caps_ok or cap_exceeded.
+- If caps exist and usage is unavailable: cap_status is cap_usage_unavailable.
+- cap_exceeded forces decision=block.
+- cap_usage_unavailable downgrades auto_approve to ask.
+
+Safety:
+- Cap validation is internal only.
+- It does not queue, execute, publish, send, spend, pause campaigns, refund, edit products, roll back, or write externally.
+- Pause and emergency safe mode still override policy and cap decisions.
+- executorExecutionAllowed remains false.
+
+Test command:
+npm.cmd run policy:cap-validation:test

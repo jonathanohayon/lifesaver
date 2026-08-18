@@ -1,0 +1,43 @@
+PHASE 10.5 — NOTIFICATION EVENT TRIGGERS
+=========================================
+
+Goal
+Create the service layer that decides when LIFE.SAVER should notify the founder about approval-related action events.
+
+Trigger types
+1. action_proposed
+   - Triggered when an approval-required action is in proposed or approval_required state.
+
+2. action_failed
+   - Triggered when an action status is failed, or latest lifecycle event is execution_failed / rollback_failed.
+
+3. high_risk_action_waiting
+   - Triggered when a high or critical risk action is waiting for approval.
+
+4. approval_reminder_needed
+   - Triggered when an approval-required action has waited longer than approval_escalation_minutes and max_escalations is not reached.
+
+Preferences used
+- in_app_enabled decides whether an in-app notification candidate is produced.
+- email_enabled decides whether an email candidate is produced.
+- slack remains false and planned later.
+- quiet hours mark whether email may be delayed later; no scheduling is implemented in this phase.
+- escalation timing decides reminder candidate status.
+
+Endpoints
+- GET /api/v1/notifications/triggers/status
+- GET /api/v1/notifications/triggers/preview
+
+Security and safety
+- Trigger service returns preview/candidate data only.
+- It does not send email.
+- It does not send Slack.
+- It does not call external notification services.
+- It does not approve, reject, execute, publish, rollback, or mutate external platforms.
+- It does not expose action payload JSON, OAuth tokens, raw platform responses, rollback payloads, or secrets.
+
+Why this phase matters
+Phase 10.1 stored preferences.
+Phase 10.2 displayed in-app notification information.
+Phase 10.3 created a safe email template.
+Phase 10.5 now adds the event trigger service that future phases can use before real delivery workers/providers are added.

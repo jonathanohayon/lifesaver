@@ -1,0 +1,57 @@
+{
+  "endpoint": "GET /api/v1/actions/content-publish-caps/status",
+  "version": "0.7.0",
+  "phase": "v0.7.0_phase_9_8",
+  "healthMode": "v2-phase-9-8-rate-post-caps",
+  "selectedPlatform": "linkedin",
+  "readOnly": true,
+  "caps": {
+    "workspaceMaxPostsPerDay": 3,
+    "workspaceMaxPostsPerHour": 1,
+    "linkedinMaxPostsPerDay": 3,
+    "linkedinMaxPostsPerHour": 1,
+    "accountMaxPostsPerDay": 3,
+    "accountMaxPostsPerHour": 1,
+    "countOnlySuccessfulPublishes": true,
+    "source": "environment"
+  },
+  "windows": {
+    "hourly": "rolling 60 minutes",
+    "daily": "rolling 24 hours"
+  },
+  "platformSpecificLimits": {
+    "linkedinOfficialNumericLimitPublished": false,
+    "linkedinLimitSource": "LinkedIn Developer Portal Analytics for the connected app/endpoints",
+    "handlesPlatform429AsFailure": true,
+    "note": "LinkedIn says standard rate limits are not published in documentation and should be checked in the Developer Portal Analytics tab. LIFE.SAVER therefore enforces conservative internal hourly/daily caps before calling LinkedIn and still treats any LinkedIn 429 response as a failed/blocked platform-rate-limit outcome."
+  },
+  "enforcementOrder": [
+    "workspace hourly cap",
+    "LinkedIn platform hourly cap",
+    "LinkedIn account hourly cap",
+    "workspace daily cap",
+    "LinkedIn platform daily cap",
+    "LinkedIn account daily cap",
+    "LinkedIn 429 response still fails safely if platform limit is hit after internal caps pass"
+  ],
+  "storage": {
+    "countedTable": "action_results",
+    "countedStatus": "success",
+    "countedExecutorName": "linkedinManualApprovedContentExecutor",
+    "countsOnlyConfirmedPublishes": true
+  },
+  "safety": {
+    "preventsTooManyPosts": true,
+    "autoRunEnabled": false,
+    "manualApprovalStillRequired": true,
+    "externalApiCalledDuringCapCheck": false,
+    "rawTokenReturned": false
+  },
+  "neverReturns": [
+    "raw OAuth access token",
+    "raw refresh token",
+    "Authorization header",
+    "raw LinkedIn API response body",
+    "secrets"
+  ]
+}

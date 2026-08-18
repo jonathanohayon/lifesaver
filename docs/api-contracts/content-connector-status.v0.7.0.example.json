@@ -1,0 +1,40 @@
+{
+  "success": true,
+  "data": {
+    "provider": "linkedin",
+    "connectionKind": "member",
+    "status": "connected",
+    "connected": true,
+    "accountHint": "Muhammad Tahir",
+    "grantedScopes": [
+      "openid",
+      "profile",
+      "w_member_social"
+    ],
+    "accessTokenExpiresAt": "2026-09-04T12:00:00.000Z",
+    "refreshTokenExpiresAt": null,
+    "lastConnectedAt": "2026-07-06T12:00:00.000Z",
+    "disconnectedAt": null,
+    "lastError": null,
+    "updatedAt": "2026-07-06T12:00:00.000Z",
+    "browserReceivesRawToken": false,
+    "encryptedAtRest": true,
+    "disconnectAvailable": true,
+    "nextAllowedStep": "Credential is stored for a future manual-approved LinkedIn executor. Real publishing is still not enabled in Phase 9.3.",
+    "metadata": {
+      "phase": "v0.7.0_phase_9_3",
+      "selectedPlatform": "linkedin",
+      "realPublishingEnabled": false,
+      "autoRunEnabled": false,
+      "externalApiCalled": false
+    },
+    "message": "LinkedIn connector status returned safely. Raw OAuth tokens were not returned."
+  },
+  "neverReturnedFields": [
+    "accessToken",
+    "refreshToken",
+    "encrypted_access_token",
+    "encrypted_refresh_token",
+    "token_fingerprint"
+  ]
+}

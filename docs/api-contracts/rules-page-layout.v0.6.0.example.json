@@ -1,0 +1,16 @@
+{
+  "phase": "v0.6.0 Phase 7.2 Create Rule Wizard",
+  "page": "/rules.html",
+  "sections": [
+    "master_pause",
+    "create_rule_wizard",
+    "content_rules",
+    "support_rules",
+    "ads_rules",
+    "global_caps",
+    "rule_history"
+  ],
+  "wizard": "browser_local_preview_only",
+  "policyDatabaseWrites": false,
+  "externalWrites": false
+}

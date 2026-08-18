@@ -1,0 +1,43 @@
+LIFE.SAVER v0.7.0 — Phase 15.6 Proactive Triggers
+
+Roadmap alignment:
+Phase 15.6 defines the proactivity trigger framework for ROAS drops, new support tickets, scheduled content slots, weekly ad reviews, pending action reminders, and failed executor events.
+
+Important boundary:
+This package does not enable actual proactive autonomy. It only creates deterministic trigger definitions and preview evaluation. Any future trigger-driven action must still pass approval, policy, pause, cap, audit, result-log, and permission gates.
+
+Supported triggers:
+1. roas_drop -> ads_specialist
+2. new_support_ticket -> support_specialist
+3. scheduled_content_slot -> content_specialist
+4. weekly_ad_review -> ads_specialist
+5. pending_action_reminder -> LIFE.SAVER front voice
+6. failed_executor_event -> dev_specialist / human review
+
+Endpoints:
+- GET  /api/v1/orchestrator/proactivity-triggers/status
+- GET  /api/v1/orchestrator/proactivity-triggers/report
+- GET  /api/v1/orchestrator/proactivity-triggers/registry
+- GET  /api/v1/orchestrator/proactivity-triggers/example
+- POST /api/v1/orchestrator/proactivity-triggers/preview
+
+Safety controls:
+- Master pause blocks trigger handling.
+- Category pause blocks trigger handling.
+- Emergency safe mode blocks trigger handling.
+- force=true is ignored.
+- Secret-like and raw-provider payload fragments are blocked.
+- Failed executor events are never hidden.
+
+Not added:
+- No scheduler enablement.
+- No event listeners.
+- No background jobs.
+- No action creation.
+- No notification sending.
+- No Claude calls.
+- No tool invocation.
+- No executor calls.
+- No external API calls.
+- No auto-run.
+- No database migration.

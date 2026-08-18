@@ -1,0 +1,25 @@
+{
+  "version": "0.6.0",
+  "phase": "v0.6.0 Phase 8.9 Rollback Simulation",
+  "deliverable": "Rolled_back action state tested",
+  "input": {
+    "actionType": "content_publish",
+    "currentStatus": "proposed",
+    "payloadJson": {
+      "schema_version": "action-payload/v0.6.0",
+      "action_type": "content_publish",
+      "data": {
+        "platform": "instagram",
+        "caption": "Sandbox post only."
+      }
+    }
+  },
+  "rollback": {
+    "statusPath": ["proposed", "approved", "executing", "executed", "rollback_requested", "executing", "rolled_back"],
+    "finalStatus": "rolled_back",
+    "resultLogStatus": "rollback_success",
+    "sandboxOnly": true,
+    "externalWritesAttempted": false,
+    "externalWritesSucceeded": false
+  }
+}

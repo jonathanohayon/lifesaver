@@ -1,0 +1,59 @@
+# LIFE.SAVER V2 — Phase 8.2 Executor Registry
+
+## Goal
+
+Map action types to executor handler keys.
+
+Example:
+
+content_publish -> sandboxContentExecutor
+
+## Why this phase exists
+
+Before LIFE.SAVER can safely simulate execution, it needs one central registry that tells the system which sandbox executor should handle each action type.
+
+This keeps future execution routing predictable, testable, auditable, and easy to block with pause/policy/approval checks.
+
+## Registry mappings
+
+- content_publish -> sandboxContentExecutor
+- support_reply_send -> sandboxSupportExecutor
+- ad_budget_adjust -> sandboxAdsBudgetExecutor
+- ad_pause -> sandboxAdsPauseExecutor
+- research_task -> sandboxResearchExecutor
+- dev_task -> sandboxDevExecutor
+- notification_send -> sandboxNotificationExecutor
+- rollback_action -> sandboxRollbackExecutor
+
+## Safety boundary
+
+The registry is mapping-only in Phase 8.2.
+
+It does not include executable sandbox handler implementations.
+It does not call external platforms.
+It does not publish content.
+It does not send support replies.
+It does not change ad budgets.
+It does not pause campaigns.
+It does not perform rollback.
+
+## Future use
+
+Phase 8.3 should add sandboxContentExecutor.
+Phase 8.4 should add sandboxSupportExecutor.
+Phase 8.5 should add sandbox ads executor behavior.
+Phase 8.6 should connect approval-to-execute flow using sandbox executors.
+
+## Important rule
+
+A registry mapping is not permission to execute.
+
+Future execution must still pass:
+- approval/status checks
+- policy evaluation
+- caps
+- permission checks
+- pause guard
+- idempotency checks
+- audit logging
+- sandbox-only external-write-free executor behavior

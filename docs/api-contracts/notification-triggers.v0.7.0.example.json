@@ -1,0 +1,65 @@
+{
+  "statusEndpoint": "/api/v1/notifications/triggers/status",
+  "previewEndpoint": "/api/v1/notifications/triggers/preview",
+  "response": {
+    "version": "0.7.0",
+    "phase": "phase_10_5_notification_event_triggers",
+    "workspaceId": "workspace-id",
+    "generatedAt": "2026-07-06T12:00:00.000Z",
+    "counts": {
+      "candidatesEvaluated": 2,
+      "triggersCreated": 4,
+      "actionProposed": 2,
+      "actionFailed": 0,
+      "highRiskWaiting": 1,
+      "approvalRemindersNeeded": 1
+    },
+    "triggers": [
+      {
+        "triggerType": "high_risk_action_waiting",
+        "actionId": "action-id",
+        "workspaceId": "workspace-id",
+        "title": "Approve LinkedIn founder update",
+        "actionType": "content_publish",
+        "riskLevel": "high",
+        "reason": "A high-risk action is waiting for founder approval.",
+        "reviewUrl": "/actions.html?actionId=action-id",
+        "priority": "elevated",
+        "channels": {
+          "inAppCandidate": true,
+          "emailCandidate": false,
+          "slackCandidate": false
+        },
+        "timing": {
+          "actionAgeMinutes": 120,
+          "reminderDue": true,
+          "reminderCount": 0,
+          "maxEscalations": 3,
+          "quietHoursMayDelayEmail": false
+        },
+        "safety": {
+          "triggerOnly": true,
+          "createsNotificationRowsInThisPhase": false,
+          "sendsEmailInThisPhase": false,
+          "sendsSlackInThisPhase": false,
+          "callsExternalServices": false,
+          "canApproveAction": false,
+          "canExecuteAction": false,
+          "exposesTokensOrSecrets": false,
+          "exposesActionPayloadJson": false
+        }
+      }
+    ],
+    "safety": {
+      "triggerServiceOnly": true,
+      "createsNotificationRowsInThisPhase": false,
+      "sendsEmailInThisPhase": false,
+      "sendsSlackInThisPhase": false,
+      "callsExternalServices": false,
+      "autoApprovalEnabled": false,
+      "autoExecutionEnabled": false,
+      "exposesTokensOrSecrets": false,
+      "exposesActionPayloadJson": false
+    }
+  }
+}

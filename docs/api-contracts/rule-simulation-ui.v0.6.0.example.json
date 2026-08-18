@@ -1,0 +1,40 @@
+{
+  "version": "0.6.0",
+  "phase": "Phase 7.7 Rule Simulation UI",
+  "previewOnly": true,
+  "persistence": "browser_local_simulation_only_no_database_write",
+  "input": {
+    "rule_source": "content",
+    "action_type": "content_publish",
+    "platform": "instagram",
+    "channel": "organic_social",
+    "category": "content",
+    "risk_level": "medium",
+    "confidence_score": 0.92,
+    "amount": 0,
+    "master_pause_active": false,
+    "text_preview": "Founder-approved Instagram post draft in the approved brand style."
+  },
+  "simulation_result": {
+    "decision": "ask",
+    "label": "ASK",
+    "matched": true,
+    "reasons": [
+      "Content auto-publish is not allowed in the preview rule."
+    ],
+    "sentence": "This proposed instagram content publish would be: ask/manual review."
+  },
+  "safety": {
+    "localPreviewOnly": true,
+    "databaseWritesAttempted": false,
+    "policyEndpointCalled": false,
+    "simulationDatabaseSaveAttempted": false,
+    "externalWritesAttempted": false,
+    "executorRan": false,
+    "autoRunTriggered": false,
+    "contentPublished": false,
+    "supportSent": false,
+    "adBudgetChanged": false,
+    "campaignPaused": false
+  }
+}

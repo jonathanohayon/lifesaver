@@ -1,0 +1,59 @@
+{
+  "success": true,
+  "data": {
+    "version": "0.7.0",
+    "phase": "phase_10_1_notification_preferences_model",
+    "workspaceId": "workspace_uuid",
+    "channels": {
+      "inApp": {
+        "enabled": true,
+        "status": "stored_preference_only"
+      },
+      "email": {
+        "enabled": false,
+        "status": "stored_preference_only",
+        "deliveryImplemented": false
+      },
+      "slack": {
+        "enabled": false,
+        "status": "planned_later",
+        "deliveryImplemented": false
+      }
+    },
+    "quietHours": {
+      "enabled": false,
+      "start": "22:00",
+      "end": "08:00",
+      "timezone": "America/New_York",
+      "crossesMidnight": true
+    },
+    "escalation": {
+      "approvalEscalationMinutes": 60,
+      "repeatEscalationMinutes": 120,
+      "maxEscalations": 3,
+      "schedulingImplemented": false
+    },
+    "triggers": {
+      "actionNeedsApproval": true,
+      "actionFailed": true,
+      "rollbackNeedsReview": true
+    },
+    "safety": {
+      "modelOnly": true,
+      "sendsEmailInThisPhase": false,
+      "sendsSlackInThisPhase": false,
+      "createsInAppRowsInThisPhase": false,
+      "externalServicesCalled": false,
+      "browserReceivesSecrets": false,
+      "autoRunEnabled": false
+    },
+    "updatedBy": null,
+    "createdAt": "2026-07-06T12:00:00.000Z",
+    "updatedAt": "2026-07-06T12:00:00.000Z",
+    "metadata": {
+      "phase": "phase_10_1_notification_preferences_model",
+      "slackLater": true,
+      "realExternalNotificationsAdded": false
+    }
+  }
+}

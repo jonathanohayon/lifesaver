@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LIFE.SAVER — SaaS Onboarding</title>
+<link rel="stylesheet" href="./assets/css/admin.css" />
+<link rel="stylesheet" href="./assets/css/mobile-release-qa.css" />
+</head>
+<body>
+  <main class="admin-shell">
+    <section class="topbar">
+      <div class="brand">
+        <h1>LIFE.SAVER ONBOARDING</h1>
+        <span>Multi-workspace SaaS foundation · v0.5.2</span>
+      </div>
+      <div class="footer-actions">
+        <a class="btn" href="./landing.html">Public Site</a>
+        <a class="btn" href="./index.html">Dashboard</a>
+        <a class="btn" href="./settings.html">Settings</a>
+        <a class="btn" href="./surface-access.html">Surfaces</a>
+        <a class="btn" href="./launch-readiness.html">Launch Prep</a>
+        <a class="btn" href="./functional-audit.html">Functional Audit</a>
+        <a class="btn" href="./admin.html">Admin</a>
+        <a class="btn" href="./login.html">Login</a>
+      </div>
+    </section>
+
+    <section class="grid two">
+      <div class="panel">
+        <h2>Workspace Setup</h2>
+        <p class="note" id="onboardingMessage">Loading onboarding status…</p>
+        <div class="onboarding-progress">
+          <div class="onboarding-progress-bar"><span id="progressBar" style="width:0%"></span></div>
+          <div class="row"><strong id="progressText">0%</strong><small id="workspaceName">Workspace</small></div>
+        </div>
+        <div id="stepsList" class="onboarding-steps"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Current Workspace</h2>
+        <div class="list" id="workspaceDetails">
+          <div class="row"><strong>Status</strong><small>Loading…</small></div>
+        </div>
+        <div class="footer-actions align-left" style="margin-top:14px">
+          <button class="btn primary" id="refreshStatus">Refresh Status</button>
+          <a class="btn" href="./settings.html">Connect Triple Whale</a>
+          <a class="btn" href="./admin.html">Generate Briefs</a>
+        </div>
+        <p class="note warn" style="margin-top:14px">v0.5.2 is a foundation step. It creates workspace-safe onboarding and does not add billing, external posting, emails, ad spend edits, refunds, or any autonomous action.</p>
+      </div>
+    </section>
+  </main>
+
+<script src="./assets/js/runtime-config.js"></script>
+<script src="./assets/js/onboarding.js"></script>
+</body>
+</html>

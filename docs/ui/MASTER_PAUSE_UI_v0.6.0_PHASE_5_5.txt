@@ -1,0 +1,30 @@
+LIFE.SAVER UI — Master Pause Switch
+Version: v0.6.0 Phase 5.5
+
+Screen
+- Customer Settings: /settings.html
+
+Main elements
+1. Master Pause Switch panel.
+2. Current pause state card.
+3. Last updated by card.
+4. Last updated at card.
+5. Emergency Safe Mode card.
+6. Optional audit reason input.
+7. Pause / Resume All Autonomy button.
+8. Refresh Pause State button.
+9. Category toggles for Content, Support, Ads, Research, Dev.
+10. Status message area.
+
+Founder explanation copy
+The warning explains that pause blocks future auto-approval and executor execution while proposed actions remain reviewable.
+
+Accessibility notes
+- Buttons use native button elements.
+- Category buttons expose aria-pressed state.
+- Input has a placeholder and accepts a short audit reason.
+- Mobile styles keep buttons full width when needed.
+- Status text remains visible without relying only on color.
+
+No-execution guarantee
+The UI only calls autonomy status/pause/resume endpoints. Those endpoints update database flags and audit logs only.

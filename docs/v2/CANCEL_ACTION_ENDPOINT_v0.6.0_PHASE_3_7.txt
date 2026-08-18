@@ -1,0 +1,190 @@
+LIFE.SAVER v0.6.0 — Phase 3.7 Cancel Action Endpoint
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 3.7 adds the safe backend endpoint for cancelling eligible V2 actions before they execute.
+
+Endpoint:
+POST /api/v1/actions/:id/cancel
+
+This is part of the Phase 3 Approval Queue Backend. It is still internal-status-only.
+It does not execute, rollback, publish, send, spend, pause campaigns, refund, edit products,
+or call external write APIs.
+
+================================================================================
+WHY THIS IS NEEDED
+================================================================================
+
+Approval flows need a safe way to stop an action after it has been proposed, auto-approved,
+approved, or queued, but before any executor runs.
+
+Examples:
+- Founder changes their mind about a proposed Instagram post.
+- A support reply was approved but should not be sent anymore.
+- A queued future ad adjustment is no longer needed.
+- A policy later auto-approves something, but the founder pauses/cancels it before execution.
+
+================================================================================
+ALLOWED STATUSES
+================================================================================
+
+The cancel endpoint may cancel:
+
+- proposed
+- approval_required
+- auto_approved
+- approved
+- queued
+
+These statuses represent actions that have not executed yet.
+
+================================================================================
+BLOCKED STATUSES
+================================================================================
+
+The cancel endpoint must not cancel:
+
+- rejected
+- cancelled
+- executing
+- executed
+- failed
+- rollback_requested
+- rolled_back
+
+Important:
+Executed actions cannot be cancelled by this endpoint. A future rollback flow is required where
+rollback is supported.
+
+================================================================================
+ROLE RULES
+================================================================================
+
+Allowed:
+- owner
+- admin
+
+Blocked:
+- member
+- viewer
+
+Reason:
+Cancellation stops progress and performs no external write, so owner/admin can cancel eligible
+actions by default. Lower roles remain review-only.
+
+================================================================================
+REQUEST BODY
+================================================================================
+
+Optional body:
+
+{
+  "cancel_reason": "No longer needed before execution."
+}
+
+Also accepted:
+
+- cancellation_reason
+- reason
+- note
+
+Reason text is normalized and capped to 1000 characters.
+
+================================================================================
+SUCCESS RESPONSE SHAPE
+================================================================================
+
+The response includes:
+
+- cancelled
+- alreadyCancelled
+- action summary
+- transition from previous status to cancelled
+- cancellation metadata
+- execution safety flags
+- external write safety flags
+
+Important response safety fields:
+
+execution.executed=false
+execution.queued=false
+execution.executorEnabled=false
+execution.rollbackRequired=false
+safety.externalWritesEnabled=false
+safety.executedActionsCancellableFromThisEndpoint=false
+
+================================================================================
+EVENT LOGGING
+================================================================================
+
+Successful cancellation logs an action_events row:
+
+- event_type: cancelled
+- from_status: previous action status
+- to_status: cancelled
+- actor_user_id: cancelling user
+- metadata_json.phase: 3.7
+- metadata_json.endpoint: POST /api/v1/actions/:id/cancel
+- metadata_json.execution_enabled=false
+- metadata_json.external_write_enabled=false
+- metadata_json.rollback_required=false
+
+Double-click duplicate cancellation does not create duplicate events.
+
+================================================================================
+SAFETY GUARANTEES
+================================================================================
+
+The endpoint does not:
+
+- queue an action
+- execute an action
+- rollback an action
+- publish content
+- send email/support replies
+- change ad spend
+- pause campaigns
+- refund orders
+- edit products
+- write to Triple Whale
+- write to Shopify, Meta, Google, TikTok, Snapchat, Google Ads, or any other external system
+
+================================================================================
+TESTING
+================================================================================
+
+Run:
+
+npm.cmd install
+npm.cmd run build
+npm.cmd run db:status
+npm.cmd run db:migrate
+npm.cmd run client:test-checklist
+npm.cmd run security:check
+npm.cmd run env:check
+
+Optional fixture test:
+
+npm.cmd run db:seed:actions:local
+
+Manual check:
+
+GET /api/v1/actions
+POST /api/v1/actions/:id/cancel
+GET /api/v1/actions/:id
+
+Expected:
+- action.status becomes cancelled
+- statusHistory contains cancelled event
+- no executor/result is created
+- no external write happens
+
+================================================================================
+NEXT PHASE
+================================================================================
+
+Phase 3.8 — Permission Guards
+
+That phase should tighten and document permission helpers for approve/reject/cancel and prepare for Phase 3.9 error handling.

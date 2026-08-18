@@ -1,0 +1,38 @@
+{
+  "status": {
+    "phase": "V2 Phase 13.3 — Manual Approval First",
+    "healthMode": "v2-phase-13-3-manual-approval-first",
+    "deliverable": "all_support_sends_approval_gated",
+    "selectedConnector": "gmail",
+    "actionType": "support_reply_send",
+    "policyId": "support_send_manual_approval_first_v1",
+    "manualApprovalRequiredForEverySupportSend": true,
+    "autoSendEnabled": false,
+    "forceBypassAllowed": false,
+    "gmailApiCallAllowedWithoutApproval": false,
+    "emailSendingAllowedWithoutApproval": false
+  },
+  "previewRequest": {
+    "actionType": "support_reply_send",
+    "actionStatus": "proposed",
+    "approvedAt": null,
+    "approvalEventId": null,
+    "approvalEventActorUserId": null,
+    "forceRequested": true,
+    "autoSendRequested": false
+  },
+  "previewResponse": {
+    "eligibleToSend": false,
+    "decision": "blocked_manual_approval_required",
+    "safeSummary": "Support reply send is blocked until founder/admin manual approval is confirmed.",
+    "safety": {
+      "emailSent": false,
+      "gmailApiCalled": false,
+      "autoReplyAllowed": false,
+      "forceBypassAllowed": false,
+      "manualFounderApprovalRequired": true,
+      "rawTicketPayloadReturned": false,
+      "rawTokenReturned": false
+    }
+  }
+}

@@ -1,0 +1,18 @@
+# LIFE.SAVER v0.6.0 Phase 7.10 — Rules Permission QA
+
+## Goal
+Only authorized roles can edit rules.
+
+## Required test scenarios
+- Owner can edit.
+- Admin can edit if allowed.
+- Viewer cannot edit.
+- Unauthorized request blocked.
+
+## Implementation
+Phase 7.10 adds a safe Rules Permission QA section inside `/rules.html`. It shows a role selector, admin edit permission selector, authorization selector, permission matrix, JSON preview, and local snapshot actions.
+
+The UI also gates browser-local rule preview save buttons using the Phase 7.10 permission decision. This is UI-level QA only because there are still no backend policy editing endpoints in this phase.
+
+## Safety
+No database policy creation. No permission database save. No policy editing endpoints. No external writes. No executors. No auto-run.

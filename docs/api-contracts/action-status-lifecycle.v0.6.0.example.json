@@ -1,0 +1,137 @@
+{
+  "version": "0.6.0",
+  "phase": "2.2",
+  "name": "LIFE.SAVER V2 Action Status Lifecycle",
+  "externalWritesEnabled": false,
+  "databaseMigrationIncluded": false,
+  "executorIncluded": false,
+  "defaultStatus": "proposed",
+  "statuses": [
+    {
+      "status": "proposed",
+      "label": "Proposed",
+      "terminal": false,
+      "externalWriteAllowed": false,
+      "allowedNext": ["approval_required", "auto_approved", "rejected", "cancelled", "failed"],
+      "owner": "action_creation_service"
+    },
+    {
+      "status": "approval_required",
+      "label": "Needs Approval",
+      "terminal": false,
+      "externalWriteAllowed": false,
+      "allowedNext": ["approved", "rejected", "cancelled", "failed"],
+      "owner": "policy_evaluation_service"
+    },
+    {
+      "status": "auto_approved",
+      "label": "Auto-Approved by Rule",
+      "terminal": false,
+      "externalWriteAllowed": false,
+      "allowedNext": ["queued", "cancelled", "failed"],
+      "owner": "policy_evaluation_service"
+    },
+    {
+      "status": "approved",
+      "label": "Approved",
+      "terminal": false,
+      "externalWriteAllowed": false,
+      "allowedNext": ["queued", "cancelled", "failed"],
+      "owner": "approval_service"
+    },
+    {
+      "status": "rejected",
+      "label": "Rejected",
+      "terminal": true,
+      "externalWriteAllowed": false,
+      "allowedNext": [],
+      "owner": "approval_service"
+    },
+    {
+      "status": "cancelled",
+      "label": "Cancelled",
+      "terminal": true,
+      "externalWriteAllowed": false,
+      "allowedNext": [],
+      "owner": "cancellation_service_or_system_safety_guard"
+    },
+    {
+      "status": "queued",
+      "label": "Queued",
+      "terminal": false,
+      "externalWriteAllowed": false,
+      "allowedNext": ["executing", "cancelled", "failed"],
+      "owner": "queue_execution_service"
+    },
+    {
+      "status": "executing",
+      "label": "Executing",
+      "terminal": false,
+      "externalWriteAllowed": true,
+      "allowedNext": ["executed", "failed", "rolled_back"],
+      "owner": "executor_service_only"
+    },
+    {
+      "status": "executed",
+      "label": "Executed",
+      "terminal": false,
+      "externalWriteAllowed": false,
+      "allowedNext": ["rollback_requested"],
+      "owner": "executor_service_after_result_confirmation"
+    },
+    {
+      "status": "failed",
+      "label": "Failed",
+      "terminal": true,
+      "externalWriteAllowed": false,
+      "allowedNext": [],
+      "owner": "policy_queue_or_executor_service"
+    },
+    {
+      "status": "rollback_requested",
+      "label": "Rollback Requested",
+      "terminal": false,
+      "externalWriteAllowed": false,
+      "allowedNext": ["queued", "executing", "failed", "rolled_back"],
+      "owner": "rollback_request_service"
+    },
+    {
+      "status": "rolled_back",
+      "label": "Rolled Back",
+      "terminal": true,
+      "externalWriteAllowed": false,
+      "allowedNext": [],
+      "owner": "rollback_executor_after_result_confirmation"
+    }
+  ],
+  "forbiddenTransitions": [
+    ["proposed", "executed"],
+    ["proposed", "queued"],
+    ["approval_required", "executed"],
+    ["auto_approved", "executed"],
+    ["approved", "executed"],
+    ["rejected", "queued"],
+    ["rejected", "executed"],
+    ["cancelled", "queued"],
+    ["cancelled", "executed"],
+    ["failed", "executed"],
+    ["rolled_back", "executing"],
+    ["executed", "cancelled"]
+  ],
+  "normalFlows": {
+    "manualApproval": ["proposed", "approval_required", "approved", "queued", "executing", "executed"],
+    "manualRejection": ["proposed", "approval_required", "rejected"],
+    "autoApproved": ["proposed", "auto_approved", "queued", "executing", "executed"],
+    "failure": ["queued", "executing", "failed"],
+    "rollback": ["executed", "rollback_requested", "queued", "executing", "rolled_back"]
+  },
+  "safetyRules": [
+    "approval_is_not_execution",
+    "auto_approval_is_not_execution",
+    "executed_requires_action_result_confirmation",
+    "all_status_changes_require_action_events_later",
+    "master_pause_must_block_execution",
+    "idempotency_required_before_execution",
+    "no_raw_secrets_in_status_events_or_payloads"
+  ]
+}

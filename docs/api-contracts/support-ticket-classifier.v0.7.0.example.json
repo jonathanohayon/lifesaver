@@ -1,0 +1,39 @@
+{
+  "statusEndpoint": "GET /api/v1/support/ticket-classifier/status",
+  "exampleEndpoint": "GET /api/v1/support/ticket-classifier/example",
+  "previewEndpoint": "POST /api/v1/support/ticket-classifier/preview",
+  "previewRequest": {
+    "ticketId": "ticket_123",
+    "customerEmail": "customer@example.com",
+    "subject": "Where is my order?",
+    "bodySnippet": "Can you send tracking? Delivery looks delayed.",
+    "threadId": "gmail_thread_123",
+    "sensitiveFlag": false
+  },
+  "previewResponseData": {
+    "valid": true,
+    "result": {
+      "ticketId": "ticket_123",
+      "category": "shipping",
+      "categoryLabel": "Shipping",
+      "confidence": 0.87,
+      "severity": "normal",
+      "sensitiveFlag": false,
+      "escalationRequired": false,
+      "matchedSignals": ["tracking_or_delivery", "late_or_lost_package"],
+      "reason": "Matched Shipping support signals: tracking_or_delivery, late_or_lost_package.",
+      "safeForBrowser": true,
+      "externalApiCalled": false,
+      "emailSent": false
+    },
+    "warnings": []
+  },
+  "safety": {
+    "gmailApiClientAdded": false,
+    "gmailExternalApiCalled": false,
+    "emailSendAdded": false,
+    "supportReplyActionAdded": false,
+    "supportAutoReplyAdded": false,
+    "rawProviderPayloadAllowedInPreviewInput": false
+  }
+}

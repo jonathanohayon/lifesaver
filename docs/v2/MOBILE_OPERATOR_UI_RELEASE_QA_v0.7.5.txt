@@ -1,0 +1,73 @@
+LIFE.SAVER v0.7.5 — Mobile Operator UI Release QA
+==================================================
+
+Deliverable:
+Mobile operator UI release checklist and final responsive hardening pass.
+
+Scope:
+This is Phase 5 of the mobile operator UI readiness roadmap. It completes the responsive hardening sequence after v0.7.1 mobile shell/version system, v0.7.2 dashboard/chat, v0.7.3 actions/approval queue, and v0.7.4 rules/memory/proactivity.
+
+Primary goal:
+Make the remaining admin/operator surfaces usable on phones and tablets while preserving the desktop layout.
+
+Covered pages:
+- Dashboard
+- Settings
+- Actions
+- Rules
+- Memory
+- Support
+- Notifications
+- Launch Readiness
+- Super Admin
+- Login
+
+Final mobile behavior:
+- Settings cards stack cleanly on phones.
+- Launch Prep sections stack cleanly on phones.
+- Super Admin status, database, metrics, connection, and worker panels stack cleanly.
+- Support connector status and support action review panels are readable on phones.
+- Notifications center uses the shared mobile shell and mobile menu.
+- Login/auth forms and tabs are touch-friendly.
+- Buttons and controls use mobile-friendly spacing.
+- Raw previews, result logs, cards, badges, and rows stay inside the viewport.
+- No old visible version labels from v0.6.0, Phase 8, Phase 15.10, or v0.7.4 remain in the mobile web source.
+
+Breakpoints covered:
+- 320px
+- 360px
+- 375px
+- 390px
+- 414px
+- 430px
+- 768px
+- 1024px
+- Desktop
+
+Version update rule applied:
+- root package.json version updated to 0.7.5
+- apps/api package version updated to 0.7.5
+- apps/web package version updated to 0.7.5
+- apps/worker package version updated to 0.7.5
+- packages/shared package version updated to 0.7.5
+- packages/config package version updated to 0.7.5
+- API health source and dist mode updated to v2-mobile-0-7-5-operator-ui-release-qa
+- shared frontend version source updated to 0.7.5
+- visible UI labels updated to V2 Mobile Operator UI Release QA
+- README, CHANGELOG, START_HERE, docs/v2, and docs/testing updated
+
+Safety boundary:
+No database migration.
+No backend approval logic change.
+No executor logic change.
+No policy logic change.
+No Claude behavior change.
+No connector behavior change.
+No notification sending.
+No action creation.
+No auto-run.
+No hidden autonomy.
+No external writes.
+
+Operator note:
+This release makes the V2 operator foundation more usable from mobile. It does not make LIFE.SAVER autonomous and does not approve or execute anything by itself.

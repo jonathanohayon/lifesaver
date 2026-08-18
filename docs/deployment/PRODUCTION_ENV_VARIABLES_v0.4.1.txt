@@ -1,0 +1,62 @@
+LIFE.SAVER v0.4.1 — Production Environment Variables Checklist
+
+DO NOT COMMIT REAL VALUES.
+Store these in the hosting provider's environment variable manager.
+
+Core:
+NODE_ENV=production
+PORT=4000
+FRONTEND_URL=https://app.yourdomain.com
+ALLOWED_ORIGINS=https://app.yourdomain.com
+DASHBOARD_REQUIRE_AUTH=true
+CHAT_REQUIRE_AUTH=true
+ENABLE_DEBUG_ROUTES=false
+DATABASE_SSL=true
+
+Database:
+DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/postgres
+
+Secrets:
+AUTH_TOKEN_SECRET=long_random_secret_minimum_40_chars
+APP_ENCRYPTION_KEY=long_random_secret_keep_stable_after_keys_are_stored
+WORKER_SHARED_SECRET=long_random_secret_minimum_40_chars
+
+Claude:
+CLAUDE_API_KEY=your_production_claude_key
+CLAUDE_API_BASE_URL=https://api.anthropic.com
+CLAUDE_API_VERSION=2023-06-01
+CLAUDE_MODEL=claude-sonnet-4-20250514
+CLAUDE_MAX_TOKENS=700
+CLAUDE_TEMPERATURE=0.35
+CLAUDE_DAILY_CHAT_LIMIT=100
+CLAUDE_TOOL_MAX_CALLS=3
+DAILY_CLAUDE_COST_LIMIT_USD=10
+
+Triple Whale:
+TRIPLE_WHALE_API_BASE_URL=https://api.triplewhale.com
+TRIPLE_WHALE_VALIDATE_PATH=/api/v2/users/api-keys/me
+TRIPLE_WHALE_SUMMARY_PATH=/api/v2/summary-page/get-data
+TRIPLE_WHALE_SHOP_DOMAIN=budclub.com
+TRIPLE_WHALE_ADDITIONAL_SHOP_IDS=budclub.com
+TRIPLE_WHALE_CURRENCY=USD
+TRIPLE_WHALE_TIMEZONE=America/New_York
+TRIPLE_WHALE_TIMEZONE_OFFSET=-04:00
+TRIPLE_WHALE_SUMMARY_GROUP_BY=hour
+TRIPLE_WHALE_ATTRIBUTION_PATH=/api/v2/attribution/get-orders-with-journeys-v2
+TRIPLE_WHALE_ATTRIBUTION_PAGE=1
+TRIPLE_WHALE_ATTRIBUTION_PAGE_SIZE=25
+TRIPLE_WHALE_ATTRIBUTION_EXCLUDE_JOURNEY_DATA=true
+
+Worker:
+WORKER_API_BASE_URL=https://api.yourdomain.com
+WORKER_ENABLED=false
+WORKER_TIMEZONE=America/New_York
+WORKER_METRICS_CRON=15 * * * *
+WORKER_DAILY_BRIEF_CRON=30 8 * * *
+WORKER_WEEKLY_SUMMARY_CRON=0 9 * * 1
+
+SECURITY NOTES
+- Do not rotate APP_ENCRYPTION_KEY casually after Triple Whale keys are stored.
+- If APP_ENCRYPTION_KEY changes, existing encrypted connected accounts cannot be decrypted unless re-encrypted.
+- Rotate development database password before production.
+- Rotate Triple Whale key if it was exposed in screenshots/files/chat.

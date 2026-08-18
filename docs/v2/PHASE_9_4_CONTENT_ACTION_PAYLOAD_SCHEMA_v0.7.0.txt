@@ -1,0 +1,130 @@
+LIFE.SAVER v0.7.0 — PHASE 9.4 CONTENT ACTION PAYLOAD
+======================================================
+
+Purpose
+-------
+Define the first real content_publish action payload shape for the selected Phase 9 platform: LinkedIn.
+
+This is a schema and validation phase only.
+
+It prepares the project for a future manual-approved LinkedIn executor by standardising the action payload fields before any publish code exists.
+
+Selected platform
+-----------------
+LinkedIn remains the selected first platform from Phase 9.1.
+
+Initial lane remains:
+- LinkedIn member post.
+- Text/link first.
+- Media URL placeholder allowed for future media planning.
+- Manual approval only.
+
+Payload fields
+--------------
+Required:
+- caption
+- platform
+- account_id
+
+Optional / supported:
+- media_url
+- media_type
+- link_url
+- hashtags
+- scheduled_time
+- approval_notes
+- source_draft_id
+- idempotency_hint
+- safety flags
+
+Canonical schema version
+------------------------
+content_publish_payload.v0.7.0.phase_9_4
+
+Canonical action type
+---------------------
+content_publish
+
+Canonical platform
+------------------
+linkedin
+
+Important validation rules
+--------------------------
+- platform must be linkedin.
+- action_type must be content_publish.
+- account_kind is member.
+- caption must be non-empty and max 3000 characters.
+- media_url must be HTTPS if provided.
+- link_url must be HTTPS if provided.
+- media_type must match media URL/link behaviour.
+- hashtags are normalized to lowercase #tags and deduplicated.
+- scheduled_time must be a valid ISO date-time when provided.
+- approval_notes are trimmed and capped.
+- secret-like fields are blocked anywhere in the payload.
+- browser-safe previews do not show the full account_id or raw payload.
+
+Forbidden payload keys
+----------------------
+These must not appear anywhere inside the payload:
+- api_key
+- access_token
+- refresh_token
+- authorization
+- bearer
+- password
+- secret
+- cookie
+- database_url
+- credential
+
+Why this is needed
+------------------
+Before LIFE.SAVER can safely publish to LinkedIn in a later phase, every proposed content action needs a predictable shape.
+
+This lets the future executor safely check:
+- what text to publish,
+- where it should publish,
+- whether media/link data exists,
+- who approved it,
+- whether the schedule/idempotency fields are valid,
+- whether the payload accidentally contains secrets.
+
+Safety boundary
+---------------
+Phase 9.4 does not publish anything.
+
+No OAuth routes are added.
+No LinkedIn API client is added.
+No LinkedIn API call is made.
+No real executor is added.
+No external write connector is activated.
+No auto-run is enabled.
+
+The payload can describe a possible future LinkedIn post, but it cannot publish it.
+
+Main files
+----------
+- apps/api/src/modules/content-publishing/content-action-payload.ts
+- apps/api/src/modules/content-publishing/content-action-payload-tests.ts
+- packages/shared/src/content-action-payload.ts
+- docs/api-contracts/content-publish-payload-schema.v0.7.0.example.json
+
+Test command
+------------
+npm.cmd run phase9:content-payload:test
+
+Expected result
+---------------
+phase9:content-payload:test — 26 passed, 0 failed
+Selected platform: linkedin
+Payload schema: content_publish_payload.v0.7.0.phase_9_4
+Real external writes added: false
+Auto-run enabled: false
+
+Next phase
+----------
+Phase 9.5 — Media Upload Handling.
+
+Recommended next scope:
+Plan media constraints and placeholder handling first. Do not upload files to LinkedIn yet unless the Phase 9.5 roadmap explicitly asks for implementation.

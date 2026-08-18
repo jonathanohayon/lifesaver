@@ -1,0 +1,57 @@
+================================================================================
+LIFE.SAVER v0.7.0 — PHASE 15.1 REQUEST CLASSIFIER
+================================================================================
+
+Purpose:
+Complete the first safe orchestrator foundation by adding a service that classifies incoming founder requests and system events into the correct future specialist lane.
+
+Routes:
+- Content
+- Ads
+- Support
+- Research
+- Dev
+- Metrics
+- General advisor
+
+Deliverable:
+- Request classification service.
+
+Implementation:
+- apps/api/src/modules/orchestrator/request-classifier.types.ts
+- apps/api/src/modules/orchestrator/request-classifier.model.ts
+- apps/api/src/modules/orchestrator/request-classifier.controller.ts
+- apps/api/src/modules/orchestrator/request-classifier.routes.ts
+- apps/api/src/modules/orchestrator/request-classifier-tests.ts
+
+Endpoints:
+- GET  /api/v1/orchestrator/request-classifier/status
+- GET  /api/v1/orchestrator/request-classifier/report
+- GET  /api/v1/orchestrator/request-classifier/example
+- POST /api/v1/orchestrator/request-classifier/preview
+
+How classification works:
+- Uses deterministic signal matching, not external AI calls.
+- Reads message, source, event_type, and safe context fields.
+- Scores each route.
+- Chooses the highest-scoring route with a deterministic priority tie-breaker.
+- Falls back to general_advisor when no strong specialist signal exists.
+- Keeps KPI-only requests such as revenue/orders/AOV/ROAS/ad spend under metrics unless there is a clear ads-control signal.
+
+Safety boundary:
+- Classifier only.
+- No specialist execution.
+- No tool-routing execution.
+- No connector calls.
+- No action rows created.
+- No approvals.
+- No executor calls.
+- No auto-run.
+- No content publishing.
+- No support sending.
+- No ads mutation.
+- No database migration.
+
+Next phase:
+- Phase 15.2 — Specialist Prompt Packs.
+================================================================================

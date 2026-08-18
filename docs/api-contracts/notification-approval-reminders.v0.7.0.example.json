@@ -1,0 +1,39 @@
+{
+  "statusEndpoint": "GET /api/v1/notifications/reminders/status",
+  "previewEndpoint": "GET /api/v1/notifications/reminders/preview",
+  "exampleResponse": {
+    "version": "0.7.0",
+    "phase": "phase_10_6_reminder_escalation_logic",
+    "workspaceId": "workspace-id",
+    "generatedAt": "2026-07-06T12:00:00.000Z",
+    "counts": {
+      "candidatesEvaluated": 2,
+      "remindersDue": 1,
+      "urgent": 0,
+      "elevated": 1
+    },
+    "reminders": [
+      {
+        "actionId": "22222222-2222-4222-8222-222222222222",
+        "title": "Review LinkedIn post",
+        "actionType": "content_publish",
+        "riskLevel": "medium",
+        "status": "proposed",
+        "reminderDue": true,
+        "reviewUrl": "./actions.html?actionId=22222222-2222-4222-8222-222222222222&source=approval_reminder",
+        "priority": "normal"
+      }
+    ],
+    "safety": {
+      "reminderSystemOnly": true,
+      "createsNotificationRowsInThisPhase": false,
+      "sendsEmailInThisPhase": false,
+      "sendsSlackInThisPhase": false,
+      "callsExternalServices": false,
+      "autoApprovalEnabled": false,
+      "autoExecutionEnabled": false,
+      "exposesTokensOrSecrets": false,
+      "exposesActionPayloadJson": false
+    }
+  }
+}

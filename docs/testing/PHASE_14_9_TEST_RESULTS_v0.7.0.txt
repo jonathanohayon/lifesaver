@@ -1,0 +1,30 @@
+LIFE.SAVER v0.7.0 — Phase 14.9 Restricted Ads Auto-Run Policy
+
+Health mode:
+- v2-phase-14-9-restricted-ads-auto-run-policy
+
+Test commands run:
+- npm run phase14:ads-restricted-auto-run-policy:test
+- npm run phase14:ads-rollback-executor:test
+- npm run phase14:ads-before-after-snapshot:test
+- npm run phase14:ads-manual-approval:test
+- npm run phase14:ads-hard-caps:test
+- npm run phase14:ads-budget-payload:test
+- npm run phase14:ads-action-types:test
+- npm run phase14:ads-write-scope:test
+- npm run phase14:ads-connector-audit:test
+- npm run phase13:support-send-qa:test
+- npm run build
+
+Result:
+- PASS
+
+Safety confirmation:
+- No ads auto-run enabled now.
+- No external ad API called.
+- No budget changed.
+- No campaign or ad set paused.
+- No budget restored.
+- No campaign re-enabled.
+- No OAuth route or token storage added.
+- Manual approval still required this phase.

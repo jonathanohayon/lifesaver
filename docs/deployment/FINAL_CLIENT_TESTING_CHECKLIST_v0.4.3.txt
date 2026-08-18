@@ -1,0 +1,187 @@
+LIFE.SAVER v0.4.3 — Final Client Testing Checklist
+
+Goal:
+Before deployment or client handoff, test every major area of LIFE.SAVER and collect clear evidence that the system works safely.
+
+Definition of a successful test round:
+- API and frontend run locally.
+- Database connection is healthy.
+- Founder login works.
+- Super Admin loads and shows version 0.4.3.
+- Triple Whale Summary probe succeeds.
+- Preview Metric Mapping shows production-ready core metrics.
+- Dashboard live sections show current Triple Whale values, not old demo values.
+- Daily Brief and Weekly Summary generate from live core metrics.
+- Drafts can be created, copied, approved, rejected, and reset without any external sending/posting.
+- Worker one-off commands run without Windows/tsx assertion crash.
+- Admin logs, snapshot history, brief history, usage logs, and system events load.
+- Claude safe fallback works if CLAUDE_API_KEY is empty.
+- Claude live mode can be tested only if a real CLAUDE_API_KEY is added.
+- Attribution / Pixel probe runs safely and does not overwrite core dashboard metrics.
+- Security status and environment checks are visible.
+- No raw API keys, database passwords, Claude keys, cookies, or auth tokens appear in browser previews.
+
+Step 1 — Local setup checks:
+1. Open the v0.4.3 folder in VS Code.
+2. Run:
+   npm.cmd install
+   npm.cmd run db:status
+   npm.cmd run db:migrate
+   npm.cmd run security:check
+   npm.cmd run env:check
+   npm.cmd run client:test-checklist
+
+Expected:
+- db:status configured=true and connected=true.
+- security:check prints local security status.
+- env:check prints environment separation details.
+- client:test-checklist prints this v0.4.3 checklist summary.
+
+Step 2 — Start services:
+Terminal 1:
+   npm.cmd run dev:api
+Terminal 2:
+   npm.cmd run dev:web
+
+Open:
+- http://localhost:3000/login.html
+- http://localhost:3000/admin.html
+
+Step 3 — Auth/Admin check:
+- Login with the development founder account.
+- Confirm Admin shows version 0.4.3.
+- Confirm Mode shows Final Client Testing Checklist.
+- Confirm API CONNECTED and Database CONNECTED.
+
+Step 4 — Triple Whale core metrics:
+Go to Customer Settings:
+- Validate Triple Whale Key
+- Probe Summary API
+- Preview Metric Mapping
+
+Expected:
+- Summary probe success.
+- coreMetricsProductionReady=true.
+- productionReady=true for core metrics.
+- Revenue maps to totalSales / Order Revenue.
+- Orders maps to totalOrders / Shopify Orders.
+- AOV maps to shopifyAovIncludeZero / Average Order Value.
+- ROAS maps to totalRoas / Blended ROAS.
+- Ad Spend is sum_of_channel_spend from real paid-media components only.
+
+Ad Spend must NOT include:
+- totalInventoryCost
+- Cost
+- COGS
+- Payment gateways
+- Custom expenses
+- Peer or benchmark spend fields
+
+Step 5 — Dashboard live values:
+Open:
+- http://localhost:3000
+Hard refresh with Ctrl + F5.
+
+Expected:
+- Main core metrics show live Triple Whale values.
+- No old demo KPI values such as $9,068 / 142 / $63.86 / 3.40x appear in live KPI sections.
+- Static modules are labelled static/demo/pending.
+
+Step 6 — Briefs:
+Open Super Admin:
+- Generate Daily Brief
+- Generate Weekly Summary
+- Load Latest Brief
+- Load Latest Weekly Summary
+
+Expected:
+- Briefs mention live revenue/orders/ad spend/ROAS.
+- Briefs do not say sample_placeholder.
+- Briefs do not pretend attribution or conversion rate is confirmed.
+
+Step 7 — Drafts:
+On dashboard chat, ask:
+- Draft an Instagram post about today’s business performance.
+- Draft a support reply for a customer asking about a delayed order.
+
+Expected:
+- Drafts appear in Draft Review Panel.
+- Drafts are saved in PostgreSQL drafts table.
+- Copy / Approve / Reject / Back to Draft work.
+- No external sending/posting happens.
+
+Step 8 — Claude:
+If CLAUDE_API_KEY is empty:
+- Chat should use safe fallback.
+If CLAUDE_API_KEY is added:
+- Restart backend.
+- Ask for business performance.
+- Confirm Claude live mode and tool audit metadata if tools are used.
+
+Expected:
+- Claude API key never appears in frontend.
+- usage_logs and chat_history record safe metadata.
+- No action-taking tools are added.
+
+Step 9 — Worker:
+With API running, open a third terminal:
+   npm.cmd run worker:status
+   npm.cmd run worker:once:daily
+   npm.cmd run worker:once:weekly
+
+Expected:
+- Worker status prints JSON and returns to PowerShell without assertion crash.
+- Daily pipeline refreshes metrics and generates Daily Brief.
+- Weekly pipeline refreshes metrics and generates Weekly Summary.
+- system_events records worker activity.
+
+Step 10 — Admin Logs + Snapshot History:
+Open Super Admin and test:
+- Load Admin Logs
+- Show Snapshot Timeline
+- Show System Events
+- Show Brief History
+- Show Usage Logs
+
+Expected:
+- Redacted previews.
+- Snapshot timeline includes latest summary_probe_success.
+- No raw secrets appear.
+
+Step 11 — Attribution / Pixel:
+In Settings/Admin:
+- Probe Attribution / Pixel API
+- Load Attribution Probe Response
+
+Expected:
+- Safe success or safe error.
+- Attribution snapshots use provider triple_whale_attribution.
+- Attribution data does not overwrite /metrics core metrics.
+- attributionProductionReady remains false until manually confirmed.
+
+Step 12 — Security and Environment:
+Open Admin:
+- Load Security Status
+Run:
+   npm.cmd run security:check
+   npm.cmd run env:check
+
+Expected locally:
+- Environment may be development.
+- productionReady may be false locally.
+- That is normal.
+- Production requires NODE_ENV=production, real domains, HTTPS, rotated secrets, and hosting environment variables.
+
+Evidence to capture:
+- db:status terminal output.
+- Preview Metric Mapping screenshot/text.
+- Dashboard screenshot after Ctrl + F5.
+- Daily Brief + Weekly Summary output.
+- Draft Review Panel screenshot.
+- Worker terminal output.
+- Admin Logs screenshot.
+- Attribution Probe response.
+- Security Status screenshot.
+
+Final client handoff rule:
+Do not hand off as production-ready until the evidence is reviewed, secrets are rotated, .env is removed from deployable code, and production environment variables are configured on hosting.

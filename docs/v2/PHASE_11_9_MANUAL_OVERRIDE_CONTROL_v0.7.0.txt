@@ -1,0 +1,42 @@
+LIFE.SAVER v0.7.0 — Phase 11.9 Manual Override Control
+======================================================
+
+Goal
+----
+Founder can disable the future content auto-run lane instantly.
+
+Implementation
+--------------
+Phase 11.9 adds an explicit content auto-run manual override endpoint. It does not create a new table; it reuses the existing autonomy_settings content pause lane:
+
+- pause_content_actions = true
+
+This is the safest path because Phase 5 already made content pause part of the global safety model and later Phase 11 validators already treat content pause as a blocking gate.
+
+Endpoints
+---------
+- GET  /api/v1/content-auto-run/manual-override/status
+- GET  /api/v1/content-auto-run/manual-override/preview
+- POST /api/v1/content-auto-run/manual-override/disable
+
+Disable behavior
+----------------
+The disable endpoint:
+
+1. Requires authentication.
+2. Requires owner/admin through the existing autonomy service.
+3. Sets content pause active.
+4. Writes an autonomy audit event through system_events.
+5. Returns a browser-safe response.
+6. Does not approve, execute, publish, or call LinkedIn.
+
+Why this phase matters
+----------------------
+Before enabling any actual auto-run lane, the founder needs a visible, immediate stop control. Phase 11.9 provides that stop lane while keeping auto-run itself disabled.
+
+Safety notes
+------------
+- Manual override disables content auto-run only.
+- It does not resume content auto-run.
+- Resuming remains a separate explicit autonomy operation and must not execute waiting actions.
+- No token, raw payload, rollback payload, or secret is returned.

@@ -1,0 +1,23 @@
+PHASE 15.7 — VOICE INPUT
+
+Goal
+Add browser SpeechRecognition.
+
+Features
+- Speak command.
+- Convert to text.
+- Submit to chat/orchestrator.
+- Keep text fallback.
+
+Deliverable
+Voice input UI.
+
+Implementation
+- Dashboard UI adds microphone and submit-transcript controls.
+- Browser SpeechRecognition fills the existing chat input.
+- Founder may edit the transcript before sending.
+- Existing chat endpoint remains the submission path.
+- API voice-input endpoints provide status/report/example/preview only.
+
+Safety
+No server-side audio capture, no audio storage, no transcript persistence in this module, no automatic real-world action, no tool invocation, no executor call, and no auto-run.

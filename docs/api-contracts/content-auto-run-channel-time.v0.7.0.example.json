@@ -1,0 +1,74 @@
+{
+  "endpoint_status": "GET /api/v1/content-auto-run/channel-time/status",
+  "endpoint_preview": "GET /api/v1/content-auto-run/channel-time/preview",
+  "query_example": {
+    "platform": "linkedin",
+    "channel": "linkedin_member_feed",
+    "actionType": "content_publish",
+    "timezone": "UTC",
+    "scheduledTime": "2026-07-06T10:00:00.000Z",
+    "allowedPlatforms": "linkedin",
+    "allowedChannels": "linkedin_member_feed",
+    "startTime": "09:00",
+    "endTime": "18:00",
+    "days": "all"
+  },
+  "safe_response_example": {
+    "success": true,
+    "data": {
+      "phase": "phase_11_4_allowed_channels_times",
+      "healthMode": "v2-phase-11-4-allowed-channels-times",
+      "deliverable": "channel_time_restrictions",
+      "platform": "linkedin",
+      "channel": "linkedin_member_feed",
+      "actionType": "content_publish",
+      "timezone": "UTC",
+      "referenceTime": "2026-07-06T10:00:00.000Z",
+      "localTime": "10:00",
+      "localDay": "mon",
+      "allowedPlatforms": ["linkedin"],
+      "allowedChannels": ["linkedin_member_feed"],
+      "allowedWindows": [
+        {
+          "label": "preview_window",
+          "startTime": "09:00",
+          "endTime": "18:00",
+          "days": ["all"]
+        }
+      ],
+      "matchedWindow": {
+        "label": "preview_window",
+        "startTime": "09:00",
+        "endTime": "18:00",
+        "days": ["all"]
+      },
+      "platformAllowed": true,
+      "channelAllowed": true,
+      "withinAllowedWindow": true,
+      "restrictionsSatisfied": true,
+      "decision": "allowed_for_future_auto_run_review",
+      "reason": "Platform, channel, and local time are within the configured future auto-run restrictions.",
+      "autoRunAllowedNow": false,
+      "safety": {
+        "restrictionCheckOnly": true,
+        "autoRunEnabled": false,
+        "autoApprovalEnabled": false,
+        "doesNotPublish": true,
+        "externalApiCalled": false,
+        "manualApprovalStillRequired": true,
+        "noDatabaseWrites": true,
+        "futureAutoRunRequiresAdditionalGates": true
+      }
+    }
+  },
+  "must_not_return": [
+    "access_token",
+    "refresh_token",
+    "authorization",
+    "client_secret",
+    "raw_payload",
+    "payload_json",
+    "rollback_payload",
+    "encrypted_token"
+  ]
+}

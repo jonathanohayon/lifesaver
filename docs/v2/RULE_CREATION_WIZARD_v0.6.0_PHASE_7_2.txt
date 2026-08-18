@@ -1,0 +1,35 @@
+# LIFE.SAVER v0.6.0 — Phase 7.2 Create Rule Wizard
+
+## Purpose
+
+Let the founder safely build a policy rule preview through a guided UI without enabling execution or writing to the backend policy table.
+
+## Wizard steps
+
+1. Choose action type.
+2. Choose platform/channel.
+3. Add condition.
+4. Choose decision.
+5. Set caps.
+6. Review.
+7. Save.
+
+## Implementation
+
+The wizard is located at:
+
+- `/rules.html`
+
+Files:
+
+- `apps/web/src/rules.html`
+- `apps/web/src/assets/css/rules.css`
+- `apps/web/src/assets/js/rules.js`
+
+## Safety behaviour
+
+The Save step stores a browser-local preview using localStorage. It does not call `/api/v1/policies`, does not insert rows into the `policies` table, and does not enable any action execution.
+
+## Future phases
+
+A later phase may add authenticated backend policy creation with permission checks, validation, audit records, and QA. Until then, this phase is UI-only plus local preview.

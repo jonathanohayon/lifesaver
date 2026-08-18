@@ -1,0 +1,39 @@
+{
+  "version": "0.6.0",
+  "phase": "v0.6.0 Phase 6.6 Global Caps Foundation",
+  "operators": [
+    "equals",
+    "contains",
+    "less_than",
+    "greater_than",
+    "channel_is",
+    "risk_below",
+    "confidence_above",
+    "amount_below"
+  ],
+  "exampleConditionsJson": {
+    "all": [
+      { "channel_is": "instagram" },
+      { "risk_below": "high" },
+      { "confidence_above": 0.9 },
+      { "amount_below": 50 }
+    ]
+  },
+  "exampleResult": {
+    "matched": true,
+    "supported": true,
+    "matchMode": "all",
+    "checked": [
+      { "operator": "channel_is", "matched": true, "supported": true, "field": "channel" },
+      { "operator": "risk_below", "matched": true, "supported": true, "field": "riskLevel" },
+      { "operator": "confidence_above", "matched": true, "supported": true, "field": "confidence" },
+      { "operator": "amount_below", "matched": true, "supported": true, "field": "amount" }
+    ]
+  },
+  "safety": {
+    "externalWritesEnabled": false,
+    "executorEnabled": false,
+    "autoRunExecutionEnabled": false,
+    "note": "Phase 6.5 keeps condition matching available after action scope matching. It does not execute actions."
+  }
+}

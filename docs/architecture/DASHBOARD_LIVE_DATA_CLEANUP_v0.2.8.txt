@@ -1,0 +1,24 @@
+LIFE.SAVER v0.2.8 — Full Dashboard Live Data Cleanup + Brief Controls Fix
+
+Purpose:
+This version removes the most confusing frontend issue after v0.2.7: the dashboard was partly showing verified Triple Whale core metrics and partly showing old demo values.
+
+Scope:
+- Keep the confirmed Triple Whale Summary pull and core metrics mapper unchanged.
+- Keep the encrypted API-key, auth, database, snapshot history, and redaction layers unchanged.
+- Update the dashboard so visible business metric cards use the latest /metrics response where appropriate.
+- Make static/unconnected modules clearly labelled as static/demo or pending integration.
+- Prevent stale sample_placeholder Daily Brief / Weekly Summary records from overriding newer production-ready core metrics.
+- Add clearer Super Admin controls to generate and load Daily Brief / Weekly Summary records.
+
+Key backend rule:
+If a live production-ready metrics snapshot exists, GET /brief and GET /weekly must not return an older sample_placeholder brief as the main dashboard truth. They should generate a safe live response from the latest metrics snapshot unless a stored brief was generated from the current snapshot.
+
+Frontend rules:
+- Weekly Summary cards are updated from latest live metrics.
+- Revenue Stream uses live revenue and paid-media spend, while attribution remains pending.
+- Ad Intelligence uses live ROAS where available, while impressions/conversions remain pending or static.
+- Audience Reach, Draft Engine, Support Drafts, and Business Events remain static/demo modules until integrations are added.
+
+Safety:
+No external write actions were added. V1 remains read + advise + draft only.

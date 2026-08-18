@@ -1,0 +1,675 @@
+LIFE.SAVER V2 ACTION STATUS LIFECYCLE
+Version: v0.6.0
+Phase: 2.2 — Action Status Lifecycle
+Status: Documentation-only lifecycle definition. No database migration. No executor. No external write connector.
+Prepared for: LIFE.SAVER V2 Operator Mode foundation
+
+================================================================================
+PURPOSE
+================================================================================
+
+This document defines the official lifecycle states for LIFE.SAVER V2 actions.
+
+Phase 2.1 defined what kinds of actions LIFE.SAVER may create.
+Phase 2.2 defines how each action moves safely from proposal to approval, queueing,
+execution, failure, cancellation, and rollback.
+
+This lifecycle is required before creating the actions table, approval APIs, policy
+engine, audit logs, and sandbox executor.
+
+This phase does NOT create the actions table.
+This phase does NOT add approval endpoints.
+This phase does NOT add executors.
+This phase does NOT connect any write API.
+This phase does NOT publish, send, refund, change ads, or perform external actions.
+
+V1 remains READ + ADVISE + DRAFT ONLY.
+
+================================================================================
+CORE V2 SAFETY PRINCIPLE
+================================================================================
+
+No real-world action may happen merely because an action exists.
+No real-world action may happen merely because an action is approved.
+No real-world action may happen merely because an action is auto_approved.
+
+A real-world action may only happen when ALL of the following are true:
+
+1. The action status allows execution.
+2. The correct workspace/user permission checks pass.
+3. Master pause and category pause are not blocking the action.
+4. Policy/cap checks allow the action.
+5. An executor exists for the action type.
+6. The executor performs a final preflight validation.
+7. The executor writes an action_results record confirming the outcome.
+8. The status change is logged in action_events.
+
+Until real executors are intentionally built in later phases, all execution must remain
+sandbox-only or disabled.
+
+================================================================================
+OFFICIAL ACTION STATUSES
+================================================================================
+
+The initial official statuses are:
+
+1. proposed
+2. approval_required
+3. auto_approved
+4. approved
+5. rejected
+6. cancelled
+7. queued
+8. executing
+9. executed
+10. failed
+11. rollback_requested
+12. rolled_back
+
+These status values should be treated as stable enum values for future database,
+backend, UI, and audit-log work.
+
+================================================================================
+STATUS DEFINITIONS
+================================================================================
+
+--------------------------------------------------------------------------------
+STATUS: proposed
+--------------------------------------------------------------------------------
+
+Meaning:
+An action has been created by LIFE.SAVER, a tool, a worker, a specialist, or a user,
+but it has not yet been evaluated by policy and has not been approved.
+
+Typical creators:
+- chat/tool output
+- content specialist
+- support specialist
+- ads specialist later
+- proactive scheduler later
+- manual admin/test fixture
+
+Allowed next statuses:
+- approval_required
+- auto_approved
+- rejected
+- cancelled
+- failed
+
+External write allowed from this status:
+- No
+
+Important rule:
+A proposed action is only an idea/request. It must never execute directly.
+
+--------------------------------------------------------------------------------
+STATUS: approval_required
+--------------------------------------------------------------------------------
+
+Meaning:
+Policy evaluation decided that the founder or an authorized workspace role must approve
+this action before it can move toward execution.
+
+Typical setter:
+- policy engine
+- safety guard
+- manual system fallback when policy is unavailable
+
+Allowed next statuses:
+- approved
+- rejected
+- cancelled
+- failed
+
+External write allowed from this status:
+- No
+
+Important rule:
+This is the default safe status whenever there is uncertainty.
+
+--------------------------------------------------------------------------------
+STATUS: auto_approved
+--------------------------------------------------------------------------------
+
+Meaning:
+Policy evaluation decided that the action is allowed under an explicit founder-defined
+rule, all relevant caps are currently satisfied, and manual approval is not required.
+
+Typical setter:
+- policy engine only
+
+Allowed next statuses:
+- queued
+- cancelled
+- failed
+
+External write allowed from this status:
+- No, not directly
+
+Important rule:
+auto_approved does not mean executed. It only means the action may be queued if all
+final safety checks still pass. Master pause, category pause, caps, and executor preflight
+must still be checked again before execution.
+
+--------------------------------------------------------------------------------
+STATUS: approved
+--------------------------------------------------------------------------------
+
+Meaning:
+An authorized human has approved the action, or a later controlled internal process has
+promoted an approval_required action after explicit user confirmation.
+
+Typical setter:
+- founder/owner
+- authorized admin role
+- approval API after permission check
+
+Allowed next statuses:
+- queued
+- cancelled
+- failed
+
+External write allowed from this status:
+- No, not directly
+
+Important rule:
+Approval is not execution. The approve endpoint must not publish, send, refund, or change
+ad spend by itself unless a later intentionally built approve-to-execute flow calls the executor
+after all final checks. For early V2, approval should only change internal action state.
+
+--------------------------------------------------------------------------------
+STATUS: rejected
+--------------------------------------------------------------------------------
+
+Meaning:
+The founder or an authorized reviewer rejected the action.
+
+Typical setter:
+- founder/owner
+- authorized admin role
+- rejection API after permission check
+
+Allowed next statuses:
+- none
+
+External write allowed from this status:
+- No
+
+Terminal:
+- Yes
+
+Important rule:
+Rejected actions must remain visible in history/audit. They should not be deleted silently.
+
+--------------------------------------------------------------------------------
+STATUS: cancelled
+--------------------------------------------------------------------------------
+
+Meaning:
+The action was stopped before execution. Cancellation may happen because the founder
+cancelled it, the source condition became stale, duplicate protection blocked it, or the
+system cancelled it for safety.
+
+Typical setter:
+- founder/owner/admin
+- system safety guard
+- duplicate/idempotency guard
+- stale action cleanup job later
+
+Allowed next statuses:
+- none
+
+External write allowed from this status:
+- No
+
+Terminal:
+- Yes
+
+Important rule:
+Cancelled means the action did not execute. If something already executed, use rollback
+instead of cancellation.
+
+--------------------------------------------------------------------------------
+STATUS: queued
+--------------------------------------------------------------------------------
+
+Meaning:
+The action passed approval/policy and is waiting for an executor to process it.
+
+Typical setter:
+- approval service
+- policy service
+- execution queue service
+
+Allowed next statuses:
+- executing
+- cancelled
+- failed
+
+External write allowed from this status:
+- No, not until executor starts
+
+Important rule:
+The executor must re-check pause state, caps, permissions, idempotency, and connector
+readiness before moving to executing.
+
+--------------------------------------------------------------------------------
+STATUS: executing
+--------------------------------------------------------------------------------
+
+Meaning:
+An executor is actively processing the action.
+
+Typical setter:
+- executor service only
+
+Allowed next statuses:
+- executed
+- failed
+- rolled_back only when the current execution is a rollback flow
+
+External write allowed from this status:
+- Yes, only through the registered executor for this action type and only after final preflight checks
+
+Important rule:
+The system must prevent duplicate execution. Use idempotency_key/action_hash before
+entering this status.
+
+--------------------------------------------------------------------------------
+STATUS: executed
+--------------------------------------------------------------------------------
+
+Meaning:
+The executor completed the action successfully and stored a result record.
+
+Typical setter:
+- executor service after confirmed success
+
+Allowed next statuses:
+- rollback_requested
+
+External write allowed from this status:
+- No further writes from this status unless a rollback flow begins
+
+Terminal:
+- Operationally yes, unless rollback is requested
+
+Important rule:
+Do not set executed unless action_results confirms success. Never claim execution based
+only on a successful API request setup or approval click.
+
+--------------------------------------------------------------------------------
+STATUS: failed
+--------------------------------------------------------------------------------
+
+Meaning:
+The action could not be completed safely. This can happen during policy evaluation,
+queueing, executor preflight, executor execution, or rollback.
+
+Typical setter:
+- policy service
+- approval service
+- executor service
+- worker/system service
+
+Allowed next statuses:
+- none for the same action in early V2
+
+External write allowed from this status:
+- No
+
+Terminal:
+- Yes for early V2
+
+Important rule:
+Do not hide failed actions. Store safe error summaries without secrets. If retry is needed,
+create a new action or a future explicit retry flow rather than mutating failed back to queued.
+
+--------------------------------------------------------------------------------
+STATUS: rollback_requested
+--------------------------------------------------------------------------------
+
+Meaning:
+A rollback/undo has been requested for an action that was already executed.
+
+Typical setter:
+- founder/owner/admin
+- safety/anomaly system later
+
+Allowed next statuses:
+- queued
+- executing
+- failed
+- rolled_back
+
+External write allowed from this status:
+- No, not directly
+
+Important rule:
+Rollback may be handled either by the original action's rollback flow or by creating a
+separate rollback_action. The original action must keep a clear audit trail.
+
+--------------------------------------------------------------------------------
+STATUS: rolled_back
+--------------------------------------------------------------------------------
+
+Meaning:
+A rollback was completed successfully, or the system completed the best supported undo
+behavior for that platform.
+
+Typical setter:
+- rollback executor after confirmed success
+
+Allowed next statuses:
+- none
+
+External write allowed from this status:
+- No
+
+Terminal:
+- Yes
+
+Important rule:
+Some platforms cannot truly undo actions. In those cases, do not falsely mark rolled_back.
+Use failed or a future rollback_not_supported result detail in action_results.
+
+================================================================================
+RECOMMENDED NORMAL FLOWS
+================================================================================
+
+--------------------------------------------------------------------------------
+Manual approval flow
+--------------------------------------------------------------------------------
+
+proposed
+  -> approval_required
+  -> approved
+  -> queued
+  -> executing
+  -> executed
+
+Use this for:
+- first content publishing executor
+- first support send executor
+- first ads executor
+- any medium/high-risk action
+
+--------------------------------------------------------------------------------
+Manual rejection flow
+--------------------------------------------------------------------------------
+
+proposed
+  -> approval_required
+  -> rejected
+
+Use this when the founder says no.
+
+--------------------------------------------------------------------------------
+Manual cancellation flow
+--------------------------------------------------------------------------------
+
+proposed
+  -> approval_required
+  -> cancelled
+
+approved
+  -> cancelled
+
+queued
+  -> cancelled
+
+Use this before execution begins.
+
+--------------------------------------------------------------------------------
+Policy auto-approved flow
+--------------------------------------------------------------------------------
+
+proposed
+  -> auto_approved
+  -> queued
+  -> executing
+  -> executed
+
+Use this only after policy engine, caps, pause switch, audit logs, and sandbox executor
+are fully tested. Do not use for early real ad/support execution.
+
+--------------------------------------------------------------------------------
+Execution failure flow
+--------------------------------------------------------------------------------
+
+queued
+  -> executing
+  -> failed
+
+Use this when executor preflight or execution fails.
+
+--------------------------------------------------------------------------------
+Rollback flow
+--------------------------------------------------------------------------------
+
+executed
+  -> rollback_requested
+  -> queued
+  -> executing
+  -> rolled_back
+
+Use this only when rollback is supported and confirmed.
+
+================================================================================
+FORBIDDEN TRANSITIONS
+================================================================================
+
+The system must not allow these transitions:
+
+- proposed -> executed
+- proposed -> queued without policy/approval decision
+- approval_required -> executed
+- auto_approved -> executed directly
+- approved -> executed directly without queue/executor lifecycle
+- rejected -> queued
+- rejected -> executed
+- cancelled -> queued
+- cancelled -> executed
+- failed -> executed
+- rolled_back -> executing
+- executed -> cancelled
+
+Reason:
+Every real action needs an auditable approval/policy, queue, execution, and result path.
+
+================================================================================
+STATUS OWNERSHIP RULES
+================================================================================
+
+Status changes should be owned by specific parts of the system:
+
+proposed:
+- action creation service
+
+approval_required:
+- policy evaluation service
+
+auto_approved:
+- policy evaluation service only
+
+approved:
+- approval service after role check
+
+rejected:
+- approval/rejection service after role check
+
+cancelled:
+- cancellation service or system safety guard
+
+queued:
+- queue/execution service after final queue eligibility check
+
+executing:
+- executor service only
+
+executed:
+- executor service only after result confirmation
+
+failed:
+- policy, queue, or executor service with safe error record
+
+rollback_requested:
+- rollback request service after permission check
+
+rolled_back:
+- rollback executor only after result confirmation
+
+================================================================================
+ACTION EVENTS THAT SHOULD BE LOGGED LATER
+================================================================================
+
+Each status change should create an action_events row in Phase 2.5.
+
+Recommended event names:
+
+- action_created
+- policy_evaluated
+- approval_required
+- auto_approved
+- approved
+- rejected
+- cancelled
+- queued
+- execution_started
+- execution_finished
+- execution_failed
+- rollback_requested
+- rollback_started
+- rollback_finished
+- rollback_failed
+
+Each event should include:
+
+- action_id
+- workspace_id
+- old_status
+- new_status
+- actor_type: user | system | policy | executor | worker
+- actor_user_id when available
+- reason
+- safe_metadata_json
+- created_at
+- request_id when available
+
+Never log raw secrets, raw API keys, customer private credentials, or full sensitive support payloads.
+
+================================================================================
+UI DISPLAY RULES
+================================================================================
+
+The founder-facing UI should use plain labels:
+
+proposed:
+- Proposed
+
+approval_required:
+- Needs Approval
+
+auto_approved:
+- Auto-Approved by Rule
+
+approved:
+- Approved
+
+rejected:
+- Rejected
+
+cancelled:
+- Cancelled
+
+queued:
+- Queued
+
+executing:
+- Executing
+
+executed:
+- Executed
+
+failed:
+- Failed
+
+rollback_requested:
+- Rollback Requested
+
+rolled_back:
+- Rolled Back
+
+Important UI language:
+- Approved does not mean executed.
+- Auto-approved does not mean executed.
+- Executed must show a result summary.
+- Failed must show a safe reason.
+- Rolled back must explain what was actually undone.
+
+================================================================================
+PHASE 2.3 MIGRATION GUIDANCE
+================================================================================
+
+When the actions table is created in Phase 2.3, the status column should use these exact
+values.
+
+Recommended database default:
+- proposed
+
+Recommended validation:
+- database CHECK constraint or application enum validation should restrict values to the
+official lifecycle statuses.
+
+Recommended future fields:
+- status
+- approval_required
+- policy_decision
+- approved_at
+- queued_at later if needed
+- executing_at later if needed
+- executed_at
+- failed_at later if needed
+- cancelled_at later if needed
+- rollback_requested_at later if needed
+- rolled_back_at later if needed
+
+Early migration should stay additive and non-destructive.
+Do not drop or rename existing V1 tables.
+Do not add real executor fields that assume a platform is already connected.
+
+================================================================================
+SECURITY NOTES
+================================================================================
+
+1. Status fields are not permission checks by themselves.
+2. Backend routes must enforce workspace scoping and role checks.
+3. Super Admin may monitor, but must not expose customer secrets.
+4. Approval endpoints must not execute real writes in early V2.
+5. Executor endpoints must never be public without strong protection.
+6. Worker/executor calls must use internal authentication and request IDs.
+7. All external writes must be idempotency protected.
+8. All action payloads must be sanitized before display.
+9. Sensitive customer/support data should be redacted in logs.
+10. Master pause must override queued, approved, and auto_approved actions before execution.
+
+================================================================================
+ACCEPTANCE CHECKLIST FOR PHASE 2.2
+================================================================================
+
+Phase 2.2 is complete when:
+
+[ ] All official statuses are documented.
+[ ] Each status has a clear meaning.
+[ ] Allowed next transitions are defined.
+[ ] Forbidden transitions are defined.
+[ ] The difference between approved, auto_approved, and executed is clear.
+[ ] Rollback flow is defined.
+[ ] UI labels are defined.
+[ ] Future action_events requirements are noted.
+[ ] Phase 2.3 migration guidance is included.
+[ ] No external writes or executors are added.
+
+================================================================================
+END OF LIFE.SAVER V2 ACTION STATUS LIFECYCLE
+================================================================================

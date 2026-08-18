@@ -1,0 +1,42 @@
+================================================================================================
+PHASE 11.5 TEST RESULTS — AUTO-APPROVAL DECISION
+================================================================================================
+
+Commands run by package builder:
+
+npm run phase11:auto-approval:test
+npm run phase11:channel-time:test
+npm run phase11:daily-cap:test
+npm run phase11:content-risk:test
+npm run phase11:approved-style:test
+npm run phase10:notification-qa:test
+npm run phase9:content-caps:test
+npm run build
+
+Observed results:
+
+phase11:auto-approval:test — 23 passed, 0 failed
+phase11:channel-time:test — 20 passed, 0 failed
+phase11:daily-cap:test — 12 passed, 0 failed
+phase11:content-risk:test — 20 passed, 0 failed
+phase11:approved-style:test — 16 passed, 0 failed
+phase10:notification-qa:test — 9 passed, 0 failed
+phase9:content-caps:test — 22 passed, 0 failed
+build — passed
+
+Install note:
+- npm install --ignore-scripts reported 3 existing dependency audit findings: 1 low, 2 moderate.
+- npm audit fix was not run.
+- npm audit fix --force was not run.
+
+Safety checks included:
+- auto_approved can only be returned when every gate passes
+- pause gates block
+- daily cap exceeded blocks
+- outside publishing window blocks
+- unsupported platform/channel/action blocks
+- image/video media blocks narrow lane
+- style/risk ask keeps manual_review_required
+- secret-like fragments are not returned
+- raw caption is not returned inside the decision record
+- decision record does not publish or mutate action status

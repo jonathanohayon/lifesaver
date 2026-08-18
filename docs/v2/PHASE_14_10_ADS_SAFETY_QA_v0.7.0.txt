@@ -1,0 +1,36 @@
+LIFE.SAVER v0.7.0 — Phase 14.10 Ads Safety QA
+
+Roadmap deliverable:
+Ads executor QA and risk sign-off.
+
+Required tests:
+1. Sandbox/test account first.
+2. Manual approval.
+3. Hard cap exceeded.
+4. Pause active.
+5. Rollback supported.
+6. No duplicate execution.
+
+Implementation:
+Phase 14.10 adds a QA/report-only module under apps/api/src/modules/ads.
+It combines the prior Phase 14 safety pieces into one sign-off report:
+- Phase 14.4 budget payload validation.
+- Phase 14.5 hard caps.
+- Phase 14.6 manual approval gate.
+- Phase 14.7 before/after snapshot readiness.
+- Phase 14.8 rollback/re-enable planning.
+- Phase 14.9 restricted auto-run policy remains future-only.
+
+Endpoints:
+- GET  /api/v1/ads/safety-qa/status
+- GET  /api/v1/ads/safety-qa/report
+- GET  /api/v1/ads/safety-qa/example
+- POST /api/v1/ads/safety-qa/preview
+
+Risk sign-off notes:
+This phase signs off the executor shell safety gates only.
+It does not approve live provider execution.
+Any future controlled Meta/Google Ads test must still use sandbox/test account first and explicit founder/client approval.
+
+Safety:
+No provider client, OAuth route, token storage, write scope, budget mutation, campaign/adset pause, rollback mutation, auto-run, external API call, raw token/provider payload, or database migration is added.

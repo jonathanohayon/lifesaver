@@ -1,0 +1,134 @@
+================================================================================
+LIFE.SAVER v0.7.0 — Phase 9.5 Media Asset Handling Flow
+================================================================================
+
+Purpose
+-------
+Phase 9.5 decides how future LinkedIn media assets should be handled before a real
+publishing executor is added.
+
+This phase covers:
+- upload flow,
+- storage,
+- validation,
+- file size limits,
+- MIME checks,
+- preview.
+
+Selected platform
+-----------------
+LinkedIn remains the selected first content platform.
+
+Initial safety position
+-----------------------
+Text/link publishing remains the easiest first future real executor path.
+Image/video support is planned here, but no LinkedIn media upload is implemented in
+Phase 9.5.
+
+Official LinkedIn media observations used for planning
+------------------------------------------------------
+LinkedIn Posts API requires image/video assets to be uploaded first so the post can
+reference an Image URN or Video URN.
+
+LinkedIn Images API supports JPG, GIF, and PNG formats, images below 36,152,320
+pixels, and GIFs up to 250 frames.
+
+LinkedIn Videos API documents MP4 video guidance, 3 seconds to 30 minutes length,
+and a 75KB to 500MB high-level size range for normal non-connected-TV use.
+
+LIFE.SAVER Phase 9.5 decision
+-----------------------------
+Use a two-step internal media lifecycle:
+
+1. LIFE.SAVER private asset stage
+   - User chooses media in browser.
+   - Future backend upload endpoint receives file and metadata.
+   - Backend validates auth/workspace/permission.
+   - Backend validates file name, extension, MIME, file signature, size, dimensions,
+     duration, and optional checksum.
+   - Backend stores asset in private object storage.
+   - Browser receives only safe preview metadata and a short-lived signed preview URL.
+
+2. Future LinkedIn upload stage
+   - Only after manual approval and policy checks.
+   - Future executor loads the private asset server-side.
+   - Future executor initializes LinkedIn Images API or Videos API upload.
+   - Future executor uploads media to LinkedIn server-side.
+   - Future executor receives LinkedIn media URN.
+   - Future executor attaches media URN to post creation request.
+
+Storage plan
+------------
+Default storage provider:
+- Supabase Storage private bucket, or compatible private object storage.
+
+Default bucket:
+- content-media-assets
+
+Visibility:
+- private only
+
+Object key pattern:
+- workspace/{workspace_id}/content-media/{asset_id}/{safe_file_name}
+
+Preview:
+- short-lived signed URL only
+- default TTL: 300 seconds
+- maximum TTL: 900 seconds
+
+Browser must never receive:
+- LinkedIn access token
+- LinkedIn upload URL
+- permanent storage URL
+- raw object key when not needed
+- external upload URL
+
+Validation rules
+----------------
+Images:
+- Allowed MIME: image/jpeg, image/png, image/gif
+- Allowed extension: jpg, jpeg, png, gif
+- LIFE.SAVER safety file cap: 20MB
+- LinkedIn pixel cap: 36,152,320 pixels
+- LinkedIn GIF frame cap: 250 frames
+
+Videos:
+- Allowed MIME: video/mp4
+- Allowed extension: mp4
+- Minimum size: 75KB
+- LIFE.SAVER initial safety file cap: 500MB
+- Duration: 3 seconds to 30 minutes
+
+Security notes
+--------------
+- Do not trust browser-provided MIME alone.
+- Backend must inspect file signature/magic bytes in the future upload endpoint.
+- Backend must calculate checksum server-side.
+- Backend must confirm image dimensions or video duration server-side.
+- Backend must keep media assets workspace-scoped.
+- Backend must not store permanent public URLs.
+- Backend must not expose raw LinkedIn upload URLs to the browser.
+
+Current implementation in Phase 9.5
+-----------------------------------
+Added:
+- TypeScript media metadata schema.
+- Validation rules.
+- Browser-safe preview builder.
+- Handling flow builder.
+- Shared package media constants.
+- Tests.
+
+Not added:
+- File upload endpoint.
+- Object storage write code.
+- LinkedIn media upload code.
+- LinkedIn post executor.
+- Real external API calls.
+- Auto-run execution.
+
+Next implementation phases
+--------------------------
+Phase 9.6 should remain manual approval execution planning only.
+Actual OAuth/API/publish implementation must only occur when that exact sub-phase is
+explicitly approved and scoped.

@@ -1,0 +1,38 @@
+LIFE.SAVER v0.6.0 — Phase 8.6 Test Results
+===========================================
+
+Package:
+- lifesaver-v0.6.0-phase-8-6-approve-to-execute-flow.zip
+
+New test:
+- executor:sandbox-lifecycle:test — 16 passed, 0 failed
+
+Regression tests run:
+- npm run build — passed
+- npm run executor:sandbox-lifecycle:test — 16 passed, 0 failed
+- npm run executor:sandbox-ads:test — 23 passed, 0 failed
+- npm run executor:sandbox-support:test — 16 passed, 0 failed
+- npm run executor:sandbox-content:test — 15 passed, 0 failed
+- npm run executor:registry:test — 15 passed, 0 failed
+- npm run executor:interface:test — 12 passed, 0 failed
+- npm run executor:pause:test — 4 passed, 0 failed
+- npm run policy:tests:test — 7 passed, 0 failed
+- npm run rules:permission:test — passed
+- npm run actions:test:backend — passed
+- npm run client:test-checklist — completed
+- npm run security:check — completed with expected local warnings
+- npm run env:check — completed with expected local warnings
+
+Expected local warnings:
+- DATABASE_URL missing if .env is not copied.
+- Development secrets weak/default if production env is not configured.
+- NODE_ENV=development.
+
+Safety confirmed:
+- No external writes attempted.
+- No real executors enabled.
+- No auto-run enabled.
+- No real content publishing.
+- No real support sending.
+- No real ad changes.
+- No real rollback execution.

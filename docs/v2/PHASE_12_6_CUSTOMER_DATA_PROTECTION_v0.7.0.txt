@@ -1,0 +1,40 @@
+LIFE.SAVER v0.7.0 — Phase 12.6 Customer Data Protection
+=========================================================
+
+Purpose
+-------
+Add support privacy safeguards before Gmail/support data becomes more deeply integrated.
+
+Rules implemented
+-----------------
+- Redact sensitive data in logs.
+- Do not expose customer private data unnecessarily.
+- Avoid full raw ticket payload in admin logs.
+- Return only browser-safe support log previews.
+- Keep raw/provider payloads separated from normalized support ticket data.
+
+Endpoints
+---------
+- GET  /api/v1/support/privacy-safeguards/status
+- GET  /api/v1/support/privacy-safeguards/example
+- POST /api/v1/support/privacy-safeguards/preview
+
+Redaction coverage
+------------------
+- Email addresses.
+- Card-like numbers.
+- OAuth/access/refresh token fragments.
+- Authorization bearer headers.
+- API key/secret-like values.
+- OTP/security/verification codes.
+- Phone-number-like values.
+- Postal-address-like snippets.
+
+Important safety boundary
+-------------------------
+Phase 12.6 does not add Gmail OAuth, Gmail API calls, email sending, support auto-reply, or support send executors.
+It is a privacy/model/API preview phase only.
+
+Testing command
+---------------
+npm.cmd run phase12:support-privacy:test

@@ -1,0 +1,24 @@
+{
+  "version": "0.6.0",
+  "phase": "V2 Phase 6.10 Policy Tests",
+  "success": true,
+  "passed": 7,
+  "failed": 0,
+  "requiredRoadmapScenarios": [
+    "Ask by default",
+    "Auto-approve when rule matches",
+    "Block when rule matches",
+    "Cap exceeded",
+    "Pause active",
+    "Conflicting rules"
+  ],
+  "safety": {
+    "testOnly": true,
+    "databaseWritesPerformed": false,
+    "executorEnabled": false,
+    "executorRan": false,
+    "externalWritesEnabled": false,
+    "externalWritesAttempted": false,
+    "autoRunTriggered": false
+  }
+}

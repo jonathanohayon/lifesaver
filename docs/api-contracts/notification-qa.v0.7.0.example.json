@@ -1,0 +1,81 @@
+{
+  "status": "ok",
+  "data": {
+    "version": "0.7.0",
+    "phase": "phase_10_10_notification_qa",
+    "generatedAt": "2026-07-06T18:00:00.000Z",
+    "workspaceId": "workspace_notification_qa",
+    "actionId": "11111111-1111-4111-8111-111111111111",
+    "summary": {
+      "totalChecks": 5,
+      "passed": 5,
+      "failed": 0,
+      "readyForPhase10Completion": true
+    },
+    "checks": [
+      {
+        "key": "in_app_notification",
+        "label": "In-app notification center shows pending approval",
+        "status": "pass",
+        "evidence": "Pending approvals: 1; high-risk pending approvals: 1.",
+        "safetyNotes": [
+          "Notification center is read-only.",
+          "Notification center links open the action review screen only."
+        ]
+      },
+      {
+        "key": "email_notification",
+        "label": "Email notification template contains required fields",
+        "status": "pass",
+        "evidence": "Template subject: [LIFE.SAVER] Approval needed: Review LinkedIn launch update",
+        "safetyNotes": [
+          "Template generation does not send email.",
+          "Template excludes secrets, raw payload JSON, rollback payloads, and tracking pixels."
+        ]
+      },
+      {
+        "key": "deep_link",
+        "label": "Deep link opens exact action detail screen",
+        "status": "pass",
+        "evidence": "Review URL: ./actions.html?actionId=11111111-1111-4111-8111-111111111111&source=email_notification&linkMode=review_only&notificationKey=notification-qa-email-link",
+        "safetyNotes": [
+          "Link contains actionId and linkMode=review_only.",
+          "Link targets actions.html, not an API mutation route."
+        ]
+      },
+      {
+        "key": "auth_required",
+        "label": "Approval links require login and do not approve from email",
+        "status": "pass",
+        "evidence": "Secure link behavior requires authenticated app session plus a separate in-app approval click.",
+        "safetyNotes": [
+          "Clicking the email link cannot approve, execute, publish, or rollback.",
+          "API route is mounted behind authRequired in api-v1.ts."
+        ]
+      },
+      {
+        "key": "failed_notification_logs",
+        "label": "Failed notification logs are recorded safely",
+        "status": "pass",
+        "evidence": "Failed log status: failed; provider: lifesaver_internal_qa.",
+        "safetyNotes": [
+          "Failure log is a safe delivery log only.",
+          "Failure log does not call an external provider or expose secrets."
+        ]
+      }
+    ],
+    "safety": {
+      "qaReportOnly": true,
+      "sendsEmailInThisPhase": false,
+      "sendsSlackInThisPhase": false,
+      "callsExternalNotificationProviders": false,
+      "canApproveAction": false,
+      "canRejectAction": false,
+      "canExecuteAction": false,
+      "canPublishContent": false,
+      "exposesTokensOrSecrets": false,
+      "exposesActionPayloadJson": false,
+      "exposesRollbackPayload": false
+    }
+  }
+}

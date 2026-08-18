@@ -1,0 +1,667 @@
+LIFE.SAVER V2 ACTION TYPE REGISTRY
+Version: v0.6.0
+Phase: 2.1 — Action Taxonomy Definition
+Status: Documentation-only registry. No database migration. No executor. No external write connector.
+Prepared for: LIFE.SAVER V2 Operator Mode foundation
+
+================================================================================
+PURPOSE
+================================================================================
+
+This document defines the first official LIFE.SAVER V2 action taxonomy.
+
+In V1, LIFE.SAVER is advisor-only:
+- read metrics
+- advise the founder
+- generate briefs
+- create drafts
+- change internal draft statuses only
+
+In V2, LIFE.SAVER may propose actions and, later, execute real actions only when:
+1. the founder approves the action, OR
+2. an explicit founder-defined policy/rule allows the action.
+
+This registry gives the engineering team a controlled vocabulary before building:
+- actions table
+- approval queue
+- policy engine
+- audit logs
+- sandbox executor
+- real write executors later
+
+This phase does NOT add execution power.
+This phase does NOT connect any write API.
+This phase does NOT allow autonomous posting, sending, or ad changes.
+
+================================================================================
+NON-NEGOTIABLE V2 SAFETY RULES
+================================================================================
+
+1. Default to ask.
+2. Auto-run nothing unless an explicit policy/rule allows it.
+3. Master pause must stop all autonomy and execution.
+4. Every action must be workspace-scoped.
+5. Every action must have a status lifecycle.
+6. Every status change must be logged.
+7. Every real external write must have an executor result record.
+8. Every action must be idempotent before execution.
+9. Raw external secrets must never be stored in action payloads.
+10. No real write connector may be added before approval queue, policies, pause switch, audit logs, and sandbox execution are working.
+
+================================================================================
+ACTION CATEGORY SUMMARY
+================================================================================
+
+Initial V2 action types:
+
+1. content_publish
+2. support_reply_send
+3. ad_budget_adjust
+4. ad_pause
+5. research_task
+6. dev_task
+7. notification_send
+8. rollback_action
+
+================================================================================
+ACTION TYPE: content_publish
+================================================================================
+
+Purpose:
+Create, schedule, or publish content to a connected content/social platform.
+
+Examples:
+- Publish an Instagram post.
+- Publish a TikTok video.
+- Publish a YouTube Short.
+- Publish a Facebook post.
+- Schedule an approved campaign post.
+
+Initial V2 behavior:
+- Manual approval required.
+- Sandbox executor first.
+- Real executor later, one channel only.
+
+Allowed source modules:
+- AI content draft tool
+- content specialist
+- campaign planner
+- scheduler/proactive engine later
+
+Likely payload fields:
+- platform
+- account_id
+- caption
+- media_asset_id
+- media_url
+- hashtags
+- scheduled_time
+- approval_notes
+- brand_voice_profile_id
+- risk_score
+
+Default risk level:
+- medium
+
+Approval requirement:
+- true by default
+
+Auto-run eligibility later:
+- only after policy engine, caps, pause switch, brand safety checks, sandbox executor, and one controlled real channel pass QA.
+
+Hard caps needed:
+- max posts per day
+- max posts per hour
+- platform-specific rate limit
+- model/content generation cost cap
+
+Rollback support:
+- platform dependent
+- if supported: unpublish/delete post
+- if unsupported: mark rollback_not_supported and draft correction/follow-up
+
+Forbidden payload data:
+- raw platform access token
+- raw customer credentials
+- private API keys
+
+================================================================================
+ACTION TYPE: support_reply_send
+================================================================================
+
+Purpose:
+Send a support reply to a customer through a connected inbox/helpdesk.
+
+Examples:
+- Send a Gmail reply.
+- Send a Zendesk/Gorgias/Help Scout reply.
+- Reply to a customer ticket using an approved draft.
+
+Initial V2 behavior:
+- Manual approval required.
+- Read-only support connector first.
+- Sandbox support executor before real sending.
+
+Allowed source modules:
+- support reply draft tool
+- support specialist
+- ticket classifier
+- proactive support workflow later
+
+Likely payload fields:
+- connector
+- ticket_id
+- thread_id
+- customer_email_hint
+- subject_hint
+- reply_body
+- classification
+- confidence_score
+- sensitive_flag
+- escalation_reason
+
+Default risk level:
+- medium
+- high when refund, cancellation, payment, legal, complaint, chargeback, medical/sensitive, or low confidence is detected
+
+Approval requirement:
+- true by default
+
+Auto-run eligibility later:
+- only low-risk FAQ replies
+- only after explicit policy allows it
+- only when confidence threshold is met
+- never for sensitive or escalation categories
+
+Hard caps needed:
+- max auto-replies per day
+- max replies per hour
+- no bulk sends without explicit approval
+
+Rollback support:
+- real email/support replies usually cannot be truly undone
+- rollback should create follow-up/apology/correction draft and mark for human review
+
+Forbidden payload data:
+- full raw customer PII in general admin logs
+- support connector token
+- payment card data
+- private API keys
+
+================================================================================
+ACTION TYPE: ad_budget_adjust
+================================================================================
+
+Purpose:
+Adjust a campaign/adset/ad group budget on an ad platform.
+
+Examples:
+- Increase Meta ad set budget by a small amount.
+- Decrease Google Ads campaign budget.
+- Restore a previous budget after a rollback request.
+
+Initial V2 behavior:
+- Not allowed in early V2 packages.
+- Manual approval only when later introduced.
+- Sandbox ads executor first.
+- Real ads executor comes after content/support safety patterns are proven.
+
+Allowed source modules:
+- ads specialist
+- ROAS anomaly detector
+- weekly ad review job
+- founder chat request
+
+Likely payload fields:
+- platform
+- ad_account_id
+- campaign_id
+- adset_id
+- ad_group_id
+- current_budget
+- proposed_budget
+- delta_amount
+- delta_percent
+- currency
+- reason
+- metric_snapshot_id
+- before_state_snapshot
+
+Default risk level:
+- high
+
+Approval requirement:
+- true by default
+
+Auto-run eligibility later:
+- only tiny changes under explicit hard caps
+- only after direct ad platform connector is tested
+- only after before/after snapshot and rollback are working
+
+Hard caps needed:
+- max daily budget change
+- max percentage change
+- max number of changes per day
+- emergency maximum budget limit
+- always ask above threshold
+
+Rollback support:
+- restore previous budget when platform supports it
+- requires before-state snapshot
+
+Forbidden payload data:
+- ad platform access token
+- raw OAuth refresh token
+- secrets
+
+================================================================================
+ACTION TYPE: ad_pause
+================================================================================
+
+Purpose:
+Pause a campaign, ad set, ad group, or ad when performance or policy requires it.
+
+Examples:
+- Pause an underperforming ad set.
+- Pause a campaign with abnormal spend.
+- Pause an ad flagged by a rule.
+
+Initial V2 behavior:
+- Not allowed in early V2 packages.
+- Manual approval only when later introduced.
+- Sandbox ads executor first.
+
+Allowed source modules:
+- ads specialist
+- anomaly detector
+- founder chat request
+- weekly ad review job
+
+Likely payload fields:
+- platform
+- ad_account_id
+- campaign_id
+- adset_id
+- ad_id
+- current_status
+- proposed_status
+- reason
+- metric_snapshot_id
+- before_state_snapshot
+
+Default risk level:
+- high
+
+Approval requirement:
+- true by default
+
+Auto-run eligibility later:
+- only inside explicit emergency/policy rules
+- must obey master pause and ad category pause
+- must store before-state snapshot for re-enable/rollback
+
+Hard caps needed:
+- max pause actions per day
+- never pause all campaigns unless explicitly approved
+- always ask for high-spend or core campaigns
+
+Rollback support:
+- re-enable campaign/adset/ad when platform supports it
+- requires before-state snapshot
+
+Forbidden payload data:
+- ad platform access token
+- raw OAuth refresh token
+- secrets
+
+================================================================================
+ACTION TYPE: research_task
+================================================================================
+
+Purpose:
+Create a research task for LIFE.SAVER or the founder to investigate an issue/opportunity.
+
+Examples:
+- Research why ROAS dropped.
+- Research competitors.
+- Research product demand.
+- Research ad creative ideas.
+- Research support complaint patterns.
+
+Initial V2 behavior:
+- Internal only.
+- No external write action.
+- Can be created without dangerous execution.
+
+Allowed source modules:
+- chat assistant
+- research specialist
+- Daily Brief/Weekly Summary generator
+- anomaly detector
+
+Likely payload fields:
+- topic
+- question
+- context
+- related_metric_snapshot_id
+- priority
+- due_date
+- output_format
+- assigned_to
+
+Default risk level:
+- low
+
+Approval requirement:
+- false for internal-only research tasks
+- true if it triggers paid tools, external scraping, or notifications later
+
+Auto-run eligibility later:
+- safe internal research can auto-create if policy allows
+- must respect model cost caps
+
+Hard caps needed:
+- max research tasks per day
+- model cost cap
+- external source/API cost cap if added later
+
+Rollback support:
+- cancel task or archive output
+
+Forbidden payload data:
+- secrets
+- unnecessary customer PII
+
+================================================================================
+ACTION TYPE: dev_task
+================================================================================
+
+Purpose:
+Create an internal development/technical task for the LIFE.SAVER team.
+
+Examples:
+- Create a bug fix task.
+- Create a schema investigation task.
+- Create a deployment checklist item.
+- Create a QA follow-up task.
+
+Initial V2 behavior:
+- Internal task only.
+- No code deployment.
+- No repository write in early V2.
+
+Allowed source modules:
+- dev specialist
+- admin QA tools
+- launch readiness page
+- error/anomaly detector
+
+Likely payload fields:
+- title
+- description
+- severity
+- affected_area
+- reproduction_steps
+- expected_result
+- actual_result
+- linked_log_id
+- priority
+
+Default risk level:
+- low
+
+Approval requirement:
+- false for internal task creation
+- true if later connected to GitHub/Jira/Linear write APIs
+
+Auto-run eligibility later:
+- create internal dev task only
+- no code change or deploy without explicit approval
+
+Hard caps needed:
+- max tasks per day
+- no deployment automation in V2 unless separately approved
+
+Rollback support:
+- cancel/close task
+
+Forbidden payload data:
+- raw secrets
+- full .env values
+- API keys
+
+================================================================================
+ACTION TYPE: notification_send
+================================================================================
+
+Purpose:
+Notify the founder/team about pending approvals, failures, warnings, or important business events.
+
+Examples:
+- In-app pending approval notification.
+- Email notification that an action needs review.
+- Slack notification later.
+- Failure alert for an executor.
+
+Initial V2 behavior:
+- In-app notification preferred first.
+- Email/Slack later.
+- No approval-by-link without login.
+
+Allowed source modules:
+- approval queue
+- policy engine
+- executor result handler
+- worker scheduler
+- anomaly detector
+
+Likely payload fields:
+- channel
+- recipient_user_id
+- recipient_email_hint
+- title
+- message
+- related_action_id
+- priority
+- deep_link
+- quiet_hours_override
+
+Default risk level:
+- low
+- medium if external email/Slack send is used
+
+Approval requirement:
+- false for safe in-app notifications
+- true or policy-controlled for external notification sends until stable
+
+Auto-run eligibility later:
+- pending approval reminders
+- executor failure alerts
+- launch/security alerts
+- must obey notification preferences and quiet hours
+
+Hard caps needed:
+- max notifications per user per hour
+- max emails per day
+- quiet hours enforcement
+
+Rollback support:
+- cannot undo delivered notification
+- can dismiss/archive notification
+
+Forbidden payload data:
+- raw API keys
+- full private payloads
+- customer PII unless necessary and safe
+
+================================================================================
+ACTION TYPE: rollback_action
+================================================================================
+
+Purpose:
+Represent an attempt to reverse or compensate for a previously executed action.
+
+Examples:
+- Unpublish a post.
+- Restore previous ad budget.
+- Re-enable paused campaign/adset.
+- Draft correction/follow-up for a sent support reply.
+
+Initial V2 behavior:
+- Internal/sandbox only until real executors exist.
+- Requires original action/result reference.
+
+Allowed source modules:
+- action detail screen
+- executor result handler
+- founder chat request
+- admin/super admin review
+
+Likely payload fields:
+- original_action_id
+- original_result_id
+- rollback_type
+- rollback_supported
+- rollback_reason
+- rollback_payload
+- expected_result
+
+Default risk level:
+- same or higher than original action
+
+Approval requirement:
+- true by default
+
+Auto-run eligibility later:
+- rare; usually ask
+- possible auto-rollback only for clearly failed/partial sandbox cases or explicitly configured emergency rules
+
+Hard caps needed:
+- max rollback attempts per action
+- prevent rollback loops
+- prevent duplicate rollback
+
+Rollback support:
+- rollback action itself may not always be reversible
+- must record final result carefully
+
+Forbidden payload data:
+- raw connector tokens
+- secrets
+
+================================================================================
+RECOMMENDED ACTION TYPE REGISTRY SHAPE FOR CODE LATER
+================================================================================
+
+When Phase 2 moves from documentation into code, the registry can become a TypeScript
+constant similar to this shape:
+
+export const ACTION_TYPE_REGISTRY = {
+  content_publish: {
+    label: 'Content Publish',
+    category: 'content',
+    defaultRiskLevel: 'medium',
+    approvalRequiredByDefault: true,
+    executorPhase: 'sandbox_first',
+    realWriteAllowedInV060: false,
+  },
+  support_reply_send: {
+    label: 'Support Reply Send',
+    category: 'support',
+    defaultRiskLevel: 'medium',
+    approvalRequiredByDefault: true,
+    executorPhase: 'sandbox_first',
+    realWriteAllowedInV060: false,
+  },
+  ad_budget_adjust: {
+    label: 'Ad Budget Adjust',
+    category: 'ads',
+    defaultRiskLevel: 'high',
+    approvalRequiredByDefault: true,
+    executorPhase: 'future_ads_executor',
+    realWriteAllowedInV060: false,
+  },
+  ad_pause: {
+    label: 'Ad Pause',
+    category: 'ads',
+    defaultRiskLevel: 'high',
+    approvalRequiredByDefault: true,
+    executorPhase: 'future_ads_executor',
+    realWriteAllowedInV060: false,
+  },
+  research_task: {
+    label: 'Research Task',
+    category: 'research',
+    defaultRiskLevel: 'low',
+    approvalRequiredByDefault: false,
+    executorPhase: 'internal_only',
+    realWriteAllowedInV060: false,
+  },
+  dev_task: {
+    label: 'Dev Task',
+    category: 'dev',
+    defaultRiskLevel: 'low',
+    approvalRequiredByDefault: false,
+    executorPhase: 'internal_only',
+    realWriteAllowedInV060: false,
+  },
+  notification_send: {
+    label: 'Notification Send',
+    category: 'notification',
+    defaultRiskLevel: 'low',
+    approvalRequiredByDefault: false,
+    executorPhase: 'in_app_first',
+    realWriteAllowedInV060: false,
+  },
+  rollback_action: {
+    label: 'Rollback Action',
+    category: 'rollback',
+    defaultRiskLevel: 'inherits_original_or_higher',
+    approvalRequiredByDefault: true,
+    executorPhase: 'sandbox_first',
+    realWriteAllowedInV060: false,
+  },
+} as const;
+
+================================================================================
+PHASE 2.1 ACCEPTANCE CHECKLIST
+================================================================================
+
+Phase 2.1 is complete when:
+
+[ ] The action types are named and stable.
+[ ] Every action type has a clear purpose.
+[ ] Every action type has a default risk level.
+[ ] Every action type has a default approval rule.
+[ ] Every action type has expected payload guidance.
+[ ] Every action type has rollback expectations.
+[ ] The document clearly states no external write execution is enabled yet.
+[ ] The document is committed before Phase 2.2 action lifecycle work begins.
+
+================================================================================
+NEXT PHASE
+================================================================================
+
+Next: Phase 2.2 — Action Status Lifecycle
+
+Goal:
+Define exact action states such as proposed, approval_required, auto_approved,
+approved, rejected, cancelled, queued, executing, executed, failed,
+rollback_requested, and rolled_back.
+
+Do not create the actions migration until Phase 2.2 and Phase 2.3 are both reviewed.
+
+================================================================================
+END OF ACTION TYPE REGISTRY
+================================================================================
+
+================================================================================
+RELATED PHASE 2.2 DOCUMENT
+================================================================================
+
+The status lifecycle for these action types is defined in:
+- docs/v2/ACTION_STATUS_LIFECYCLE_v0.6.0_PHASE_2_2.txt
+
+Action types define WHAT LIFE.SAVER may propose.
+Action statuses define HOW those proposed actions safely move through approval, queueing, execution, failure, and rollback.
+

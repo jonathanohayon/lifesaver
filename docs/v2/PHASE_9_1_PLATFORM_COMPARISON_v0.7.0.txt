@@ -1,0 +1,104 @@
+# LIFE.SAVER — Phase 9.1 Platform Comparison
+
+Version: v0.7.0
+Phase: V2 Phase 9.1 — Choose First Platform
+
+================================================================================
+PLATFORM COMPARISON
+================================================================================
+
+1. LinkedIn — SELECTED
+
+Best first executor choice for engineering safety.
+
+Strengths:
+- Text-only first test is possible.
+- OAuth + posting flow is clear enough for a controlled implementation.
+- Good for founder and brand posts.
+- Lower media handling complexity at the start.
+- Useful for proving approval, token security, idempotency, result logs, and rollback planning.
+
+Risks:
+- Not the most ecommerce-native channel.
+- Company/organization posting may require additional setup beyond member posting.
+- Media upload still needs careful planning in later sub-phases.
+
+Decision:
+- Use LinkedIn first.
+- Begin with member text/link publishing only when real executor work is explicitly reached.
+
+--------------------------------------------------------------------------------
+2. Instagram
+
+Strengths:
+- Strong ecommerce fit.
+- Important future channel for product/content marketing.
+
+Risks:
+- Meta app review and account/page/business linkage complexity.
+- Media container + publish flow needs careful handling.
+- Permissions and eligible account requirements must be confirmed.
+
+Decision:
+- Good later, not first unless the client already has approved Meta publishing access.
+
+--------------------------------------------------------------------------------
+3. TikTok
+
+Strengths:
+- Strong short-form content fit.
+- Useful for ecommerce awareness.
+
+Risks:
+- Media/video-first flow.
+- Direct post audit and explicit user consent requirements.
+- More strict UX/content handling.
+
+Decision:
+- Defer until media handling and consent flow are mature.
+
+--------------------------------------------------------------------------------
+4. YouTube
+
+Strengths:
+- Good for long-form/video content.
+- Clear upload API exists.
+
+Risks:
+- Video-only, large files, processing states, quota, and audit/compliance limits.
+- Unverified project upload visibility restrictions must be handled.
+
+Decision:
+- Defer until video asset handling phase.
+
+--------------------------------------------------------------------------------
+5. Facebook
+
+Strengths:
+- Useful if the client has Facebook Page content needs.
+- Could share Meta setup with Instagram later.
+
+Risks:
+- Page token, permissions, and Meta app review complexity.
+- Less ideal than LinkedIn for first isolated low-risk proof.
+
+Decision:
+- Defer or pair with Instagram in a later Meta connector phase.
+
+================================================================================
+FINAL RECOMMENDATION
+================================================================================
+
+Use LinkedIn for Phase 9's first content publishing executor path.
+
+Build order after this package:
+
+1. Phase 9.2 — LinkedIn write-scope planning.
+2. Phase 9.3 — encrypted LinkedIn connector credential model.
+3. Phase 9.4 — LinkedIn content payload schema.
+4. Phase 9.5 — media handling, initially optional.
+5. Phase 9.6 — manual-approved LinkedIn executor.
+6. Phase 9.7 — real result logs.
+7. Phase 9.8 — post caps.
+8. Phase 9.9 — rollback/delete behavior where supported.
+9. Phase 9.10 — one controlled live test after explicit approval.

@@ -1,0 +1,18 @@
+{
+  "phase": "phase_14_9_auto_run_below_threshold_later",
+  "healthMode": "v2-phase-14-9-restricted-ads-auto-run-policy",
+  "endpoints": {
+    "status": "GET /api/v1/ads/restricted-auto-run-policy/status",
+    "report": "GET /api/v1/ads/restricted-auto-run-policy/report",
+    "example": "GET /api/v1/ads/restricted-auto-run-policy/example",
+    "preview": "POST /api/v1/ads/restricted-auto-run-policy/preview"
+  },
+  "safety": {
+    "policyOnly": true,
+    "previewOnly": true,
+    "autoRunEnabledNow": false,
+    "manualApprovalStillRequiredThisPhase": true,
+    "externalAdApiCalled": false,
+    "budgetChanged": false
+  }
+}

@@ -1,0 +1,25 @@
+LIFE.SAVER v0.2.8 — Triple Whale Metrics Array Mapper
+
+Purpose:
+- v0.2.4 successfully reached the Triple Whale Summary API and captured a real response.
+- The response shape is payload.metrics[], where each metric includes id, metricId, title, type, values.current, values.previous, and charts.
+- v0.2.8 teaches the mapper to read this real Triple Whale Summary metrics array.
+
+Key mapping behavior:
+- Revenue maps from metrics such as id=sales or metricId=totalSales, title=Order Revenue.
+- Net sales/total sales style values are detected as additional revenue candidates.
+- Orders, AOV, ad spend, ROAS, and conversion rate are mapped when corresponding metric IDs/titles exist in the Summary payload.
+- AOV can be calculated from revenue / orders if both values exist.
+- ROAS can be calculated from revenue / ad spend if both values exist.
+- Mapping output now includes metricArrayDetected and metricCatalog so developer review can confirm exact Triple Whale IDs.
+
+Safety:
+- productionReady remains false until mapped paths/metric IDs are manually reviewed once.
+- Raw payload remains stored separately from normalized metrics.
+- API keys remain server-side only.
+- Browser raw previews remain redacted/truncated.
+
+Next step:
+- Run Probe Summary API, then Preview Metric Mapping.
+- Confirm the field paths for revenue, orders, adSpend, AOV, ROAS, and conversionRate.
+- If required metric names differ, add those IDs/titles to the aliases in triple-whale.mapper.ts.

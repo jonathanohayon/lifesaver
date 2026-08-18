@@ -1,0 +1,139 @@
+LIFE.SAVER V2 — PHASE 4.3 ACTION DETAIL DRAWER / MODAL
+Version: v0.6.0
+Status: Completed UI foundation, safe review-only detail drawer
+
+================================================================================
+PURPOSE
+================================================================================
+
+Phase 4.3 adds a safe action detail drawer/modal to the dedicated Actions page.
+
+The founder can now click Detail on an action card and review a richer view before
+future approval/rejection confirmation modals are enabled.
+
+This phase is UI-only and read-only.
+
+================================================================================
+DELIVERABLE
+================================================================================
+
+Action detail drawer/modal added to:
+
+- apps/web/src/actions.html
+- apps/web/src/assets/css/actions.css
+- apps/web/src/assets/js/actions.js
+- apps/web/src/assets/js/action-card.js
+
+The drawer uses the already completed backend endpoint:
+
+- GET /api/v1/actions/:id
+
+================================================================================
+DETAIL DRAWER SECTIONS
+================================================================================
+
+The drawer shows:
+
+1. Full proposed content from the safe payload preview
+2. Payload preview
+3. Expected result
+4. Policy decision
+5. Risk explanation
+6. Related metric / ticket / campaign context
+7. Timeline from action_events
+8. Result summary from action_results
+9. Safety boundary note
+
+================================================================================
+IMPORTANT DATA SAFETY
+================================================================================
+
+The drawer does not expose raw payload_json.
+
+It does not expose:
+
+- API keys
+- OAuth tokens
+- Claude API key
+- Triple Whale API key
+- APP_ENCRYPTION_KEY
+- WORKER_SHARED_SECRET
+- DATABASE_URL
+- raw .env values
+- rollback_payload
+
+It only renders the safe payloadPreview returned by the backend detail endpoint.
+
+================================================================================
+APPROVE / REJECT SAFETY
+================================================================================
+
+Approve and Reject buttons remain guarded.
+
+They do not call:
+
+- POST /api/v1/actions/:id/approve
+- POST /api/v1/actions/:id/reject
+
+Reason:
+
+- Phase 4.5 must add the Approve Confirmation Modal first.
+- Phase 4.6 must add the Reject With Reason Modal first.
+
+================================================================================
+NO EXECUTION
+================================================================================
+
+This phase does not add:
+
+- executor registry
+- sandbox executor
+- real executor
+- social publishing
+- support sending
+- ad budget changes
+- campaign pause
+- external write connectors
+- auto-run rules
+- rollback execution
+
+V1 remains READ + ADVISE + DRAFT ONLY.
+
+================================================================================
+TESTING
+================================================================================
+
+1. Start API and web:
+
+npm.cmd run dev:api
+npm.cmd run dev:web
+
+2. Seed safe local actions if needed:
+
+npm.cmd run db:seed:actions:local
+
+3. Open:
+
+http://localhost:3000/actions.html
+
+4. Confirm:
+
+- action cards load
+- Detail opens the drawer
+- proposed content appears
+- payload preview appears
+- expected result appears
+- policy/risk notes appear
+- related context appears where available
+- timeline appears
+- result summary section appears
+- drawer closes by Close button, overlay click, and Escape key
+- Approve/Reject show guarded safety message
+- no external write happens
+
+================================================================================
+NEXT PHASE
+================================================================================
+
+Phase 4.4 — Status Filters
+

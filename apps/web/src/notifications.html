@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LIFE.SAVER — Notification Center</title>
+<link rel="stylesheet" href="./assets/css/admin.css" />
+<link rel="stylesheet" href="./assets/css/notifications.css" />
+<link rel="stylesheet" href="./assets/css/mobile-shell.css" />
+<link rel="stylesheet" href="./assets/css/mobile-release-qa.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to notification center</a>
+  <main class="admin-shell notification-shell" id="main-content" tabindex="-1">
+    <section class="topbar">
+      <div class="brand">
+        <h1>LIFE.SAVER NOTIFICATIONS</h1>
+        <span>In-app approval center · Active Platform Conversion · v0.8.3</span>
+      </div>
+      <div class="footer-actions">
+        <a class="btn" href="./index.html">← Dashboard</a>
+        <a class="btn" href="./actions.html">Actions</a>
+        <a class="btn" href="./rules.html">Rules</a>
+        <a class="btn" href="./settings.html">Settings</a>
+        <a class="btn" href="./memory.html">Memory</a>
+        <a class="btn" href="./functional-audit.html">Functional Audit</a>
+        <a class="btn" href="./admin.html">Super Admin</a>
+        <a class="btn" href="./login.html">Login</a>
+        <button class="btn" id="logoutBtn" type="button">Logout</button>
+        <span class="badge" id="authState">AUTH CHECKING</span>
+        <span class="badge" id="loadState">CENTER READY</span>
+      </div>
+    </section>
+
+    <section class="grid four compact notification-summary-grid">
+      <div class="panel"><div class="kicker">Pending Approval</div><div class="value" id="pendingCount">0</div><small>Manual founder/client review.</small></div>
+      <div class="panel"><div class="kicker">High Risk Pending</div><div class="value warn-value" id="highRiskCount">0</div><small>Review with extra care.</small></div>
+      <div class="panel"><div class="kicker">Recent Events</div><div class="value green" id="eventCount">0</div><small>Action history preview.</small></div>
+      <div class="panel"><div class="kicker">Last Refresh</div><div class="value green" id="lastRefreshTime">—</div><small>Read-only refresh.</small></div>
+    </section>
+
+    <section class="panel notification-hero-panel">
+      <div>
+        <h2>Founder Approval Notification Center</h2>
+        <p class="note">The mobile-ready notification center shows pending approvals and recent action events in one safe in-app center. This page is read-only: it does not approve, execute, publish, send email, send Slack messages, or call external services.</p>
+      </div>
+      <div class="notification-controls" aria-label="Notification center controls">
+        <button class="btn primary" id="refreshCenterBtn" type="button">Refresh Center</button>
+        <a class="btn" href="./actions.html">Open Full Approval Queue</a>
+      </div>
+    </section>
+
+    <section class="grid two notification-panels">
+      <article class="panel notification-column">
+        <div class="panel-header-row">
+          <div>
+            <div class="kicker">Needs Approval</div>
+            <h2>Pending Approvals</h2>
+          </div>
+          <span class="badge warn-badge" id="pendingState">WAITING</span>
+        </div>
+        <p class="note compact-note">These actions still need founder review. Open the full action queue to approve or reject with confirmation.</p>
+        <div class="notification-list" id="pendingApprovalList" aria-live="polite" aria-busy="true">
+          <article class="notification-card loading-card"><strong>Loading approvals…</strong><span>Please wait while LIFE.SAVER checks your workspace.</span></article>
+        </div>
+      </article>
+
+      <article class="panel notification-column">
+        <div class="panel-header-row">
+          <div>
+            <div class="kicker">Action Timeline</div>
+            <h2>Recent Events</h2>
+          </div>
+          <span class="badge" id="eventState">READ ONLY</span>
+        </div>
+        <p class="note compact-note">Recent events help the founder see what changed without opening each action individually.</p>
+        <div class="notification-list timeline-list" id="recentEventList" aria-live="polite" aria-busy="true">
+          <article class="notification-card loading-card"><strong>Loading events…</strong><span>Please wait while LIFE.SAVER reads recent action events.</span></article>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <h2>Notification Preferences Snapshot</h2>
+      <div class="grid three notification-pref-grid">
+        <div class="notification-pref"><span>In-app center</span><strong id="prefInApp">Enabled</strong><small>Mobile-ready read-only UI.</small></div>
+        <div class="notification-pref"><span>Email</span><strong id="prefEmail">Stored preference only</strong><small>No email delivery in this phase.</small></div>
+        <div class="notification-pref"><span>Slack</span><strong id="prefSlack">Planned later</strong><small>No Slack delivery in this phase.</small></div>
+      </div>
+      <p class="note" id="preferencesHelp">Loading notification preference summary…</p>
+    </section>
+
+    <section class="panel">
+      <h2>Mobile Notification Safety Boundary</h2>
+      <div class="grid two">
+        <p class="note green-note"><strong>Allowed in this phase:</strong><br>Read pending approvals, read recent action events, show counts, display a browser-safe event timeline, link to the full approval queue, and show notification preference status.</p>
+        <p class="note warn"><strong>Not allowed in this phase:</strong><br>No email sending, no Slack sending, no push notification provider, no auto-approval, no auto-execution, no worker notification job, no external platform call, and no exposure of payload JSON, tokens, rollback payloads, or secrets.</p>
+      </div>
+    </section>
+
+    <div class="note" id="notificationMessage" role="status" aria-live="polite">Loading notification center…</div>
+  </main>
+  <script src="./assets/js/runtime-config.js"></script>
+  <script src="./assets/js/notifications.js"></script>
+<script src="./assets/js/lifesaver-version.js"></script>
+<script src="./assets/js/lifesaver-mobile-shell.js"></script>
+</body>
+</html>

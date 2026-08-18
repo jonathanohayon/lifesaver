@@ -1,0 +1,37 @@
+{
+  "version": "0.6.0",
+  "phase": "Phase 7.8 Pause Integration Display",
+  "surface": "/rules.html",
+  "endpoint_read_only": "GET /api/v1/autonomy/status",
+  "display": {
+    "global_pause_warning": "Auto-run is currently paused globally.",
+    "scopes": [
+      "global",
+      "content",
+      "support",
+      "ads"
+    ],
+    "states": [
+      "global_paused",
+      "category_paused",
+      "not_paused",
+      "status_unknown"
+    ]
+  },
+  "safety": {
+    "readOnlyDisplay": true,
+    "pauseResumeAttempted": false,
+    "policyDatabaseWrites": false,
+    "policyEditingEndpoints": false,
+    "simulationDatabaseWrites": false,
+    "realExecutors": false,
+    "sandboxExecutors": false,
+    "externalWriteConnectors": false,
+    "autoRunExecution": false,
+    "contentPublishing": false,
+    "supportSending": false,
+    "adBudgetChanges": false,
+    "campaignPauses": false,
+    "externalWrites": false
+  }
+}

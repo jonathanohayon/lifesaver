@@ -1,0 +1,62 @@
+# LIFE.SAVER example Render blueprint. Do not put real secrets here.
+# Prefer configuring environment variables inside Render dashboard.
+services:
+  - type: web
+    name: lifesaver-api
+    env: node
+    buildCommand: npm ci && npm run build
+    startCommand: npm --workspace apps/api run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
+      - key: PUBLIC_SITE_URL
+        value: https://mydomain.com
+      - key: APP_URL
+        value: https://app.mydomain.com
+      - key: ADMIN_URL
+        value: https://admin.mydomain.com
+      - key: API_URL
+        value: https://api.mydomain.com
+      - key: ALLOWED_ORIGINS
+        value: https://mydomain.com,https://app.mydomain.com,https://admin.mydomain.com
+      - key: PRODUCT_SURFACE_MODE
+        value: subdomain-production-ready
+      - key: DOMAIN_DEPLOYMENT_MODE
+        value: split-subdomain-production
+      - key: CUSTOMER_ACCESS_MODE
+        value: private-beta
+      - key: CUSTOMER_LAUNCH_DOMAIN_LABEL
+        value: LIFE.SAVER Private Beta
+      - key: DASHBOARD_REQUIRE_AUTH
+        value: true
+      - key: CHAT_REQUIRE_AUTH
+        value: true
+      - key: DATABASE_SSL
+        value: true
+      - key: ENABLE_DEBUG_ROUTES
+        value: false
+      - key: DATABASE_URL
+        sync: false
+      - key: AUTH_TOKEN_SECRET
+        sync: false
+      - key: APP_ENCRYPTION_KEY
+        sync: false
+      - key: WORKER_SHARED_SECRET
+        sync: false
+      - key: CLAUDE_API_KEY
+        sync: false
+
+  - type: worker
+    name: lifesaver-worker
+    env: node
+    buildCommand: npm ci && npm run build
+    startCommand: npm --workspace apps/worker run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: WORKER_API_BASE_URL
+        sync: false
+      - key: WORKER_SHARED_SECRET
+        sync: false

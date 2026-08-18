@@ -1,0 +1,29 @@
+LIFE.SAVER v0.6.0 — Phase 6.2 Clean Metadata Alignment
+
+Purpose:
+Create a clean Phase 6.2 package after earlier package metadata still referenced older phases.
+
+Changed:
+- README.txt now identifies v0.6.0 Phase 6.2 Default Ask Policy as current.
+- START_HERE_v0.6.0_PHASE_6_2_DEFAULT_ASK_POLICY.txt now uses the clean package name.
+- GET /api/v1/health reports mode v2-phase-6-2-default-ask-policy.
+- ACTION_MODULE_PHASE reports v0.6.0 Phase 6.2 Default Ask Policy.
+- ACTION_SAFE_ERROR_PHASE reports v0.6.0 Phase 6.2 Default Ask Policy.
+- getActionsModuleStatus reports Phase 6.2 current scope and Phase 6.3 next phase.
+- docs/api-contracts/action-module-status.v0.6.0.example.json updated to Phase 6.2.
+- docs/api-contracts/action-error-response.v0.6.0.example.json updated to Phase 6.2.
+- CHANGELOG.txt received a current Phase 6.2 clean package entry.
+
+Not changed:
+- No database schema changes.
+- No migrations added.
+- No executor added.
+- No external connector added.
+- No auto-run rules added.
+- No content publishing/support sending/ad changes added.
+
+Safety status:
+READ + ADVISE + DRAFT + INTERNAL APPROVAL/REJECTION/CANCELLATION + PAUSE CONTROL + POLICY STORAGE + DEFAULT ASK ONLY.
+
+Next phase:
+Phase 6.3 — Policy Evaluation Service.

@@ -1,0 +1,49 @@
+LIFE.SAVER V2 — Phase 6.10 Policy Tests
+
+Goal:
+Validate the Phase 6 policy engine before moving into Phase 7 rules UI work.
+
+Required roadmap scenarios covered:
+1. Ask by default.
+2. Auto-approve when rule matches.
+3. Block when rule matches.
+4. Cap exceeded.
+5. Pause active.
+6. Conflicting rules.
+
+Implemented test runner:
+- apps/api/src/modules/policies/policy.phase-6-10-tests.ts
+
+Command:
+- npm.cmd run policy:tests:test
+
+Expected result:
+- success=true
+- passed=7
+- failed=0
+
+Important implementation notes:
+- Tests use known in-memory pause state, policy rows, and cap usage snapshots.
+- Tests do not require a live database.
+- Tests do not create action rows.
+- Tests do not persist policy decision snapshots.
+- Tests do not queue execution.
+- Tests do not run executors.
+- Tests do not write to any external platform.
+
+Safety preserved:
+- No real executors.
+- No sandbox executors.
+- No external write connectors.
+- No auto-run execution.
+- No content publishing.
+- No support sending.
+- No ad budget changes.
+- No campaign pauses.
+- No refunds.
+- No product edits.
+- No rollback execution.
+- No external writes.
+
+Next:
+- Phase 7.1 — Rules Page Layout.

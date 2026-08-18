@@ -1,0 +1,48 @@
+LIFE.SAVER v0.5.4 Architecture
+Customer-Ready Domain Launch Foundation
+
+CORE DECISION
+Claude API belongs to the LIFE.SAVER platform and stays in backend/hosting secrets.
+Triple Whale API belongs to each customer workspace and is entered by the customer in app settings.
+
+DOMAIN RESPONSIBILITY
+mydomain.com:
+- public marketing website only
+- no customer metrics
+- no admin logs
+- no secrets
+
+app.mydomain.com:
+- customer login/signup/onboarding
+- customer dashboard
+- customer settings
+- customer-owned Triple Whale connection
+- team member management
+- workspace-scoped metrics/briefs/drafts/chat
+
+admin.mydomain.com:
+- internal admin only
+- monitor users/workspaces/connections/syncs/errors/usage/security
+- no raw API-key exposure
+
+api.mydomain.com:
+- Express backend
+- authentication
+- permission checks
+- encrypted Triple Whale key storage
+- Claude API calls
+- metrics/briefs/drafts/admin APIs
+- worker protected endpoints
+
+private worker:
+- no public browser URL
+- protected by WORKER_SHARED_SECRET
+- read-only metrics refresh and brief generation only
+
+DATA ISOLATION RULE
+Every customer-facing API must use the authenticated user's workspace membership.
+The frontend must not be allowed to choose arbitrary workspace IDs.
+
+LAUNCH READINESS RULE
+Before customer access, use /launch-readiness.html and /api/v1/launch-readiness to verify domain/security readiness.
+Do not rely only on visual testing.

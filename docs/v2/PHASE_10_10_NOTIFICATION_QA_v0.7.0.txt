@@ -1,0 +1,57 @@
+LIFE.SAVER v0.7.0 — PHASE 10.10 NOTIFICATION QA
+================================================
+
+Purpose:
+Finalize Phase 10 by producing a safe notification QA report.
+
+Scope:
+- Verify in-app notification preview.
+- Verify email notification template preview.
+- Verify approval deep link opens the exact action review screen.
+- Verify auth-required behavior remains required.
+- Verify failed notification delivery logs are safe and present.
+
+Deliverable:
+Notification QA report.
+
+Endpoints:
+- GET /api/v1/notifications/qa/status
+- GET /api/v1/notifications/qa/report
+
+Report checks:
+1. in_app_notification
+   Confirms the notification center can show one pending approval and a safe review link.
+
+2. email_notification
+   Confirms the approval email template includes action title, action type, risk level, reason, and review link.
+   It also confirms no email is sent in this phase.
+
+3. deep_link
+   Confirms the approval link opens actions.html with the exact actionId and linkMode=review_only.
+
+4. auth_required
+   Confirms the link requires login and cannot approve from the email click alone.
+
+5. failed_notification_logs
+   Confirms failed notification delivery logs can represent notification_failed safely.
+
+Security notes:
+- QA endpoints are mounted behind authRequired.
+- QA report is read-only.
+- No external provider is called.
+- No email is sent.
+- No Slack message is sent.
+- No action state is mutated.
+- No LinkedIn publishing behavior is changed.
+- No raw payload_json is exposed.
+- No rollback payload is exposed.
+- No OAuth tokens, SMTP secrets, Slack secrets, Triple Whale keys, Claude keys, database URLs, or worker secrets are exposed.
+
+Phase 10 completion criteria:
+- phase10:notification-qa:test passes.
+- phase10:secure-approval-links:test passes.
+- phase10:delivery-logs:test passes.
+- phase10:email-template:test passes.
+- phase10:notification-center:test passes.
+- npm run build passes.
+- Health mode reports v2-phase-10-10-notification-qa.

@@ -1,0 +1,68 @@
+================================================================================
+LIFE.SAVER v0.7.0 — PHASE 15.2 SPECIALIST PROMPT PACKS
+================================================================================
+
+Purpose:
+Add internal specialist prompt packs and a safe tool registry so LIFE.SAVER can later route requests to specialists while the founder still hears one LIFE.SAVER voice.
+
+Specialists:
+- Content specialist
+- Ads specialist
+- Support specialist
+- Research specialist
+- Dev specialist
+
+Deliverable:
+- Specialist prompt/tool registry.
+
+Implementation:
+- apps/api/src/modules/orchestrator/specialist-prompt-registry.types.ts
+- apps/api/src/modules/orchestrator/specialist-prompt-registry.model.ts
+- apps/api/src/modules/orchestrator/specialist-prompt-registry.controller.ts
+- apps/api/src/modules/orchestrator/specialist-prompt-registry.routes.ts
+- apps/api/src/modules/orchestrator/specialist-prompt-registry-tests.ts
+
+Endpoints:
+- GET  /api/v1/orchestrator/specialist-prompts/status
+- GET  /api/v1/orchestrator/specialist-prompts/report
+- GET  /api/v1/orchestrator/specialist-prompts/registry
+- GET  /api/v1/orchestrator/specialist-prompts/example
+- POST /api/v1/orchestrator/specialist-prompts/preview
+
+How the registry works:
+- Phase 15.1 classifies the request route.
+- Phase 15.2 maps supported specialist routes to prompt packs:
+  - content -> content_specialist
+  - ads -> ads_specialist
+  - support -> support_specialist
+  - research -> research_specialist
+  - dev -> dev_specialist
+- Metrics and general_advisor remain front LIFE.SAVER routes for now, not separate specialist prompt packs in this phase.
+- The registry returns prompt context, expected inputs, allowed outputs, forbidden outputs, safety gates, escalation triggers, and safe tool registry entries.
+- The registry does not execute specialist prompts or invoke tools.
+
+Tool registry availability labels:
+- allowed_prompt_context_only
+- allowed_preview_only
+- future_proposed_action_only
+- forbidden_this_phase
+
+Safety boundary:
+- Prompt registry only.
+- No Claude call from registry.
+- No specialist execution.
+- No tool invocation.
+- No external connector call.
+- No action row creation.
+- No approval.
+- No executor call.
+- No auto-run.
+- No content publishing.
+- No support sending.
+- No ads mutation.
+- No raw secrets.
+- No database migration.
+
+Next phase:
+- Phase 15.3 — Tool Routing.
+================================================================================

@@ -1,0 +1,27 @@
+LIFE.SAVER v0.2.0 — Triple Whale Summary Probe + Raw Response Capture
+
+Purpose:
+- Validate the stored Triple Whale API key server-side.
+- Add an explicit protected Summary API probe endpoint.
+- Capture bounded/raw Triple Whale response data into metrics_snapshots.raw_payload.
+- Keep normalized metrics conservative until the raw response is reviewed.
+- Add customer/admin UI buttons to load a latest raw response preview.
+
+New protected endpoints:
+- POST /api/v1/triple-whale/summary-probe
+- GET  /api/v1/triple-whale/latest-raw-response
+
+Important safety rules:
+- The browser never receives the raw Triple Whale API key.
+- The raw payload preview is for developer/admin mapping review only.
+- Full raw payload remains in PostgreSQL metrics_snapshots.raw_payload.
+- Production metric mapping must not be finalized until the raw response is reviewed.
+- V1 remains read + advise + draft only.
+
+Configuration:
+- TRIPLE_WHALE_SUMMARY_PATH defaults to /api/v2/summary-page/get-data.
+- TRIPLE_WHALE_SUMMARY_BODY_JSON remains empty by default.
+- The probe will return a controlled NOT_CONFIGURED error until the exact Summary request body is confirmed.
+
+Next step:
+- Use the raw response to build v0.2.0 real metrics mapping for revenue, orders, AOV, ad spend, ROAS, conversion rate, and attribution.

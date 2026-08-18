@@ -1,0 +1,133 @@
+LIFE.SAVER v0.6.0 — Phase 3.8 Permission Guards
+====================================================
+
+Purpose
+-------
+Phase 3.8 adds a centralized role-based permission guard for the V2 action backend.
+
+The goal is to protect action review and approval flows before any executor, sandbox executor,
+or real external write connector is introduced.
+
+Scope
+-----
+This phase protects:
+
+- GET /api/v1/actions
+- GET /api/v1/actions/:id
+- POST /api/v1/actions/:id/approve
+- POST /api/v1/actions/:id/reject
+- POST /api/v1/actions/:id/cancel
+- future redacted super-admin monitoring helpers
+
+This phase does not add an executor.
+This phase does not publish, send, spend, pause, refund, rollback, or write externally.
+
+Files Added
+-----------
+
+apps/api/src/modules/actions/actions.permission-guard.ts
+packages/shared/src/action-permission-guards.ts
+
+Files Updated
+-------------
+
+apps/api/src/modules/actions/actions.service.ts
+apps/api/src/modules/actions/actions.validation.ts
+packages/shared/src/action-workspace-scope.ts
+packages/shared/src/index.ts
+apps/api/src/client-testing-check.ts
+apps/api/src/security-check.ts
+apps/api/src/config/environment-separation.ts
+apps/api/src/modules/admin/admin.service.ts
+apps/api/src/modules/product-surfaces/product-surfaces.service.ts
+
+Role Matrix
+-----------
+
+owner
+- Can view workspace actions.
+- Can approve low, medium, high, and critical actions.
+- Can reject eligible proposed actions.
+- Can cancel eligible pre-execution actions.
+- Cannot execute anything in this phase.
+
+admin
+- Can view workspace actions.
+- Can approve low, medium, and high actions.
+- Cannot approve critical actions by default.
+- Can reject eligible proposed actions.
+- Can cancel eligible pre-execution actions.
+- Cannot execute anything in this phase.
+
+member
+- Can view workspace actions.
+- Cannot approve actions.
+- Cannot reject actions.
+- Cannot cancel actions.
+- Cannot execute actions.
+
+viewer
+- Can view workspace actions.
+- Cannot approve actions.
+- Cannot reject actions.
+- Cannot cancel actions.
+- Cannot execute actions.
+
+super_admin
+- Can monitor redacted internal action summaries later.
+- Must not receive raw payload_json, connector secrets, rollback payloads, API keys, OAuth tokens, or .env values.
+- Does not bypass customer workspace-scoped endpoints by platform role alone.
+
+Important Guard Rules
+---------------------
+
+1. Normal customer action endpoints require an active workspace_members row.
+2. Customer action queries are always filtered by workspace_id.
+3. A user cannot access another workspace's actions through normal customer endpoints.
+4. Member/viewer roles cannot approve sensitive or executable actions.
+5. Admin cannot approve critical actions by default.
+6. Super-admin monitoring is redacted-only.
+7. Permission guards do not execute actions.
+8. Approval still means internal approval only, not execution.
+9. Cancel still means internal cancellation only, not rollback.
+10. V1 remains READ + ADVISE + DRAFT ONLY.
+
+Guard Error Codes
+-----------------
+
+ACTION_VIEW_FORBIDDEN
+ACTION_APPROVAL_FORBIDDEN
+ACTION_APPROVAL_FORBIDDEN_ROLE
+ACTION_CRITICAL_APPROVAL_REQUIRES_OWNER
+ACTION_REJECTION_FORBIDDEN_ROLE
+ACTION_CANCELLATION_FORBIDDEN_ROLE
+ACTION_MONITOR_FORBIDDEN
+ACTION_WORKSPACE_FORBIDDEN
+ACTION_NOT_FOUND
+
+Security Notes
+--------------
+
+- The backend does not trust browser-provided role data for action decisions.
+- The service checks database-backed active workspace membership before reading or changing action state.
+- Permission decisions are written into action event metadata when approve/reject/cancel succeeds.
+- These event records still contain no secrets and no full raw payloads.
+
+Testing Checklist
+-----------------
+
+1. Owner can list actions.
+2. Owner can view action detail.
+3. Owner can approve critical action.
+4. Admin can approve low/medium/high action.
+5. Admin cannot approve critical action.
+6. Member/viewer can list/view but cannot approve.
+7. Member/viewer cannot reject.
+8. Member/viewer cannot cancel.
+9. A user from another workspace receives ACTION_WORKSPACE_FORBIDDEN or ACTION_NOT_FOUND.
+10. No endpoint queues or executes anything.
+
+Result
+------
+
+Phase 3.8 adds a stronger role-based safety layer before Phase 3.9 error handling and request ID hardening.

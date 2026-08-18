@@ -1,0 +1,47 @@
+LIFE.SAVER v0.3.0 — Claude Metrics Tool + Draft Tools Foundation
+
+Purpose
+- Move beyond simple server-side chat by formalising safe v1 AI tools.
+- Keep the assistant grounded in verified Triple Whale core metrics.
+- Add draft-only content/support workflows that store drafts for founder approval.
+- Preserve the v1 rule: read + advise + draft only. No external actions.
+
+What changed
+1. Safe tool inventory added server-side:
+   - get_business_metrics
+   - draft_content
+   - draft_support_reply
+
+2. Chat now includes the safe tool inventory in the Claude system context.
+   - Tools are described as internal safe capabilities.
+   - No write/action-taking tools are added.
+   - Claude still cannot post, send, refund, change budgets, or modify external systems.
+
+3. Draft endpoints added:
+   - GET    /api/v1/drafts
+   - POST   /api/v1/drafts/content
+   - POST   /api/v1/drafts/support-reply
+   - PATCH  /api/v1/drafts/:id/status
+
+4. Draft storage added through the existing drafts table.
+   - status defaults to draft
+   - approved/rejected only changes status
+   - no sending/posting occurs when status changes
+
+5. Chat draft auto-save foundation added.
+   - If the user asks chat to draft content or a support reply, the assistant response is saved as a draft.
+   - The chat response returns draftSaved metadata.
+   - This keeps drafting inside the approval workflow.
+
+6. Triple Whale decrypt diagnostic improved.
+   - If APP_ENCRYPTION_KEY changes between ZIP versions, validation now explains the cause.
+   - User should copy the previous working .env into the new version folder.
+   - If original key is lost, reconnect Triple Whale once.
+
+Testing focus
+- Chat still works with CLAUDE_API_KEY missing in safe fallback mode.
+- Chat works with Claude when CLAUDE_API_KEY is present.
+- Draft endpoints require login/auth token.
+- Drafts are saved in PostgreSQL drafts table.
+- system_events logs draft creation/status updates.
+- No external actions are possible.

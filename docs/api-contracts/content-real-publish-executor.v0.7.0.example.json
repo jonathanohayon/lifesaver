@@ -1,0 +1,85 @@
+{
+  "version": "0.7.0",
+  "phase": "v0.7.0_phase_9_6",
+  "healthMode": "v2-phase-9-6-real-publish-executor",
+  "statusEndpoint": "GET /api/v1/actions/content-publish-executor/status",
+  "executeEndpoint": "POST /api/v1/actions/:id/execute-content-publish",
+  "selectedPlatform": "linkedin",
+  "executorName": "linkedinManualApprovedContentExecutor",
+  "requiredScope": "w_member_social",
+  "requestBody": {
+    "force": false
+  },
+  "successResponseShape": {
+    "success": true,
+    "data": {
+      "version": "0.7.0",
+      "phase": "v0.7.0_phase_9_6",
+      "executorName": "linkedinManualApprovedContentExecutor",
+      "workspaceId": "workspace-uuid",
+      "actionId": "action-uuid",
+      "actionType": "content_publish",
+      "status": "executed",
+      "checks": {
+        "databaseConfigured": true,
+        "featureFlagEnabled": true,
+        "actionFound": true,
+        "actionTypeValid": true,
+        "manualApprovalConfirmed": true,
+        "masterPauseOff": true,
+        "contentPauseOff": true,
+        "emergencySafeModeOff": true,
+        "capNotExceeded": true,
+        "tokenValid": true,
+        "requiredScopePresent": true,
+        "payloadValid": true,
+        "mediaSupported": true,
+        "userApproved": true
+      },
+      "linkedin": {
+        "apiCalled": true,
+        "apiStatus": 201,
+        "externalPostId": "urn:li:share:example",
+        "externalUrl": null,
+        "requestBodyPreview": {
+          "author": "urn:li:person:...",
+          "commentaryPreview": "Safe preview only",
+          "commentaryLength": 120,
+          "visibility": "PUBLIC",
+          "lifecycleState": "PUBLISHED",
+          "containsRawToken": false
+        },
+        "rawTokenReturned": false
+      },
+      "resultLogStored": true,
+      "statusPath": ["approved", "executing", "executed"],
+      "safety": {
+        "manualApprovalRequired": true,
+        "autoRunEnabled": false,
+        "externalWritesAttempted": true,
+        "externalWritesSucceeded": true,
+        "browserReceivesRawToken": false,
+        "rollbackPayloadExposedToBrowser": false,
+        "mediaUploadSupportedInThisPhase": false
+      }
+    }
+  },
+  "blockedResponseShape": {
+    "status": "blocked",
+    "linkedin": {
+      "apiCalled": false,
+      "rawTokenReturned": false
+    },
+    "safety": {
+      "externalWritesAttempted": false,
+      "externalWritesSucceeded": false
+    }
+  },
+  "safety": {
+    "manualApprovalRequired": true,
+    "autoRunEnabled": false,
+    "defaultEnabled": false,
+    "rawTokenReturnedToBrowser": false,
+    "mediaUploadSupported": false
+  }
+}

@@ -1,0 +1,71 @@
+LIFE.SAVER v0.2.8 — Triple Whale Summary Debug + Raw Preview Redaction
+
+Purpose
+-------
+v0.2.8 improves the debugging layer around the Triple Whale Summary API probe.
+The previous versions could store API-key validation snapshots and Summary probe
+snapshots in the same metrics_snapshots table, but the UI could accidentally show
+the latest API-key validation placeholder when the developer expected a Summary
+probe response.
+
+This version separates snapshot meanings clearly without changing the database schema.
+
+Snapshot kinds
+--------------
+LIFE.SAVER now classifies Triple Whale snapshots as:
+
+- summary_probe_success
+- summary_probe_error
+- api_key_validation
+- sample_placeholder
+- mapped_metrics
+- unknown
+
+Why this matters
+----------------
+API-key validation proves the API key works, but it does not return business metrics.
+Summary probe responses are the only snapshots we should inspect for real revenue,
+orders, ad spend, ROAS, AOV, conversion rate, and attribution mapping.
+
+New endpoint
+------------
+GET /api/v1/triple-whale/snapshot-history
+
+This endpoint returns a protected list of recent Triple Whale snapshots with explicit
+kind labels, timestamps, HTTP status, and brief messages.
+
+Updated endpoint
+----------------
+GET /api/v1/triple-whale/latest-raw-response?kind=summary_probe
+
+Supported kinds:
+- summary_probe
+- summary_probe_success
+- summary_probe_error
+- api_key_validation
+- all
+
+Redaction
+---------
+Browser raw previews now redact sensitive fields, including:
+
+- email
+- name
+- user_id
+- firebase
+- token / idToken / accessToken / refreshToken
+- authorization
+- cookie / cookies
+- password / secret / apiKey
+- auth metadata such as exp, iat, aud, iss, sub, auth_time, email_verified
+
+Important
+---------
+The full raw payload remains stored in PostgreSQL for developer review, but browser
+previews are treated as potentially customer-visible and must be redacted.
+
+Next step
+---------
+Use Snapshot History to identify the real Summary probe error or success payload.
+Once a successful Summary payload is captured, lock exact metric paths in v0.2.8 or
+v0.3.0 before marking dashboard metrics production-ready.

@@ -1,0 +1,62 @@
+LIFE.SAVER v0.6.0 — Phase 6.6 Global Caps Foundation
+
+Purpose:
+Phase 6.5 adds scope matching to the policy engine so a policy rule can be limited to a specific kind of action before condition operators run.
+
+Functionality:
+- evaluatePolicyScopeMatch(action, conditionsJson)
+- buildPolicyActionScope(action)
+- evaluateActionPolicy(action) now checks action scope before Phase 6.4 condition operators.
+
+Scope can match:
+- action type
+- platform
+- channel
+- workspace
+- risk level
+- amount
+- category
+- confidence score
+
+Recommended scope shape:
+{
+  "scope": {
+    "action_type": "content_publish",
+    "platform": "instagram",
+    "channel": "instagram",
+    "workspace_id": "workspace uuid",
+    "risk_below": "medium",
+    "amount_below": 50,
+    "category": "product_drop",
+    "confidence_above": 0.9
+  }
+}
+
+Simple top-level scope keys are also supported:
+{
+  "platform": "instagram",
+  "category": "product_drop",
+  "confidence_above": 0.9
+}
+
+Important behavior:
+- Empty scope passes through to condition operators.
+- Explicit scope fields must match before the policy is eligible.
+- If scope is unsupported or missing required action values, the policy does not match.
+- If scope matches and no condition operators remain, the scoped policy can match.
+- Existing Phase 6.4 condition operators still run after scope matching.
+- Default ask remains active when no scoped policy matches.
+- Pause and emergency safe mode still override auto_approve.
+- cap_status still reports only whether caps are present; real cap enforcement comes in Phase 6.6.
+
+Safety:
+- This phase does not execute actions.
+- This phase does not queue actions.
+- This phase does not publish content.
+- This phase does not send support replies.
+- This phase does not change ad spend or pause campaigns.
+- This phase does not refund orders or edit products.
+- This phase does not write to any external platform.
+
+Next phase:
+Phase 6.6 — Global Caps Foundation.

@@ -1,0 +1,36 @@
+LIFE.SAVER v0.7.4 — Mobile Rules Memory Proactivity Test Results
+=================================================================
+
+Commands run in packaging workspace:
+- npm run phase-mobile:0-7-3:test
+- npm run phase-mobile:0-7-1:test
+- node scripts/build-web-static.mjs
+
+Expected local commands after extraction:
+- npm.cmd install
+- npm.cmd run phase-mobile:0-7-3:test
+- npm.cmd run phase-mobile:0-7-1:test
+- npm.cmd run build
+
+Smoke test coverage:
+- root/api/web/worker package versions are 0.7.4
+- API health mode is v2-mobile-0-7-4-rules-memory-proactivity
+- shared frontend metadata is 0.7.4
+- actions.html visible label is updated
+- mobile shortcut command bar exists
+- mobile card list class exists
+- action cards include mobile summary markup
+- action cards expose View Details, Approve, Reject, and Cancel controls
+- action detail drawer remains full-screen on mobile
+- approve/reject/cancel confirmation surfaces are present
+- large mobile tap targets are present
+- result log metadata overflow is protected
+- no 0.6.0 labels remain on primary touched pages
+
+Safety checks:
+- no database migration added
+- no executor behavior changed
+- no policy behavior changed
+- no external connector behavior changed
+- no auto-run enabled
+- no hidden autonomy added

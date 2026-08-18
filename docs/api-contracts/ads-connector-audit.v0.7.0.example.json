@@ -1,0 +1,66 @@
+{
+  "statusEndpoint": {
+    "success": true,
+    "data": {
+      "phase": "V2 Phase 14.1 — Ads Connector Audit",
+      "healthMode": "v2-phase-14-1-ads-connector-audit",
+      "deliverable": "ads_connector_dependency_report",
+      "planningOnly": true,
+      "separatesTripleWhaleReadsFromDirectControls": true,
+      "tripleWhaleReadOnlyStill": true,
+      "directAdPlatformApiClientAdded": false,
+      "adWriteScopeRequested": false,
+      "campaignPaused": false,
+      "budgetChanged": false,
+      "autoRunAdsEnabled": false,
+      "externalApiCalled": false,
+      "noDatabaseMigrationRequired": true,
+      "nextStep": "Phase 14.2 — Write Scope Planning"
+    }
+  },
+  "reportEndpoint": {
+    "success": true,
+    "data": {
+      "version": "0.7.0",
+      "phase": "phase_14_1_ads_connector_audit",
+      "healthMode": "v2-phase-14-1-ads-connector-audit",
+      "deliverable": "ads_connector_dependency_report",
+      "planningOnly": true,
+      "executiveSummary": "Phase 14.1 separates the current read-only Triple Whale intelligence layer from future direct ad platform control APIs.",
+      "coreFinding": "Triple Whale can tell LIFE.SAVER what is happening in paid media, but direct ad platform APIs must be used to safely pause campaigns, adjust budgets, restore budgets, and capture before/after control snapshots.",
+      "boundaries": [
+        {
+          "source": "triple_whale",
+          "purpose": "Read-only performance intelligence and attribution context.",
+          "allowedInPhase141": true,
+          "examples": ["Revenue", "orders", "paid media spend", "ROAS"],
+          "forbiddenInPhase141": ["Pause campaigns", "change budgets", "write back to Triple Whale"]
+        },
+        {
+          "source": "direct_platform_api",
+          "purpose": "Future execution/control layer for real ad actions.",
+          "allowedInPhase141": false,
+          "examples": ["Meta Marketing API", "Google Ads API"],
+          "forbiddenInPhase141": ["Request write scopes", "call ad APIs", "pause campaigns", "adjust budgets"]
+        }
+      ],
+      "recommendedControlOrder": ["meta_ads", "google_ads", "tiktok_ads", "snapchat_ads", "pinterest_ads", "microsoft_ads"],
+      "safety": {
+        "auditOnly": true,
+        "tripleWhaleReadOnlyStill": true,
+        "directAdPlatformApiClientAdded": false,
+        "oauthRoutesAdded": false,
+        "tokenStorageAdded": false,
+        "adWriteScopeRequested": false,
+        "campaignPaused": false,
+        "budgetChanged": false,
+        "autoRunAdsEnabled": false,
+        "externalApiCalled": false,
+        "noRawTokensReturned": true,
+        "noRawProviderPayloadReturned": true,
+        "noDatabaseMigrationRequired": true
+      },
+      "nextStep": "Phase 14.2 — Write Scope Planning"
+    }
+  }
+}

@@ -1,0 +1,99 @@
+LIFE.SAVER V2 — PHASE 12.7 ESCALATION RULES
+===========================================
+
+Version
+-------
+v0.7.0
+
+Health mode
+-----------
+v2-phase-12-7-escalation-rules
+
+Purpose
+-------
+Phase 12.7 adds support escalation logic so LIFE.SAVER can identify tickets that should always be handled by the founder or an authorized human reviewer.
+
+This phase does not send any support reply and does not create/approve/execute a support action.
+
+Escalation rules
+----------------
+Always escalate:
+
+1. Refund requests
+   Refunds can affect cash, policy, and customer trust.
+
+2. Legal threats
+   Any legal/lawyer/lawsuit/court language requires human review.
+
+3. Chargebacks
+   Chargebacks and payment disputes can affect merchant risk.
+
+4. Angry complaints
+   Angry customers require careful tone and resolution.
+
+5. Uncertain answers
+   Drafts with uncertain wording, explicit uncertainty flags, or low classifier confidence require review.
+
+6. Medical/sensitive content
+   Medical, safety, identity, account-security, payment-card, bank, OTP, or password-related content is escalated.
+
+7. High-value customers when configured
+   High-value customer escalation is only active when the workspace/customer configuration enables it.
+
+New endpoints
+-------------
+GET  /api/v1/support/escalation-rules/status
+GET  /api/v1/support/escalation-rules/example
+POST /api/v1/support/escalation-rules/preview
+
+Decision values
+---------------
+- no_escalation_required
+- escalate_to_founder
+
+Suggested queues
+----------------
+- standard_support
+- founder_review
+- sensitive_review
+
+Privacy behavior
+----------------
+Phase 12.7 uses Phase 12.6 redaction helpers for subject/body previews.
+
+The API result does not return:
+- Full raw ticket payload.
+- Full support ticket body.
+- Access tokens.
+- Refresh tokens.
+- Gmail authorization headers.
+- Provider raw payloads.
+
+Safety boundaries
+-----------------
+No Gmail OAuth routes.
+No Gmail API client.
+No Gmail external API calls.
+No email sending.
+No support send executor.
+No support auto-reply.
+No external support writes.
+No support reply action creation.
+No database migration.
+No database write.
+
+Testing
+-------
+Primary command:
+
+npm.cmd run phase12:support-escalation-rules:test
+
+Recommended regression commands:
+
+npm.cmd run phase12:support-privacy:test
+npm.cmd run phase12:support-draft-action:test
+npm.cmd run phase12:support-ticket-classifier:test
+npm.cmd run phase12:support-ticket-schema:test
+npm.cmd run phase12:support-readonly-import:test
+npm.cmd run phase12:support-connector-plan:test
+npm.cmd run build

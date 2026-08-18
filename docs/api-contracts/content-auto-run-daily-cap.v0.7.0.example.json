@@ -1,0 +1,32 @@
+{
+  "status": "ok",
+  "data": {
+    "phase": "phase_11_3_max_posts_per_day_enforcement",
+    "healthMode": "v2-phase-11-3-max-posts-per-day-enforcement",
+    "deliverable": "daily_post_cap_check",
+    "platform": "linkedin",
+    "actionType": "content_publish",
+    "capWindow": "calendar_day_by_workspace_timezone",
+    "timezone": "UTC",
+    "maxPostsPerDay": 1,
+    "publishedTodayCount": 0,
+    "reservedTodayCount": 0,
+    "proposedNewPosts": 1,
+    "projectedTotalToday": 1,
+    "remainingToday": 1,
+    "capExceeded": false,
+    "decision": "allowed_for_future_auto_run_review",
+    "reason": "Projected content volume is within the daily cap for the future narrow auto-run lane.",
+    "autoRunAllowedNow": false,
+    "safety": {
+      "capCheckOnly": true,
+      "autoRunEnabled": false,
+      "autoApprovalEnabled": false,
+      "doesNotPublish": true,
+      "externalApiCalled": false,
+      "manualApprovalStillRequired": true,
+      "noDatabaseWrites": true,
+      "futureAutoRunRequiresAdditionalGates": true
+    }
+  }
+}

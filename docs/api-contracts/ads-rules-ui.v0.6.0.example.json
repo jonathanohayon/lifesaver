@@ -1,0 +1,41 @@
+{
+  "version": "0.6.0",
+  "phase": "Phase 7.5 Ads Rules UI",
+  "previewOnly": true,
+  "persistence": "browser_local_preview_only_no_database_write",
+  "action_type": "ad_budget_adjust",
+  "scope": {
+    "platform": "meta_ads",
+    "channel": "paid_media",
+    "category": "ads",
+    "campaign_scope": "single_campaign"
+  },
+  "ads_rules": {
+    "platform": "meta_ads",
+    "campaign_scope": "single_campaign",
+    "max_daily_budget_change": 25,
+    "max_percentage_change": 10,
+    "always_ask_above_threshold": 50,
+    "pause_rules": [
+      "roas_below_threshold",
+      "spend_above_cap",
+      "manual_review_required"
+    ],
+    "approval_required_above_risk_level": "medium"
+  },
+  "decision": "ask",
+  "caps_json": {
+    "max_ad_spend_change_per_day": 25,
+    "max_ad_spend_percentage_change_per_action_preview": 10
+  },
+  "enabled": false,
+  "safety": {
+    "databaseWritesAttempted": false,
+    "policyEndpointCalled": false,
+    "externalWritesAttempted": false,
+    "executorRan": false,
+    "adConnectorAdded": false,
+    "adBudgetChanged": false,
+    "campaignPaused": false
+  }
+}

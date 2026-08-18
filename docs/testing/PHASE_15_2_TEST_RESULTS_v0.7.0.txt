@@ -1,0 +1,42 @@
+================================================================================
+LIFE.SAVER v0.7.0 — PHASE 15.2 TEST RESULTS
+================================================================================
+
+Test command:
+- npm run phase15:specialist-prompts:test
+
+Regression commands:
+- npm run phase15:request-classifier:test
+- npm run phase14:ads-safety-qa:test
+- npm run phase14:ads-restricted-auto-run-policy:test
+- npm run phase14:ads-rollback-executor:test
+- npm run phase14:ads-before-after-snapshot:test
+- npm run phase14:ads-manual-approval:test
+- npm run phase13:support-send-qa:test
+- npm run build
+
+Expected Phase 15.2 test coverage:
+- Constants identify Phase 15.2 package and health mode.
+- Registry includes exactly the roadmap specialists: Content, Ads, Support, Research, and Dev.
+- Prompt packs preserve one founder-facing LIFE.SAVER voice.
+- Tool registry entries are non-executing and approval-aware.
+- Safety report confirms registry-only behavior.
+- Preview resolves every supported route to the correct specialist prompt pack.
+- Preview resolves explicit specialist keys.
+- Metrics and general advisor are not separate Phase 15.2 specialist packs.
+- force=true is ignored and cannot enable specialist execution, tool invocation, action creation, or auto-run.
+- Example inputs cover every specialist.
+- Report includes prompt packs, tool registry, safety, and next step.
+- Status/report outputs avoid secret-like fragments.
+
+Safety result:
+- No Claude call was made by the registry.
+- No specialist prompt was executed.
+- No tool was invoked.
+- No external connector was called.
+- No real-world action was created.
+- No action was approved or executed.
+- No auto-run was enabled.
+- No content/support/ads write happened.
+- No migration was required.
+================================================================================

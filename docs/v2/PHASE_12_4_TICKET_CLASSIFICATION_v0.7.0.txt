@@ -1,0 +1,42 @@
+================================================================================
+PHASE 12.4 — TICKET CLASSIFICATION
+================================================================================
+
+Goal:
+Classify imported support tickets into a safe, deterministic category before support drafts are converted into actions.
+
+Deliverable:
+Ticket classifier.
+
+Supported categories:
+- faq
+- shipping
+- complaint
+- refund
+- cancellation
+- payment_issue
+- sensitive
+- escalation
+
+Classifier behavior:
+- Sensitive signals have highest priority.
+- Escalation signals override normal support categories except sensitive.
+- Refund/payment/cancellation/complaint/shipping/FAQ are routed by keyword/signal matching.
+- Unknown low-risk tickets default to FAQ/manual triage.
+
+Safety constraints:
+- No Gmail API call.
+- No email sending.
+- No support reply action creation.
+- No support send executor.
+- No support auto-reply.
+- No raw provider payload required.
+- Browser output must not include token/secret/raw payload fragments.
+
+New endpoints:
+- GET /api/v1/support/ticket-classifier/status
+- GET /api/v1/support/ticket-classifier/example
+- POST /api/v1/support/ticket-classifier/preview
+
+Next likely phase:
+- Use the classifier output to prepare support draft recommendations or support draft-to-action mapping, still without sending replies.

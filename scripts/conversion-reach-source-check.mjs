@@ -1,0 +1,75 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
+const root = process.cwd();
+const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
+let passed = 0;
+function check(name, condition) {
+  if (!condition) throw new Error(`conversion-reach-source-check failed: ${name}`);
+  passed += 1;
+}
+
+const index = read('apps/web/src/index.html');
+const mainJs = read('apps/web/src/assets/js/main.js');
+const audienceJs = read('apps/web/src/assets/js/audience-reach.js');
+const versionJs = read('apps/web/src/assets/js/lifesaver-version.js');
+const dashboardCss = read('apps/web/src/assets/css/dashboard.css');
+const health = read('apps/api/src/modules/health/health.controller.ts');
+const audienceModel = read('apps/api/src/modules/audience-reach/audience-reach.model.ts');
+const audienceTypes = read('apps/api/src/modules/audience-reach/audience-reach.types.ts');
+const audienceTests = read('apps/api/src/modules/audience-reach/audience-reach-tests.ts');
+const tripleWhaleMapper = read('apps/api/src/modules/triple-whale/triple-whale.mapper.ts');
+const metricsService = read('apps/api/src/modules/metrics/metrics.service.ts');
+const metricsTypes = read('apps/api/src/modules/metrics/metrics.types.ts');
+const reachTests = read('apps/api/src/modules/triple-whale/conversion-reach-source-tests.ts');
+const pkg = JSON.parse(read('package.json'));
+const apiPkg = JSON.parse(read('apps/api/package.json'));
+const webPkg = JSON.parse(read('apps/web/package.json'));
+
+check('root version is 0.8.4', pkg.version === '0.8.4');
+check('api version is 0.8.4', apiPkg.version === '0.8.4');
+check('web version is 0.8.4', webPkg.version === '0.8.4');
+check('phase-functional 0.8.4 script exists', Boolean(pkg.scripts['phase-functional:0-8-4:test']));
+check('frontend version is 0.8.4', versionJs.includes("version: '0.8.4'"));
+check('frontend package name updated', versionJs.includes('lifesaver-v0.8.4-conversion-reach-source.zip'));
+check('frontend health mode updated', versionJs.includes('v2-functional-0-8-4-conversion-reach-source'));
+check('health version updated', health.includes("version: '0.8.4'"));
+check('health mode updated', health.includes("mode: 'v2-functional-0-8-4-conversion-reach-source'"));
+check('homepage version chip updated', index.includes('data-ls-version>0.8.4<'));
+check('audience model version updated', audienceModel.includes("AUDIENCE_REACH_VERSION = '0.8.4'"));
+check('audience model health mode updated', audienceModel.includes('v2-functional-0-8-4-conversion-reach-source'));
+check('audience safety blocks zero conversion math', audienceModel.includes('blocksZeroConversionReachMath: true'));
+check('audience safety only uses sessions when mapped', audienceModel.includes('sessionsReachSourceOnlyWhenMapped: true'));
+check('audience model has activeTrafficReach', audienceModel.includes('function activeTrafficReach'));
+check('audience model displays Awaiting Sessions', audienceModel.includes('Awaiting Sessions'));
+check('audience model can derive from orders divided by confirmed conversion rate', audienceModel.includes('orders divided by confirmed conversion rate'));
+check('audience requirements include sessions/visitors', audienceModel.includes('Sessions / Visitors'));
+check('audience types expose new safety keys', audienceTypes.includes('blocksZeroConversionReachMath') && audienceTypes.includes('sessionsReachSourceOnlyWhenMapped'));
+check('metrics types include sessions fields', metricsTypes.includes('sessionsProductionReady') && metricsTypes.includes('reachEstimateProductionReady'));
+check('triple whale mapper defines session aliases', tripleWhaleMapper.includes('TRAFFIC_SESSION_ALIASES'));
+check('triple whale mapper excludes per-session conversion rate false positives', tripleWhaleMapper.includes('transactionspersession') && tripleWhaleMapper.includes('persession'));
+check('triple whale mapper calculates conversion from sessions', tripleWhaleMapper.includes('sessionDerivedConversionRate'));
+check('triple whale mapper blocks zero conversion reach math', tripleWhaleMapper.includes('awaiting_sessions_or_nonzero_conversion'));
+check('triple whale mapper outputs reach estimate fields', tripleWhaleMapper.includes('reachEstimateProductionReady'));
+check('triple whale mapper keeps platform conversion mapping', tripleWhaleMapper.includes('PLATFORM_CONVERSION_ALIASES'));
+check('metrics service hydrates sessions from older metricCatalog snapshots', metricsService.includes('hydrateTrafficFromMapping'));
+check('metrics service finds sessions from metricCatalog', metricsService.includes('isSessionCatalogEntry'));
+check('metrics service calculates conversion from orders/sessions', metricsService.includes('calculated_from_orders_sessions'));
+check('main dashboard shows Awaiting Sessions', mainJs.includes('Awaiting Sessions'));
+check('main dashboard weekly sub explains orders ÷ sessions', mainJs.includes('orders ÷ sessions'));
+check('audience JS updated for conversion reach source', audienceJs.includes('Conversion + Reach Source Mapping'));
+check('audience JS fallback uses Awaiting Sessions', audienceJs.includes('Awaiting Sessions'));
+check('audience JS has no external social API calls', !/graph\.facebook|instagram|tiktok\.com|linkedin|googleads|meta\.com/i.test(audienceJs));
+check('audience JS has no writes', !/method:\s*['"]POST|method:\s*['"]PATCH|method:\s*['"]DELETE/i.test(audienceJs));
+check('conversion reach tests added', reachTests.includes('conversion-reach-source-tests'));
+check('conversion reach tests cover sessions mapping', reachTests.includes('storeSessions'));
+check('conversion reach tests cover zero blocking', reachTests.includes('blockedZero'));
+check('audience tests expect 0.8.4', audienceTests.includes("'0.8.4'"));
+check('dist conversion reach test exists', fs.existsSync(path.join(root, 'apps/api/dist/modules/triple-whale/conversion-reach-source-tests.js')));
+check('dist mapper exists', fs.existsSync(path.join(root, 'apps/api/dist/modules/triple-whale/triple-whale.mapper.js')));
+check('dist metrics service exists', fs.existsSync(path.join(root, 'apps/api/dist/modules/metrics/metrics.service.js')));
+check('CSS still includes mapping guidance note', dashboardCss.includes('.ls-audience-note'));
+check('README current phase updated', read('README.txt').includes('v0.8.4'));
+check('CHANGELOG current phase updated', read('CHANGELOG.txt').includes('v0.8.4'));
+
+console.log(`conversion-reach-source-check — ${passed} passed, 0 failed`);

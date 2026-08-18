@@ -1,0 +1,48 @@
+# LIFE.SAVER v0.7.1 — Mobile Shell + Version System
+
+## Goal
+
+Fix the global mobile structure first before deeper dashboard/action/rules mobile work.
+
+## Deliverable
+
+Mobile-safe shell and shared version system.
+
+## Added shared frontend metadata
+
+`apps/web/src/assets/js/lifesaver-version.js`
+
+```js
+window.LIFESAVER_APP_VERSION = {
+  version: '0.7.1',
+  label: 'V2 Mobile Shell + Version System',
+  healthMode: 'v2-mobile-0-7-1-shell-version-system'
+};
+```
+
+## Added mobile shell controller
+
+`apps/web/src/assets/js/lifesaver-mobile-shell.js`
+
+Responsibilities:
+
+- Apply shared version labels.
+- Add mobile hamburger toggle to `.topbar .footer-actions` navigation.
+- Add mobile dashboard section toggle to the dashboard `.nav .tabs` navigation.
+- Keep existing links/buttons intact so existing logout/auth JS continues to work.
+
+## Added responsive CSS
+
+`apps/web/src/assets/css/mobile-shell.css`
+
+Responsibilities:
+
+- Prevent horizontal overflow.
+- Collapse top nav on phones.
+- Make menu buttons tap-friendly.
+- Stack grids and panels safely on mobile.
+- Keep desktop layout unchanged.
+
+## Safety
+
+No action, executor, policy, Claude, connector, database, or external-write logic changed.

@@ -1,0 +1,43 @@
+{
+  "version": "0.6.0",
+  "phase": "v0.6.0 Phase 6.6 Global Caps Foundation",
+  "exampleInput": {
+    "action": {
+      "workspaceId": "workspace uuid",
+      "actionType": "content_publish",
+      "riskLevel": "low",
+      "payloadJson": {
+        "data": {
+          "platform": "instagram",
+          "channel": "instagram",
+          "category": "product_drop",
+          "confidence_score": 0.96,
+          "change_amount": 12
+        }
+      }
+    },
+    "conditionsJson": {
+      "scope": {
+        "action_type": "content_publish",
+        "platform": "instagram",
+        "channel": "instagram",
+        "risk_below": "medium",
+        "amount_below": 25,
+        "category": "product_drop",
+        "confidence_above": 0.9
+      }
+    }
+  },
+  "exampleOutput": {
+    "matched": true,
+    "supported": true,
+    "emptyScope": false,
+    "checkedCount": 6,
+    "reason": "All explicit action scope fields matched.",
+    "safety": {
+      "externalWritesAttempted": false,
+      "executorRan": false,
+      "note": "Phase 6.5 matches action scope only. It does not execute or write externally."
+    }
+  }
+}

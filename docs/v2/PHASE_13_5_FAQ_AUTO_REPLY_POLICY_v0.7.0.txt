@@ -1,0 +1,37 @@
+LIFE.SAVER v0.7.0 — Phase 13.5 FAQ Auto-Reply Policy
+=====================================================
+
+Purpose:
+Add the policy evaluator for the future safe FAQ auto-reply lane.
+
+Roadmap gates implemented:
+- FAQ category matches.
+- Confidence is high.
+- Ticket is low risk.
+- Cap is not exceeded.
+- A rule explicitly allows auto-reply.
+
+Extra safety gates added:
+- One recipient only.
+- Phase 13.4 thread association must be verified.
+- Sensitive/escalation tickets are not eligible.
+
+Important safety boundary:
+This phase does not enable auto-send. It only evaluates whether a support_reply_send action would be eligible for a future FAQ auto-reply lane. Current package behavior remains manual approval first for real sends.
+
+Endpoints:
+- GET  /api/v1/support/faq-auto-reply-policy/status
+- GET  /api/v1/support/faq-auto-reply-policy/example
+- POST /api/v1/support/faq-auto-reply-policy/preview
+
+Main files:
+- apps/api/src/modules/support/support-faq-auto-reply-policy.types.ts
+- apps/api/src/modules/support/support-faq-auto-reply-policy.model.ts
+- apps/api/src/modules/support/support-faq-auto-reply-policy.controller.ts
+- apps/api/src/modules/support/support-faq-auto-reply-policy.routes.ts
+- apps/api/src/modules/support/support-faq-auto-reply-policy-tests.ts
+
+No database migration required.
+No Gmail API call added.
+No email send added.
+No raw provider payload/token/MIME returned.
