@@ -1,4 +1,4 @@
-import type { ContentPublishPayload } from '@lifesaver/shared';
+import type { ContentPublishPayload } from '../../shared/index.js';
 import {
   EXECUTOR_INTERFACE_PHASE,
   type ExecutorActionContext,

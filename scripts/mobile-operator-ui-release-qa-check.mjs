@@ -18,9 +18,8 @@ const packages = [
   ['package.json', json('package.json')],
   ['apps/api/package.json', json('apps/api/package.json')],
   ['apps/web/package.json', json('apps/web/package.json')],
-  ['apps/worker/package.json', json('apps/worker/package.json')],
-  ['packages/shared/package.json', json('packages/shared/package.json')],
-  ['packages/config/package.json', json('packages/config/package.json')]
+  ['apps/worker/package.json', json('apps/worker/package.json')]
+
 ];
 for (const [name, pkg] of packages) {
   assert(pkg.version === expectedVersion, `${name} version is not ${expectedVersion}.`);

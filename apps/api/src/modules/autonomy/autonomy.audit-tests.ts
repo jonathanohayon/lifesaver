@@ -1,4 +1,4 @@
-import { getAutonomyPauseAuditEventType } from '@lifesaver/shared';
+import { getAutonomyPauseAuditEventType } from '../../shared/index.js';
 
 const results = [
   {

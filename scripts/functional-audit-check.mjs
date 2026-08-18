@@ -9,7 +9,7 @@ function read(rel) { const p = path.join(root, rel); if (!fs.existsSync(p)) thro
 function json(rel) { return JSON.parse(read(rel)); }
 function assert(condition, message) { if (!condition) throw new Error(message); }
 
-for (const rel of ['package.json','apps/api/package.json','apps/web/package.json','apps/worker/package.json','packages/shared/package.json','packages/config/package.json']) {
+for (const rel of ['package.json','apps/api/package.json','apps/web/package.json','apps/worker/package.json']) {
   assert(json(rel).version === expectedVersion, `${rel} version is not ${expectedVersion}.`);
 }
 assert(json('package.json').scripts['phase-functional:0-8-0:test'] === 'node scripts/functional-audit-check.mjs', 'Missing root functional audit test script.');

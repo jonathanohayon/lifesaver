@@ -1,4 +1,4 @@
-import type { SupportReplySendPayload } from '@lifesaver/shared';
+import type { SupportReplySendPayload } from '../../shared/index.js';
 import {
   EXECUTOR_INTERFACE_PHASE,
   type ExecutorActionContext,

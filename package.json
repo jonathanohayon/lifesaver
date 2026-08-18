@@ -6,9 +6,7 @@
   "workspaces": [
     "apps/web",
     "apps/api",
-    "apps/worker",
-    "packages/shared",
-    "packages/config"
+    "apps/worker"
   ],
   "scripts": {
     "dev:api": "npm --workspace apps/api run dev",

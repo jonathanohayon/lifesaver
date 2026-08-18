@@ -1,4 +1,4 @@
-import type { AdBudgetAdjustPayload, AdPausePayload } from '@lifesaver/shared';
+import type { AdBudgetAdjustPayload, AdPausePayload } from '../../shared/index.js';
 import {
   EXECUTOR_INTERFACE_PHASE,
   type ExecutorActionContext,

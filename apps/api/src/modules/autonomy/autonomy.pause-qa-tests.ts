@@ -3,7 +3,7 @@ import {
   AUTONOMY_PAUSE_QA_PHASE,
   AUTONOMY_PAUSE_QA_SAFETY,
   getAutonomyPauseAuditEventType,
-} from '@lifesaver/shared';
+} from '../../shared/index.js';
 
 type Scope = 'content' | 'support' | 'ads' | 'research' | 'dev';
 
