@@ -8,6 +8,7 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/worker.js",
     "status": "tsx src/worker.ts --status",
+    "security:guard:test": "npm run build && node dist/config/production-guard.tests.js",
     "once:metrics": "tsx src/worker.ts --once=metrics_refresh",
     "once:daily": "tsx src/worker.ts --once=daily_pipeline",
     "once:weekly": "tsx src/worker.ts --once=weekly_pipeline",
