@@ -1,4 +1,5 @@
 import { workerEnv } from './config/env.js';
+import { assertWorkerProductionSafeStartup } from './config/production-guard.js';
 import { getWorkerStatus, runWorkerJob, type WorkerJobName } from './jobs/worker-api-client.js';
 import { startScheduler } from './scheduler.js';
 
@@ -9,6 +10,9 @@ function argValue(name: string): string | null {
 }
 
 async function main() {
+  // Runs before any command path: --once and --status also send WORKER_SHARED_SECRET to the API.
+  assertWorkerProductionSafeStartup();
+
   const once = argValue('once') as WorkerJobName | null;
   const dryRun = process.argv.includes('--dry-run');
 
