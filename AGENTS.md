@@ -12,7 +12,6 @@ Le tableau ci-dessous est la source de vérité. **Mets-le à jour dans ton prem
 
 | Espace / fichiers | Agent | Depuis | Sujet |
 |---|---|---|---|
-| `apps/worker/**` | Levy | 20/08 | propriétaire du worker : ordonnanceur, jobs, config d'environnement |
 | _(libre)_ | — | — | — |
 
 Écris ta ligne avec les **chemins réels** que tu vas modifier, pas un thème :
