@@ -10,6 +10,7 @@
     "db:status": "tsx src/db/check.ts",
     "db:migrate": "tsx src/db/migrate.ts",
     "db:seed": "tsx src/db/seed.ts",
+    "db:migrate:transaction:test": "tsx src/db/migrate.transaction-tests.ts",
     "security:check": "tsx src/security-check.ts",
     "env:check": "tsx src/environment-check.ts",
     "client:test-checklist": "tsx src/client-testing-check.ts",
