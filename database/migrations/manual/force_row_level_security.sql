@@ -1,0 +1,147 @@
+-- LIFE.SAVER v0.8.5
+-- RLS CUTOVER — MANUAL ONLY. DO NOT RUN THIS AGAINST PRODUCTION WITHOUT A MAINTENANCE WINDOW.
+--
+-- This file lives in database/migrations/manual/ on purpose. The migration runner
+-- (apps/api/src/db/migrate.ts) only picks up files matching /^\d+_.*\.sql$/ directly inside
+-- database/migrations, so `npm run db:migrate` can never apply this file by accident.
+--
+-- 025_enable_row_level_security.sql installs the policies but leaves them inert for the table
+-- owner. This file is the half that actually enforces them, and it is the half that can take the
+-- product down in one statement.
+--
+-- ============================================================================================
+-- WHY ENABLE IS NOT ENOUGH
+-- ============================================================================================
+-- PostgreSQL never applies row level security to:
+--   * a superuser,
+--   * a role created with BYPASSRLS,
+--   * the role that OWNS the table, unless FORCE ROW LEVEL SECURITY is set on that table.
+-- The application currently connects with a single role from DATABASE_URL. On Supabase and on
+-- most single-role deployments that role is the owner. Until the application connects with a
+-- dedicated, non-owner, non-superuser role, RLS protects nothing at all.
+--
+-- ============================================================================================
+-- RECOMMENDED CUTOVER ORDER
+-- ============================================================================================
+-- 0. Take a snapshot / verified backup of the database.
+-- 1. Apply 025_enable_row_level_security.sql (via npm run db:migrate). Inert for the owner:
+--    it can go out with a normal deploy, no window needed.
+-- 2. Teach the application to set the tenant context. Every request must run its queries in a
+--    transaction that starts with:
+--        SET LOCAL app.workspace_id = '<uuid>';
+--        SET LOCAL app.user_id      = '<uuid>';
+--    SET LOCAL, not SET: the pool in apps/api/src/db/pool.ts reuses connections, and a plain SET
+--    would leak one tenant's context into the next request served by that connection.
+-- 3. Carve out the paths that legitimately have no tenant context, and route them to a
+--    privileged role or to SECURITY DEFINER functions:
+--        * login / signup / password reset  (reads users by email before app.user_id exists)
+--        * workspace creation               (inserts a workspace before it is "current")
+--        * the worker jobs and cron paths   (iterate across workspaces)
+--        * admin dashboards reading system_events / usage_logs with workspace_id IS NULL
+-- 4. Restore a copy of production and run step 5 and 6 there FIRST. See "TESTING ON A COPY".
+-- 5. Create the application role and grant it (section A below).
+-- 6. Point DATABASE_URL at the new role, deploy, verify the app is fully functional. At this
+--    point RLS is already enforced for that role, because it is not the owner.
+-- 7. Only then run section B (FORCE), which closes the owner loophole for maintenance sessions
+--    too. Section C is the rollback.
+--
+-- ============================================================================================
+-- WHAT BREAKS IF THIS IS APPLIED WITHOUT DOING STEP 2 AND 3
+-- ============================================================================================
+-- app.workspace_id is unset -> app_current_workspace_id() returns NULL -> every policy predicate
+-- evaluates to NULL -> every SELECT returns zero rows and every INSERT is rejected by WITH CHECK.
+-- That is a total outage, not a degraded mode: an empty dashboard, a login that reports "unknown
+-- user" for valid credentials, and connector writes failing with
+--   new row violates row-level security policy.
+-- It is silent in the logs of anything that treats "0 rows" as "no data".
+
+-- ============================================================================================
+-- SECTION A — dedicated application role (run as a superuser / the database owner)
+-- ============================================================================================
+-- Replace the password before running. Do not reuse the owner password.
+--
+-- DO $$
+-- BEGIN
+--   IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'lifesaver_app') THEN
+--     CREATE ROLE lifesaver_app LOGIN PASSWORD 'REPLACE_WITH_A_LONG_RANDOM_PASSWORD';
+--   END IF;
+-- END $$;
+--
+-- GRANT CONNECT ON DATABASE postgres TO lifesaver_app;
+-- GRANT USAGE ON SCHEMA public TO lifesaver_app;
+-- GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO lifesaver_app;
+-- GRANT EXECUTE ON FUNCTION app_current_workspace_id(), app_current_user_id() TO lifesaver_app;
+-- ALTER DEFAULT PRIVILEGES IN SCHEMA public
+--   GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO lifesaver_app;
+--
+-- lifesaver_app must NOT be a superuser, must NOT have BYPASSRLS, and must NOT own these tables.
+-- Verify with:
+--   SELECT rolsuper, rolbypassrls FROM pg_roles WHERE rolname = 'lifesaver_app';  -- f | f
+--
+-- schema_migrations stays owned by the migration role. Keep running db:migrate with the owner
+-- credentials, not with lifesaver_app.
+
+-- ============================================================================================
+-- SECTION B — force RLS on the owner too (the breaking statement)
+-- ============================================================================================
+-- Uncomment and run only after steps 1-6 above are done and verified on a copy.
+--
+-- ALTER TABLE users                          FORCE ROW LEVEL SECURITY;
+-- ALTER TABLE workspaces                     FORCE ROW LEVEL SECURITY;
+-- ALTER TABLE workspace_members              FORCE ROW LEVEL SECURITY;
+-- ALTER TABLE connected_accounts             FORCE ROW LEVEL SECURITY;
+-- ALTER TABLE metrics_snapshots              FORCE ROW LEVEL SECURITY;
+-- ALTER TABLE chat_history                   FORCE ROW LEVEL SECURITY;
+-- ALTER TABLE briefs                         FORCE ROW LEVEL SECURITY;
+-- ALTER TABLE drafts                         FORCE ROW LEVEL SECURITY;
+-- ALTER TABLE usage_logs                     FORCE ROW LEVEL SECURITY;
+-- ALTER TABLE system_events                  FORCE ROW LEVEL SECURITY;
+-- ALTER TABLE actions                        FORCE ROW LEVEL SECURITY;
+-- ALTER TABLE action_events                  FORCE ROW LEVEL SECURITY;
+-- ALTER TABLE action_results                 FORCE ROW LEVEL SECURITY;
+-- ALTER TABLE autonomy_settings              FORCE ROW LEVEL SECURITY;
+-- ALTER TABLE policies                       FORCE ROW LEVEL SECURITY;
+-- ALTER TABLE content_connector_credentials  FORCE ROW LEVEL SECURITY;
+-- ALTER TABLE notification_preferences       FORCE ROW LEVEL SECURITY;
+-- ALTER TABLE notification_delivery_logs     FORCE ROW LEVEL SECURITY;
+-- ALTER TABLE support_tickets                FORCE ROW LEVEL SECURITY;
+-- ALTER TABLE ads_hard_caps                  FORCE ROW LEVEL SECURITY;
+-- ALTER TABLE ads_action_snapshots           FORCE ROW LEVEL SECURITY;
+-- ALTER TABLE memory_items                   FORCE ROW LEVEL SECURITY;
+--
+-- After FORCE, the owner itself needs SET LOCAL app.workspace_id to see anything. Keep one
+-- BYPASSRLS break-glass role for incident response:
+--   CREATE ROLE lifesaver_break_glass LOGIN BYPASSRLS PASSWORD '...';
+
+-- ============================================================================================
+-- SECTION C — rollback
+-- ============================================================================================
+-- Undo FORCE (instant, restores owner visibility):
+--   ALTER TABLE <each table above> NO FORCE ROW LEVEL SECURITY;
+-- Undo RLS entirely (undoes 025 as well):
+--   ALTER TABLE <each table above> DISABLE ROW LEVEL SECURITY;
+-- The policies themselves survive DISABLE, so re-enabling is a single ALTER per table.
+
+-- ============================================================================================
+-- TESTING ON A COPY
+-- ============================================================================================
+-- 1. pg_dump the production database and restore it into a scratch database.
+--      pg_dump "$PRODUCTION_DATABASE_URL" -Fc -f prod.dump
+--      createdb lifesaver_rls_test && pg_restore -d lifesaver_rls_test prod.dump
+-- 2. Apply 025 and sections A + B against the copy.
+-- 3. Prove isolation with two workspaces:
+--      SET ROLE lifesaver_app;
+--      BEGIN;
+--        SET LOCAL app.workspace_id = '<workspace A uuid>';
+--        SET LOCAL app.user_id      = '<a user of workspace A>';
+--        SELECT count(*) FROM support_tickets;                      -- only workspace A
+--        SELECT count(*) FROM support_tickets
+--          WHERE workspace_id = '<workspace B uuid>';               -- must be 0
+--        INSERT INTO briefs (workspace_id, type, content)
+--          VALUES ('<workspace B uuid>', 'daily', 'x');             -- must be rejected
+--      ROLLBACK;
+-- 4. Prove fail-closed: run the same SELECTs with no SET LOCAL at all. Every count must be 0.
+-- 5. Point a staging API at the copy with DATABASE_URL using lifesaver_app and walk the product:
+--    login, onboarding, connector connect, chat, actions approval, support import, admin views.
+--    Anything that returns an empty list or a row-level-security violation is a path from step 3
+--    that still needs a privileged route.
